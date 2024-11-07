@@ -8,7 +8,7 @@
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "build:backend": "npm --prefix backend run build",
     "build:frontend": "npm --prefix frontend run build",
-    "build": "concurrently \"npm run build:backend\" \"npm run build:frontend\"",
+    "build": "npm run build:backend && npm run build:frontend",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
