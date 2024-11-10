@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev:backend": "npm --prefix backend run dev",
-    "dev:frontend": "npm --prefix frontend run dev",
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "build:backend": "npm --prefix backend run build",
-    "build:frontend": "npm --prefix frontend run build",
-    "build": "npm run build:backend && npm run build:frontend",
+    "dev:backend": "yarn --cwd backend run dev",
+    "dev:frontend": "yarn --cwd frontend run dev",
+    "dev": "concurrently \"yarn run dev:backend\" \"yarn run dev:frontend\"",
+    "build:backend": "yarn --cwd backend run build",
+    "build:frontend": "yarn --cwd frontend run build",
+    "build": "yarn run build:backend && yarn run build:frontend",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
