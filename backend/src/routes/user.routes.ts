@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { getUsers, createUser } from "../controllers/user.controller";
+import { UserMutations } from "../controllers/user/mutation";
 
 const router = Router();
 
-router.get("/", getUsers);
-router.post("/", createUser);
+const { createUser } = UserMutations;
+
+router.post("/register", createUser);
 
 export default router;
