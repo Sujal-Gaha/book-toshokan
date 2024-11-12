@@ -63,6 +63,17 @@ const createUser = asyncHandler(async (req: Request, res: Response) => {
     },
   });
 
+  if (!user) {
+    return res.status(500).json({
+      status: 500,
+      body: {
+        data: null,
+      },
+      success: false,
+      message: "User registration failed",
+    });
+  }
+
   return res.status(201).json({
     status: 201,
     body: {
