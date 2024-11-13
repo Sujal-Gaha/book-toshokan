@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
-import { asyncHandler, hashPassword } from "../../utils";
+import {
+  asyncHandler,
+  comparePassword,
+  createSecretToken,
+  hashPassword,
+} from "../../utils";
 import { prisma } from "../../config/client";
 
 const createUser = asyncHandler(async (req: Request, res: Response) => {
@@ -74,6 +79,16 @@ const createUser = asyncHandler(async (req: Request, res: Response) => {
     });
   }
 
+  const token = createSecretToken(user.id);
+
+  res.cookie("token", token, {
+    httpOnly: true,
+    maxAge: 3 * 24 * 60 * 60 * 1000,
+    sameSite: "none",
+    secure: true,
+    path: "/",
+  });
+
   return res.status(201).json({
     status: 201,
     body: {
@@ -84,6 +99,61 @@ const createUser = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
+const loginUser = asyncHandler(async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  if (!(email && password)) {
+    return res.status(400).json({
+      status: 400,
+      body: {
+        data: null,
+      },
+      success: false,
+      message: "Please provide all the required fields",
+    });
+  }
+
+  const user = await prisma.user.findFirst({
+    where: {
+      email: email,
+    },
+  });
+
+  if (!user) {
+    return res.status(404).json({
+      status: 404,
+      body: {
+        data: null,
+      },
+      success: false,
+      message: "User not found",
+    });
+  }
+
+  const isCompared = await comparePassword(password, user.password);
+
+  if (!isCompared) {
+    return res.status(401).json({
+      status: 401,
+      body: {
+        data: null,
+      },
+      success: false,
+      message: "Invalid credentials",
+    });
+  }
+
+  return res.status(200).json({
+    status: 200,
+    body: {
+      data: user,
+    },
+    success: true,
+    message: "Login successful",
+  });
+});
+
 export const UserMutations = {
   createUser,
+  loginUser,
 } as const;
