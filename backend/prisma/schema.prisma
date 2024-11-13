@@ -19,9 +19,81 @@ enum UserRoleEnum {
 }
 
 model User {
-  id       Int          @id @default(autoincrement())
-  username String
-  email    String       @unique
-  password String
-  role     UserRoleEnum
+  id              String                 @id @default(cuid())
+  username        String                 @unique
+  email           String                 @unique
+  password        String
+  role            UserRoleEnum           @default(USER)
+  feedback        Feedback[]
+  subscriptions   UserBookSubscription[]
+  FeedbackComment FeedbackComment[]
+}
+
+model Author {
+  id    String @id @default(cuid())
+  name  String
+  about String
+  books Book[]
+}
+
+model Category {
+  id          String @id @default(cuid())
+  name        String @unique
+  description String
+  books       Book[]
+}
+
+enum ReadStatusEnum {
+  TO_READ
+  READ
+  CURRENTLY_READING
+}
+
+model Book {
+  id            String                 @id @default(cuid())
+  authorId      String
+  categoryId    String
+  readStatus    ReadStatusEnum
+  name          String                 @unique()
+  description   String
+  publishedOn   DateTime
+  author        Author                 @relation(fields: [authorId], references: [id])
+  category      Category               @relation(fields: [categoryId], references: [id])
+  feedback      Feedback[]
+  subscriptions UserBookSubscription[]
+}
+
+model Feedback {
+  id        String            @id @default(cuid())
+  userId    String
+  bookId    String
+  rating    Int
+  comment   String
+  user      User              @relation(fields: [userId], references: [id])
+  book      Book              @relation(fields: [bookId], references: [id])
+  comments  FeedbackComment[]
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+model FeedbackComment {
+  id         String   @id @default(cuid())
+  feedbackId String
+  userId     String
+  comment    String
+  feedback   Feedback @relation(fields: [feedbackId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model UserBookSubscription {
+  id         String         @id @default(cuid())
+  userId     String
+  bookId     String
+  readStatus ReadStatusEnum
+  user       User           @relation(fields: [userId], references: [id])
+  book       Book           @relation(fields: [bookId], references: [id])
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
 }
