@@ -9,6 +9,8 @@
     "build:backend": "yarn --cwd backend run build",
     "build:frontend": "yarn --cwd frontend run build",
     "build": "yarn run build:backend && yarn run build:frontend",
+    "db:generate": "yarn --cwd backend run db:generate",
+    "db:migrate": "yarn --cwd backend run db:migrate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
