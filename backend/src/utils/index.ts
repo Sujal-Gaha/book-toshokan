@@ -1,3 +1,3 @@
 export * from "./async-handler";
 export * from "./error-handler";
-export * from "./auth";
+export * from "./jwt-auth";
