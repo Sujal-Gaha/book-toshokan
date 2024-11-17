@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { verifyToken, generateRefreshToken } from "./utils"; // Assuming generateRefreshToken is a utility function for generating a new refresh token
+import { verifyToken, generateRefreshToken } from "./utils";
 
 export const authenticate = async (
   req: Request,

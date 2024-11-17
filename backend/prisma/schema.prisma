@@ -57,7 +57,7 @@ model Book {
   id            String                 @id @default(cuid())
   authorId      String
   categoryId    String
-  readStatus    ReadStatusEnum
+  readStatus    ReadStatusEnum?
   name          String                 @unique()
   description   String
   publishedOn   DateTime
