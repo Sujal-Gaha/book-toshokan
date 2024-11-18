@@ -144,6 +144,13 @@ const getBooksByAuthorId = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
+const getAllUsersBooks = asyncHandler(
+  async (req: Request, res: Response) => {}
+);
+const getUsersBooksByReadStatus = asyncHandler(
+  async (req: Request, res: Response) => {}
+);
+
 export const BookQueries = {
   getAllBooks,
   getBooksByCategoryId,
