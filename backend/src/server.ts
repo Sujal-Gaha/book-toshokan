@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import {
@@ -15,6 +15,14 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(cookieParser());
+
+app.get("/", (req: Request, res: Response) => {
+  res.json({
+    status: 200,
+    success: true,
+    message: "Hello from the server!",
+  });
+});
 
 app.use("/api/users", userRoutes);
 app.use("/api/authors", authorRoutes);

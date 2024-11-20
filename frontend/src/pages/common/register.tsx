@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Input } from "../../components/input";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { motion } from "framer-motion";
+import { Image } from "@nextui-org/react";
 
 export const RegisterPage = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -15,14 +15,12 @@ export const RegisterPage = () => {
 
   return (
     <main className="flex">
-      <section className="h-screen w-1/2 bg-red-500"></section>
+      <section className="h-screen w-1/2 overflow-clip">
+        <Image radius="none" width={1000} height={1000} src="/register.jpg" />
+      </section>
       <section className="h-screen w-1/2 flex items-center justify-center">
         <form>
-          <motion.div
-            className="w-[450px] p-6 flex flex-col gap-4 rounded-md border"
-            initial={{ x: "-100vh" }}
-            animate={{ x: "0" }}
-          >
+          <div className="w-[450px] p-6 flex flex-col gap-4 rounded-md border">
             <div className="flex flex-col items-start">
               <h1 className="text-xl font-medium">Create Account</h1>
               <p className="text-gray-400 text-sm">
@@ -77,7 +75,7 @@ export const RegisterPage = () => {
                 }
               />
             </div>
-          </motion.div>
+          </div>
         </form>
       </section>
     </main>
