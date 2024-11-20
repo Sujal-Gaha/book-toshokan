@@ -8,7 +8,7 @@ import {
 } from "../../utils";
 import { prisma } from "../../config/client";
 
-const createUser = asyncHandler(async (req: Request, res: Response) => {
+const registerUser = asyncHandler(async (req: Request, res: Response) => {
   const { username, email, password, role } = req.body;
 
   if (!(username && email && password)) {
@@ -66,6 +66,12 @@ const createUser = asyncHandler(async (req: Request, res: Response) => {
       username: username,
       password: hashedPassword,
       role: role ? role : "USER",
+    },
+    select: {
+      id: true,
+      email: true,
+      username: true,
+      role: true,
     },
   });
 
@@ -152,6 +158,7 @@ const loginUser = asyncHandler(async (req: Request, res: Response) => {
     .cookie("refreshToken", refreshToken, {
       httpOnly: true,
       sameSite: "strict",
+      maxAge: 30 * 24 * 60 * 60 * 1000,
     })
     .header("Authorization", accessToken)
     .status(200)
@@ -166,6 +173,6 @@ const loginUser = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const UserMutations = {
-  createUser,
+  registerUser,
   loginUser,
 } as const;

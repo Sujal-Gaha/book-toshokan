@@ -3,15 +3,15 @@ import { authenticate } from "../auth";
 import { AuthorMutations } from "../controllers/author/mutation";
 import { AuthorQueries } from "../controllers/author/query";
 
-const authorRoutes = Router();
+const router = Router();
 
 const { getAllAuthors } = AuthorQueries;
-authorRoutes.get("/", getAllAuthors);
+router.get("/", getAllAuthors);
 
 const { addAuthor, updateAuthor, deleteAuthor } = AuthorMutations;
 
-authorRoutes.post("/add", addAuthor);
-authorRoutes.put("/update/:authorId", updateAuthor);
-authorRoutes.delete("/delete/:authorId", deleteAuthor);
+router.post("/add", authenticate, addAuthor);
+router.put("/update/:authorId", updateAuthor);
+router.delete("/delete/:authorId", deleteAuthor);
 
-export { authorRoutes };
+export { router as authorRoutes };

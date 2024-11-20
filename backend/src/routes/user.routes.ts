@@ -3,14 +3,14 @@ import { UserMutations } from "../controllers/user/mutation";
 import { UserQueries } from "../controllers/user/query";
 import { authenticate } from "../auth";
 
-const userRoutes = Router();
+const router = Router();
 
 const { getAllUsers } = UserQueries;
 
-const { createUser, loginUser } = UserMutations;
-userRoutes.post("/register", createUser);
-userRoutes.post("/login", loginUser);
+const { registerUser, loginUser } = UserMutations;
+router.post("/register", registerUser);
+router.post("/login", loginUser);
 
-userRoutes.get("/", authenticate, getAllUsers);
+router.get("/", authenticate, getAllUsers);
 
-export { userRoutes };
+export { router as userRoutes };
