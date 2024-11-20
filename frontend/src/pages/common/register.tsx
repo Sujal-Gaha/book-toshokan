@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { Checkbox } from "../../components/checkbox";
 import { Divider } from "../../components/divider";
 import { FaGithub, FaGoogle } from "react-icons/fa";
+import { getAppsPath } from "../../utils/getAppsPath";
 
 export const RegisterPage = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -17,6 +18,8 @@ export const RegisterPage = () => {
     setIsPasswordVisible(!isPasswordVisible);
   const toggleIsConfirmPasswordVisible = () =>
     setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
+
+  const { loginPage } = getAppsPath;
 
   return (
     <main className="flex bg-black">
@@ -29,7 +32,7 @@ export const RegisterPage = () => {
             <div className="flex flex-col items-start">
               <h1 className="text-xl font-medium text-white">Create Account</h1>
               <p className="text-gray-400 text-sm">
-                Sign up for a new account to get started.
+                Sign up for a new account to get started
               </p>
             </div>
             <div className="flex flex-col gap-4 w-full">
@@ -110,10 +113,7 @@ export const RegisterPage = () => {
             </div>
             <p className="text-white text-center">
               Already have an account?{" "}
-              <Link
-                to={"/auth/login"}
-                className="text-blue-500 hover:underline"
-              >
+              <Link to={loginPage} className="text-blue-500 hover:underline">
                 Log In
               </Link>
             </p>
