@@ -3,9 +3,10 @@ import { extendVariants, Button as NextUIButton } from "@nextui-org/react";
 export const Button = extendVariants(NextUIButton, {
   variants: {
     color: {
-      olive: "text-[#000] bg-[#84cc16]",
-      orange: "bg-[#ff8c00] text-[#fff]",
+      default:
+        "text-gray-200 font-medium text-base hover:bg-gray-50 hover:text-black",
       violet: "bg-[#8b5cf6] text-[#fff]",
+      blue: "bg-[#006fee] text-[#ffffff] text-base font-medium w-full",
     },
     isDisabled: {
       true: "bg-[#eaeaea] text-[#000] opacity-50 cursor-not-allowed",
@@ -17,13 +18,13 @@ export const Button = extendVariants(NextUIButton, {
     },
   },
   defaultVariants: {
-    color: "olive",
+    color: "blue",
     size: "xl",
   },
   compoundVariants: [
     {
       isDisabled: true,
-      color: "olive",
+      color: "blue",
       class: "bg-[#84cc16]/80 opacity-100",
     },
   ],
