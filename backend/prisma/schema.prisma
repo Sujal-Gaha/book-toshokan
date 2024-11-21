@@ -15,6 +15,7 @@ datasource db {
 
 generator zod {
   provider = "zod-prisma-types"
+  output   = "./contract/generated-zod"
 }
 
 enum UserRoleEnum {

@@ -8,13 +8,20 @@ import {
   userRoutes,
   userBookSubscriptionRouter,
 } from "./routes";
+import cors from "cors";
 
 dotenv.config();
 export const app = express();
 const PORT = process.env.PORT || 5000;
+const FRONTEND_URL = process.env.FRONTEND_URL || "";
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: [FRONTEND_URL],
+  })
+);
 
 app.get("/", (req: Request, res: Response) => {
   res.json({

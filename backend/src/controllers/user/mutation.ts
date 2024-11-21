@@ -89,6 +89,13 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
   const refreshToken = generateRefreshToken(user.id);
 
   return res
+    .cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 3 * 24 * 60 * 60 * 1000,
+      sameSite: "none",
+      secure: true,
+      path: "/",
+    })
     .status(201)
     .json({
       status: 201,
@@ -97,13 +104,6 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
       },
       success: true,
       message: "User registered successfully",
-    })
-    .cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      maxAge: 3 * 24 * 60 * 60 * 1000,
-      sameSite: "none",
-      secure: true,
-      path: "/",
     });
 });
 
