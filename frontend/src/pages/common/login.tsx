@@ -3,24 +3,63 @@ import { Input } from "../../components/input";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { Image } from "@nextui-org/react";
 import { Button } from "../../components/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Checkbox } from "../../components/checkbox";
 import { Divider } from "../../components/divider";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { getAppsPath } from "../../utils/getAppsPath";
+import { useMutation } from "@tanstack/react-query";
+import { loginUser } from "../../api/data/user";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  LoginUserSchema,
+  TError,
+  TLoginUserInput,
+  TLoginUserOutput,
+} from "../../api/contracts/user/schema";
+import { toastError, toastSuccess } from "../../components/toast";
 
 export const LoginPage = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TLoginUserInput>({
+    resolver: zodResolver(LoginUserSchema),
+  });
+
+  const loginMtn = useMutation<TLoginUserOutput, TError, TLoginUserInput>({
+    mutationFn: loginUser,
+    onSuccess: (data) => {
+      toastSuccess(data.body.message);
+      navigate("/");
+    },
+    onError: (error) => {
+      toastError(error.body.message);
+    },
+  });
+
+  const loginForm: SubmitHandler<TLoginUserInput> = async (data) => {
+    try {
+      await loginMtn.mutateAsync(data);
+    } catch (error) {
+      console.error("error ", error);
+    }
+  };
 
   const toggleIsPasswordVisible = () =>
     setIsPasswordVisible(!isPasswordVisible);
 
   const { forgotPasswordPage, registerPage } = getAppsPath;
-
   return (
     <main className="flex bg-black">
       <section className="h-screen w-1/2 flex items-center justify-center">
-        <form>
+        <form onSubmit={handleSubmit(loginForm)}>
           <div className="w-[450px] p-6 flex flex-col gap-6 rounded-md">
             <div className="flex flex-col items-start">
               <h1 className="text-xl font-medium text-white">Welcome Back</h1>
@@ -35,6 +74,9 @@ export const LoginPage = () => {
                 variant="underlined"
                 label="Enter Address"
                 placeholder="Enter your email"
+                {...register("email")}
+                isInvalid={!!errors.email?.message}
+                errorMessage={errors.email?.message}
               />
               <Input
                 color="primary"
@@ -42,6 +84,9 @@ export const LoginPage = () => {
                 type={isPasswordVisible ? "text" : "password"}
                 label="Password"
                 placeholder="Enter your password"
+                {...register("password")}
+                isInvalid={!!errors.password?.message}
+                errorMessage={errors.password?.message}
                 endContent={
                   <button
                     className="focus:outline-none"
@@ -68,8 +113,13 @@ export const LoginPage = () => {
               </Link>
             </div>
             <div>
-              <Button type="submit" color="blue" size="lg">
-                Log In
+              <Button
+                type="submit"
+                color="blue"
+                size="lg"
+                disabled={loginMtn.isPending}
+              >
+                {loginMtn.isPending ? "Logging In..." : "Log In"}
               </Button>
             </div>
             <p className="text-white text-center">

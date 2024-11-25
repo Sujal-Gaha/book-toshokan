@@ -16,9 +16,9 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
       status: 400,
       body: {
         data: null,
+        message: "Please provide all the required fields",
       },
       success: false,
-      message: "Please provide all the required fields",
     });
   }
 
@@ -33,9 +33,9 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
       status: 409,
       body: {
         data: null,
+        message: "Email already in use",
       },
       success: false,
-      message: "Email already in use",
     });
   }
 
@@ -50,9 +50,9 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
       status: 409,
       body: {
         data: null,
+        message: "Username is already taken",
       },
       success: false,
-      message: "Username is already taken",
     });
   }
 
@@ -65,7 +65,6 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
       email: email,
       username: username,
       password: hashedPassword,
-      role: role ? role : "USER",
     },
     select: {
       id: true,
@@ -80,9 +79,9 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
       status: 500,
       body: {
         data: null,
+        message: "User registration failed",
       },
       success: false,
-      message: "User registration failed",
     });
   }
 
@@ -101,9 +100,9 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
       status: 201,
       body: {
         data: user,
+        message: "User registered successfully",
       },
       success: true,
-      message: "User registered successfully",
     });
 });
 
@@ -115,9 +114,9 @@ const loginUser = asyncHandler(async (req: Request, res: Response) => {
       status: 400,
       body: {
         data: null,
+        message: "Please provide all the required fields",
       },
       success: false,
-      message: "Please provide all the required fields",
     });
   }
 
@@ -128,26 +127,26 @@ const loginUser = asyncHandler(async (req: Request, res: Response) => {
   });
 
   if (!user) {
-    return res.status(404).json({
-      status: 404,
+    return res.status(400).json({
+      status: 400,
       body: {
         data: null,
+        message: "Invalid Credential",
       },
       success: false,
-      message: "User not found",
     });
   }
 
   const isCompared = await comparePassword(password, user.password);
 
   if (!isCompared) {
-    return res.status(401).json({
-      status: 401,
+    return res.status(400).json({
+      status: 400,
       body: {
         data: null,
+        message: "Invalid credentials",
       },
       success: false,
-      message: "Invalid credentials",
     });
   }
 
@@ -166,9 +165,9 @@ const loginUser = asyncHandler(async (req: Request, res: Response) => {
       status: 200,
       body: {
         data: user,
+        message: "Login successful",
       },
       success: true,
-      message: "Login successful",
     });
 });
 

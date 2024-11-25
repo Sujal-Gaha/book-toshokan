@@ -3,25 +3,32 @@ import { Input } from "../../components/input";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { Image } from "@nextui-org/react";
 import { Button } from "../../components/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Checkbox } from "../../components/checkbox";
 import { Divider } from "../../components/divider";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { getAppsPath } from "../../utils/getAppsPath";
 import { useMutation } from "@tanstack/react-query";
-import { registerUser } from "../../data/user";
+import { registerUser } from "../../api/data/user";
 import { SubmitHandler, useForm } from "react-hook-form";
 import {
+  RegisterUserSchema,
   TRegisterUserInput,
   TRegisterUserOutput,
-} from "../../../../backend/prisma/contract/user/schema";
-import { TError } from "../../../../backend/prisma/contract/error";
-import { toast } from "sonner";
+  TError,
+} from "../../api/contracts/user/schema";
+import { toastError, toastSuccess } from "../../components/toast";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export const RegisterPage = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
+
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [hasTermsBeenAccepted, setHasTermsBeenAccepted] = useState(false);
+
+  const navigate = useNavigate();
 
   const registerUserMtn = useMutation<
     TRegisterUserOutput,
@@ -30,20 +37,35 @@ export const RegisterPage = () => {
   >({
     mutationFn: registerUser,
     onSuccess: (data) => {
-      toast.success(data.message);
+      toastSuccess(data.body.message);
+      navigate("/auth/login");
     },
     onError: (error) => {
-      toast.error(error.message);
+      toastError(error.body.message);
     },
   });
 
-  const { register, handleSubmit } = useForm<TRegisterUserInput>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm<TRegisterUserInput>({
+    resolver: zodResolver(RegisterUserSchema),
+    defaultValues: {
+      password: "",
+    },
+  });
+
+  const password = watch("password");
+  const passwordMatches = confirmPassword === password;
 
   const registerForm: SubmitHandler<TRegisterUserInput> = async (data) => {
     try {
-      await registerUserMtn.mutateAsync(data);
+      if (passwordMatches && hasTermsBeenAccepted) {
+        await registerUserMtn.mutateAsync(data);
+      }
     } catch (error) {
-      toast.error("Something went wrong");
       console.error("error ", error);
     }
   };
@@ -78,6 +100,8 @@ export const RegisterPage = () => {
                 placeholder="Create your username"
                 isRequired
                 {...register("username")}
+                isInvalid={!!errors.username?.message}
+                errorMessage={errors.username?.message}
               />
               <Input
                 color="primary"
@@ -87,6 +111,8 @@ export const RegisterPage = () => {
                 placeholder="Enter your email"
                 isRequired
                 {...register("email")}
+                isInvalid={!!errors.email?.message}
+                errorMessage={errors.email?.message}
               />
               <Input
                 color="primary"
@@ -95,6 +121,7 @@ export const RegisterPage = () => {
                 label="Password"
                 placeholder="Create a password"
                 isRequired
+                {...register("password")}
                 endContent={
                   <button
                     className="focus:outline-none"
@@ -109,6 +136,8 @@ export const RegisterPage = () => {
                     )}
                   </button>
                 }
+                isInvalid={!!errors.password?.message}
+                errorMessage={errors.password?.message}
               />
               <Input
                 color="primary"
@@ -118,7 +147,8 @@ export const RegisterPage = () => {
                 label="Confirm Password"
                 placeholder="Confirm your password"
                 isRequired
-                {...register("password")}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 endContent={
                   <button
                     className="focus:outline-none"
@@ -133,9 +163,14 @@ export const RegisterPage = () => {
                     )}
                   </button>
                 }
+                isInvalid={!passwordMatches}
+                errorMessage={"Password doesnot match"}
               />
             </div>
-            <Checkbox>
+            <Checkbox
+              isRequired
+              onClick={(e) => setHasTermsBeenAccepted(!e.currentTarget.value)}
+            >
               I agree with the{" "}
               <span
                 className="text-blue-500 hover:underline"
@@ -152,8 +187,13 @@ export const RegisterPage = () => {
               </span>
             </Checkbox>
             <div>
-              <Button type="submit" color="blue" size="lg">
-                Sign Up
+              <Button
+                type="submit"
+                color="blue"
+                size="lg"
+                disabled={registerUserMtn.isPending}
+              >
+                {registerUserMtn.isPending ? "Signing Up..." : "Sign Up"}
               </Button>
             </div>
             <p className="text-white text-center">

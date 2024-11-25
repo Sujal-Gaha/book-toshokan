@@ -1,9 +1,10 @@
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import { LoginPage } from "./pages/common/login";
 import { RegisterPage } from "./pages/common/register";
-import { AuthLayout } from "./pages/common/auth";
+import { AuthLayout } from "./pages/common/auth-layout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
+import { AppLayout } from "./pages/common/app-layout";
 
 const router = createBrowserRouter([
   {
@@ -35,7 +36,9 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <AppLayout>
+        <RouterProvider router={router} />
+      </AppLayout>
       <Toaster position="top-right" />
     </QueryClientProvider>
   );
