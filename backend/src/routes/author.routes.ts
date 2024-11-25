@@ -1,8 +1,6 @@
 import { Router } from "express";
-import { authenticate } from "../auth";
 import { AuthorMutations } from "../controllers/author/mutation";
 import { AuthorQueries } from "../controllers/author/query";
-import { app } from "../server";
 
 const router = Router();
 
@@ -11,7 +9,7 @@ router.get("/", getAllAuthors);
 
 const { addAuthor, updateAuthor, deleteAuthor } = AuthorMutations;
 
-router.post("/add", authenticate, addAuthor);
+router.post("/add", addAuthor);
 router.put("/update/:authorId", updateAuthor);
 router.delete("/delete/:authorId", deleteAuthor);
 

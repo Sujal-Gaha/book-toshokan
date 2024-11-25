@@ -12,6 +12,9 @@ import { Navbar } from "../../components/navbar";
 import { Footer } from "../../components/footer";
 import { keyFeatures } from "../../constants/key-features";
 import { readingStatuses } from "../../constants/reading-status";
+import { useQuery } from "@tanstack/react-query";
+import { getRecommendedBooks } from "../../api/data/book";
+import { TGetRecommendedBooks } from "../../api/contracts/book/schema";
 
 const Welcome = () => {
   return (
@@ -100,6 +103,12 @@ const ReadingStatus = () => {
 };
 
 const RecommendedBooks = () => {
+  const { data: recommendedBooksData } = useQuery<TGetRecommendedBooks>({
+    queryKey: ["getRecommendedBooks"],
+    queryFn: getRecommendedBooks,
+  });
+  const recommendedBooks = recommendedBooksData?.body.data;
+
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 bg-background/50 flex items-center justify-center">
       <div className="container px-4 md:px-6">
@@ -107,99 +116,40 @@ const RecommendedBooks = () => {
           Recommended Books
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card className="bg-background/80 border-none">
-            <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-              <Image
-                alt="Book cover"
-                className="object-cover rounded-xl"
-                src="/placeholder.svg?height=200&width=300"
-                width={300}
-              />
-              <h4 className="font-bold text-large mt-4">
-                To Kill a Mockingbird
-              </h4>
-              <p className="text-tiny uppercase font-bold">Harper Lee</p>
-            </CardHeader>
-            <CardBody className="overflow-visible py-2">
-              <p className="text-default-500">
-                A classic of modern American literature, this novel explores
-                racial injustice and the loss of innocence.
-              </p>
-            </CardBody>
-            <CardFooter className="flex justify-between">
-              <div className="flex items-center">
-                <Star className="w-4 h-4 fill-warning text-warning mr-1" />
-                <span className="text-sm font-bold">4.8</span>
-              </div>
-              <div className="flex items-center text-default-500">
-                <BookOpen className="w-4 h-4 mr-1" />
-                <span className="text-sm">Classic</span>
-              </div>
-            </CardFooter>
-          </Card>
-          <Card className="bg-background/80 border-none">
-            <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-              <Image
-                alt="Book cover"
-                className="object-cover rounded-xl"
-                src="/placeholder.svg?height=200&width=300"
-                width={300}
-              />
-              <h4 className="font-bold text-large mt-4">1984</h4>
-              <p className="text-tiny uppercase font-bold">George Orwell</p>
-            </CardHeader>
-            <CardBody className="overflow-visible py-2">
-              <p className="text-default-500">
-                A dystopian novel set in a totalitarian society, warning of the
-                dangers of government overreach and loss of privacy.
-              </p>
-            </CardBody>
-            <CardFooter className="flex justify-between">
-              <div className="flex items-center">
-                <Star className="w-4 h-4 fill-warning text-warning mr-1" />
-                <span className="text-sm font-bold">4.7</span>
-              </div>
-              <div className="flex items-center text-default-500">
-                <BookOpen className="w-4 h-4 mr-1" />
-                <span className="text-sm">Dystopian</span>
-              </div>
-            </CardFooter>
-          </Card>
-          <Card className="bg-background/80 border-none">
-            <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-              <Image
-                alt="Book cover"
-                className="object-cover rounded-xl"
-                src="/placeholder.svg?height=200&width=300"
-                width={300}
-              />
-              <h4 className="font-bold text-large mt-4">The Great Gatsby</h4>
-              <p className="text-tiny uppercase font-bold">
-                F. Scott Fitzgerald
-              </p>
-            </CardHeader>
-            <CardBody className="overflow-visible py-2">
-              <p className="text-default-500">
-                A novel that captures the decadence and idealism of the Jazz
-                Age, exploring themes of wealth, love, and the American Dream.
-              </p>
-            </CardBody>
-            <CardFooter className="flex justify-between">
-              <div className="flex items-center">
-                <Star className="w-4 h-4 fill-warning text-warning mr-1" />
-                <span className="text-sm font-bold">4.6</span>
-              </div>
-              <div className="flex items-center text-default-500">
-                <BookOpen className="w-4 h-4 mr-1" />
-                <span
-                  className="text-sm
-"
-                >
-                  Literary Fiction
-                </span>
-              </div>
-            </CardFooter>
-          </Card>
+          {recommendedBooks?.map((book) => {
+            return (
+              <Card key={book.id} className="bg-background/80 border-none">
+                <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+                  <Image
+                    alt="Book cover"
+                    className="object-cover rounded-xl"
+                    src=""
+                    width={100}
+                    height={100}
+                  />
+                  <h4 className="font-bold text-large mt-4">{book.name}</h4>
+                  <p className="text-tiny uppercase font-bold">
+                    {book.author.name}
+                  </p>
+                </CardHeader>
+                <CardBody className="overflow-visible py-2">
+                  <p className="text-default-500">{book.description}</p>
+                </CardBody>
+                <CardFooter className="flex justify-between">
+                  <div className="flex items-center">
+                    <Star className="w-4 h-4 fill-warning text-warning mr-1" />
+                    <span className="text-sm font-bold">
+                      {book.feedback.rating || "4.8"}
+                    </span>
+                  </div>
+                  <div className="flex items-center text-default-500">
+                    <BookOpen className="w-4 h-4 mr-1" />
+                    <span className="text-sm">{book.category.name}</span>
+                  </div>
+                </CardFooter>
+              </Card>
+            );
+          })}
         </div>
       </div>
     </section>

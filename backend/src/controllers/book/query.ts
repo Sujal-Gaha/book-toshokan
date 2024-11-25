@@ -2,6 +2,43 @@ import { Request, Response } from "express";
 import { asyncHandler } from "../../utils";
 import { prisma } from "../../config/client";
 
+const getRecommendedBooks = asyncHandler(
+  async (req: Request, res: Response) => {
+    const books = await prisma.book.findMany({
+      take: 3,
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
+        author: {
+          select: {
+            name: true,
+          },
+        },
+        feedback: {
+          select: {
+            rating: true,
+          },
+        },
+      },
+    });
+
+    return res.status(200).json({
+      status: 200,
+      body: {
+        data: books,
+        message: "Fetched all the books successfully",
+      },
+      success: true,
+    });
+  }
+);
+
 const getAllBooks = asyncHandler(async (req: Request, res: Response) => {
   const books = await prisma.book.findMany({});
 
@@ -152,6 +189,7 @@ const getUsersBooksByReadStatus = asyncHandler(
 );
 
 export const BookQueries = {
+  getRecommendedBooks,
   getAllBooks,
   getBooksByCategoryId,
   getBooksByAuthorId,

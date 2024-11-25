@@ -4,8 +4,14 @@ import { BookQueries } from "../controllers/book/query";
 
 const router = Router();
 
-const { getAllBooks, getBooksByCategoryId, getBooksByAuthorId } = BookQueries;
+const {
+  getRecommendedBooks,
+  getAllBooks,
+  getBooksByCategoryId,
+  getBooksByAuthorId,
+} = BookQueries;
 router.get("/", getAllBooks);
+router.get("/getRecommendedBooks", getRecommendedBooks);
 router.get("/getBooksByCategoryId/:categoryId", getBooksByCategoryId);
 router.get("/getBooksByAuthorId/:authorId", getBooksByAuthorId);
 
