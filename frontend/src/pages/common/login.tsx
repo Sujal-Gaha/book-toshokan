@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Input } from "../../components/input";
+import { Input } from "../../components/ui/input";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { Image } from "@nextui-org/react";
-import { Button } from "../../components/button";
+import { Button } from "../../components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { Checkbox } from "../../components/checkbox";
+import { Checkbox } from "../../components/ui/checkbox";
 import { Divider } from "../../components/divider";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { getAppsPath } from "../../utils/getAppsPath";

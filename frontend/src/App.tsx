@@ -5,11 +5,12 @@ import { AuthLayout } from "./pages/common/auth-layout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import { AppLayout } from "./pages/common/app-layout";
+import { HomePage } from "./pages/user/home";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <h1>Hello World</h1>,
+    element: <HomePage />,
   },
   {
     path: "auth",
