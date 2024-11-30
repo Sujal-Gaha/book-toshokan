@@ -8,8 +8,6 @@ import {
   Image,
 } from "@nextui-org/react";
 import { BookOpen, Star } from "lucide-react";
-import { Navbar } from "../../components/navbar";
-import { Footer } from "../../components/footer";
 import { keyFeatures } from "../../constants/key-features";
 import { readingStatuses } from "../../constants/reading-status";
 import { useQuery } from "@tanstack/react-query";
@@ -197,7 +195,7 @@ const StartToday = () => {
 export const HomePage = () => {
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+      {/* <Navbar /> */}
       <main className="flex-1 bg-background text-foregroun items-center justify-center">
         <Welcome />
         <KeyFeatures />
@@ -205,7 +203,6 @@ export const HomePage = () => {
         <RecommendedBooks />
         <StartToday />
       </main>
-      <Footer />
     </div>
   );
 };

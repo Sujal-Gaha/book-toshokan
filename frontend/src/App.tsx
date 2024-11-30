@@ -6,11 +6,40 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import { AppLayout } from "./pages/common/app-layout";
 import { HomePage } from "./pages/user/home";
+import { BookPage } from "./pages/user/book";
+import { BookRecommendationsPage } from "./pages/user/recommendation";
+import { SubscribedBooksTable } from "./pages/user/subscribed";
+import { Navbar } from "./components/navbar";
+import { Footer } from "./components/footer";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <HomePage />,
+    path: "",
+    element: (
+      <>
+        <Navbar />
+        <Outlet />
+        <Footer />
+      </>
+    ),
+    children: [
+      {
+        path: "/",
+        element: <HomePage />,
+      },
+      {
+        path: "/book",
+        element: <BookPage />,
+      },
+      {
+        path: "/recommendation",
+        element: <BookRecommendationsPage />,
+      },
+      {
+        path: "/subscribed",
+        element: <SubscribedBooksTable />,
+      },
+    ],
   },
   {
     path: "auth",
