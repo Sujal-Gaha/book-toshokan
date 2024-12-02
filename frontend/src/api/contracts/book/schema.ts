@@ -44,3 +44,30 @@ export type TGetRecommendedBooks = {
   };
   success: boolean;
 };
+
+export type BookResponse = {
+  status: number;
+  body: {
+    data: {
+      id: string;
+      name: string;
+      description: string;
+      image: string;
+      subImages: string[];
+      pages: number;
+      readStatus: string | null;
+      publishedOn: string; // ISO-8601 DateTime format
+      category: {
+        id: string;
+        name: string;
+      };
+      author: {
+        id: string;
+        name: string;
+      };
+      feedback: any; // This could be a more specific type based on your feedback structure
+    };
+    message: string;
+  };
+  success: boolean;
+};

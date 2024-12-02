@@ -12,15 +12,15 @@ import type { Prisma } from '@prisma/client';
 
 export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCommitted','RepeatableRead','Serializable']);
 
-export const UserScalarFieldEnumSchema = z.enum(['id','username','email','password','role']);
+export const UserScalarFieldEnumSchema = z.enum(['id','username','email','password','image','role']);
 
 export const AuthorScalarFieldEnumSchema = z.enum(['id','name','about']);
 
 export const CategoryScalarFieldEnumSchema = z.enum(['id','name','description']);
 
-export const BookScalarFieldEnumSchema = z.enum(['id','authorId','categoryId','readStatus','name','description','publishedOn']);
+export const BookScalarFieldEnumSchema = z.enum(['id','authorId','categoryId','readStatus','name','description','image','subImages','pages','publishedOn']);
 
-export const FeedbackScalarFieldEnumSchema = z.enum(['id','userId','bookId','rating','comment','createdAt','updatedAt']);
+export const FeedbackScalarFieldEnumSchema = z.enum(['id','userId','bookId','averageRating','totalRatings','comment','createdAt','updatedAt']);
 
 export const FeedbackCommentScalarFieldEnumSchema = z.enum(['id','feedbackId','userId','comment','createdAt','updatedAt']);
 
@@ -54,6 +54,7 @@ export const UserSchema = z.object({
   username: z.string(),
   email: z.string(),
   password: z.string(),
+  image: z.string().nullable(),
 })
 
 export type User = z.infer<typeof UserSchema>
@@ -93,6 +94,9 @@ export const BookSchema = z.object({
   categoryId: z.string(),
   name: z.string(),
   description: z.string(),
+  image: z.string(),
+  subImages: z.string().array(),
+  pages: z.number().int(),
   publishedOn: z.coerce.date(),
 })
 
@@ -106,7 +110,8 @@ export const FeedbackSchema = z.object({
   id: z.string().cuid(),
   userId: z.string(),
   bookId: z.string(),
-  rating: z.number().int(),
+  averageRating: z.number(),
+  totalRatings: z.number().int(),
   comment: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
@@ -178,6 +183,7 @@ export const UserSelectSchema: z.ZodType<Prisma.UserSelect> = z.object({
   username: z.boolean().optional(),
   email: z.boolean().optional(),
   password: z.boolean().optional(),
+  image: z.boolean().optional(),
   role: z.boolean().optional(),
   feedback: z.union([z.boolean(),z.lazy(() => FeedbackFindManyArgsSchema)]).optional(),
   subscriptions: z.union([z.boolean(),z.lazy(() => UserBookSubscriptionFindManyArgsSchema)]).optional(),
@@ -275,6 +281,9 @@ export const BookSelectSchema: z.ZodType<Prisma.BookSelect> = z.object({
   readStatus: z.boolean().optional(),
   name: z.boolean().optional(),
   description: z.boolean().optional(),
+  image: z.boolean().optional(),
+  subImages: z.boolean().optional(),
+  pages: z.boolean().optional(),
   publishedOn: z.boolean().optional(),
   author: z.union([z.boolean(),z.lazy(() => AuthorArgsSchema)]).optional(),
   category: z.union([z.boolean(),z.lazy(() => CategoryArgsSchema)]).optional(),
@@ -310,7 +319,8 @@ export const FeedbackSelectSchema: z.ZodType<Prisma.FeedbackSelect> = z.object({
   id: z.boolean().optional(),
   userId: z.boolean().optional(),
   bookId: z.boolean().optional(),
-  rating: z.boolean().optional(),
+  averageRating: z.boolean().optional(),
+  totalRatings: z.boolean().optional(),
   comment: z.boolean().optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
@@ -381,6 +391,7 @@ export const UserWhereInputSchema: z.ZodType<Prisma.UserWhereInput> = z.object({
   username: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   email: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   password: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  image: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   role: z.union([ z.lazy(() => EnumUserRoleEnumFilterSchema),z.lazy(() => UserRoleEnumSchema) ]).optional(),
   feedback: z.lazy(() => FeedbackListRelationFilterSchema).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionListRelationFilterSchema).optional(),
@@ -392,6 +403,7 @@ export const UserOrderByWithRelationInputSchema: z.ZodType<Prisma.UserOrderByWit
   username: z.lazy(() => SortOrderSchema).optional(),
   email: z.lazy(() => SortOrderSchema).optional(),
   password: z.lazy(() => SortOrderSchema).optional(),
+  image: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   role: z.lazy(() => SortOrderSchema).optional(),
   feedback: z.lazy(() => FeedbackOrderByRelationAggregateInputSchema).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionOrderByRelationAggregateInputSchema).optional(),
@@ -434,6 +446,7 @@ export const UserWhereUniqueInputSchema: z.ZodType<Prisma.UserWhereUniqueInput> 
   OR: z.lazy(() => UserWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => UserWhereInputSchema),z.lazy(() => UserWhereInputSchema).array() ]).optional(),
   password: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  image: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   role: z.union([ z.lazy(() => EnumUserRoleEnumFilterSchema),z.lazy(() => UserRoleEnumSchema) ]).optional(),
   feedback: z.lazy(() => FeedbackListRelationFilterSchema).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionListRelationFilterSchema).optional(),
@@ -445,6 +458,7 @@ export const UserOrderByWithAggregationInputSchema: z.ZodType<Prisma.UserOrderBy
   username: z.lazy(() => SortOrderSchema).optional(),
   email: z.lazy(() => SortOrderSchema).optional(),
   password: z.lazy(() => SortOrderSchema).optional(),
+  image: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   role: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => UserCountOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => UserMaxOrderByAggregateInputSchema).optional(),
@@ -459,6 +473,7 @@ export const UserScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.UserScal
   username: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   email: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   password: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  image: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   role: z.union([ z.lazy(() => EnumUserRoleEnumWithAggregatesFilterSchema),z.lazy(() => UserRoleEnumSchema) ]).optional(),
 }).strict();
 
@@ -577,6 +592,9 @@ export const BookWhereInputSchema: z.ZodType<Prisma.BookWhereInput> = z.object({
   readStatus: z.union([ z.lazy(() => EnumReadStatusEnumNullableFilterSchema),z.lazy(() => ReadStatusEnumSchema) ]).optional().nullable(),
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  image: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  subImages: z.lazy(() => StringNullableListFilterSchema).optional(),
+  pages: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
   publishedOn: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   author: z.union([ z.lazy(() => AuthorRelationFilterSchema),z.lazy(() => AuthorWhereInputSchema) ]).optional(),
   category: z.union([ z.lazy(() => CategoryRelationFilterSchema),z.lazy(() => CategoryWhereInputSchema) ]).optional(),
@@ -591,6 +609,9 @@ export const BookOrderByWithRelationInputSchema: z.ZodType<Prisma.BookOrderByWit
   readStatus: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
+  subImages: z.lazy(() => SortOrderSchema).optional(),
+  pages: z.lazy(() => SortOrderSchema).optional(),
   publishedOn: z.lazy(() => SortOrderSchema).optional(),
   author: z.lazy(() => AuthorOrderByWithRelationInputSchema).optional(),
   category: z.lazy(() => CategoryOrderByWithRelationInputSchema).optional(),
@@ -620,6 +641,9 @@ export const BookWhereUniqueInputSchema: z.ZodType<Prisma.BookWhereUniqueInput> 
   categoryId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   readStatus: z.union([ z.lazy(() => EnumReadStatusEnumNullableFilterSchema),z.lazy(() => ReadStatusEnumSchema) ]).optional().nullable(),
   description: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  image: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  subImages: z.lazy(() => StringNullableListFilterSchema).optional(),
+  pages: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
   publishedOn: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   author: z.union([ z.lazy(() => AuthorRelationFilterSchema),z.lazy(() => AuthorWhereInputSchema) ]).optional(),
   category: z.union([ z.lazy(() => CategoryRelationFilterSchema),z.lazy(() => CategoryWhereInputSchema) ]).optional(),
@@ -634,10 +658,15 @@ export const BookOrderByWithAggregationInputSchema: z.ZodType<Prisma.BookOrderBy
   readStatus: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
+  subImages: z.lazy(() => SortOrderSchema).optional(),
+  pages: z.lazy(() => SortOrderSchema).optional(),
   publishedOn: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => BookCountOrderByAggregateInputSchema).optional(),
+  _avg: z.lazy(() => BookAvgOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => BookMaxOrderByAggregateInputSchema).optional(),
-  _min: z.lazy(() => BookMinOrderByAggregateInputSchema).optional()
+  _min: z.lazy(() => BookMinOrderByAggregateInputSchema).optional(),
+  _sum: z.lazy(() => BookSumOrderByAggregateInputSchema).optional()
 }).strict();
 
 export const BookScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.BookScalarWhereWithAggregatesInput> = z.object({
@@ -650,6 +679,9 @@ export const BookScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.BookScal
   readStatus: z.union([ z.lazy(() => EnumReadStatusEnumNullableWithAggregatesFilterSchema),z.lazy(() => ReadStatusEnumSchema) ]).optional().nullable(),
   name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  image: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  subImages: z.lazy(() => StringNullableListFilterSchema).optional(),
+  pages: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
   publishedOn: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
 
@@ -660,7 +692,8 @@ export const FeedbackWhereInputSchema: z.ZodType<Prisma.FeedbackWhereInput> = z.
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   bookId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  rating: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  averageRating: z.union([ z.lazy(() => FloatFilterSchema),z.number() ]).optional(),
+  totalRatings: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
   comment: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -673,7 +706,8 @@ export const FeedbackOrderByWithRelationInputSchema: z.ZodType<Prisma.FeedbackOr
   id: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   bookId: z.lazy(() => SortOrderSchema).optional(),
-  rating: z.lazy(() => SortOrderSchema).optional(),
+  averageRating: z.lazy(() => SortOrderSchema).optional(),
+  totalRatings: z.lazy(() => SortOrderSchema).optional(),
   comment: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
@@ -692,7 +726,8 @@ export const FeedbackWhereUniqueInputSchema: z.ZodType<Prisma.FeedbackWhereUniqu
   NOT: z.union([ z.lazy(() => FeedbackWhereInputSchema),z.lazy(() => FeedbackWhereInputSchema).array() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   bookId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  rating: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
+  averageRating: z.union([ z.lazy(() => FloatFilterSchema),z.number() ]).optional(),
+  totalRatings: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
   comment: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -705,7 +740,8 @@ export const FeedbackOrderByWithAggregationInputSchema: z.ZodType<Prisma.Feedbac
   id: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   bookId: z.lazy(() => SortOrderSchema).optional(),
-  rating: z.lazy(() => SortOrderSchema).optional(),
+  averageRating: z.lazy(() => SortOrderSchema).optional(),
+  totalRatings: z.lazy(() => SortOrderSchema).optional(),
   comment: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
@@ -723,7 +759,8 @@ export const FeedbackScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Feed
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   userId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   bookId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  rating: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
+  averageRating: z.union([ z.lazy(() => FloatWithAggregatesFilterSchema),z.number() ]).optional(),
+  totalRatings: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
   comment: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
@@ -866,6 +903,7 @@ export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z.object
   username: z.string(),
   email: z.string(),
   password: z.string(),
+  image: z.string().optional().nullable(),
   role: z.lazy(() => UserRoleEnumSchema).optional(),
   feedback: z.lazy(() => FeedbackCreateNestedManyWithoutUserInputSchema).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionCreateNestedManyWithoutUserInputSchema).optional(),
@@ -877,6 +915,7 @@ export const UserUncheckedCreateInputSchema: z.ZodType<Prisma.UserUncheckedCreat
   username: z.string(),
   email: z.string(),
   password: z.string(),
+  image: z.string().optional().nullable(),
   role: z.lazy(() => UserRoleEnumSchema).optional(),
   feedback: z.lazy(() => FeedbackUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
@@ -888,6 +927,7 @@ export const UserUpdateInputSchema: z.ZodType<Prisma.UserUpdateInput> = z.object
   username: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   role: z.union([ z.lazy(() => UserRoleEnumSchema),z.lazy(() => EnumUserRoleEnumFieldUpdateOperationsInputSchema) ]).optional(),
   feedback: z.lazy(() => FeedbackUpdateManyWithoutUserNestedInputSchema).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionUpdateManyWithoutUserNestedInputSchema).optional(),
@@ -899,6 +939,7 @@ export const UserUncheckedUpdateInputSchema: z.ZodType<Prisma.UserUncheckedUpdat
   username: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   role: z.union([ z.lazy(() => UserRoleEnumSchema),z.lazy(() => EnumUserRoleEnumFieldUpdateOperationsInputSchema) ]).optional(),
   feedback: z.lazy(() => FeedbackUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
@@ -910,6 +951,7 @@ export const UserCreateManyInputSchema: z.ZodType<Prisma.UserCreateManyInput> = 
   username: z.string(),
   email: z.string(),
   password: z.string(),
+  image: z.string().optional().nullable(),
   role: z.lazy(() => UserRoleEnumSchema).optional()
 }).strict();
 
@@ -918,6 +960,7 @@ export const UserUpdateManyMutationInputSchema: z.ZodType<Prisma.UserUpdateManyM
   username: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   role: z.union([ z.lazy(() => UserRoleEnumSchema),z.lazy(() => EnumUserRoleEnumFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
@@ -926,6 +969,7 @@ export const UserUncheckedUpdateManyInputSchema: z.ZodType<Prisma.UserUncheckedU
   username: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   role: z.union([ z.lazy(() => UserRoleEnumSchema),z.lazy(() => EnumUserRoleEnumFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
@@ -1026,6 +1070,9 @@ export const BookCreateInputSchema: z.ZodType<Prisma.BookCreateInput> = z.object
   readStatus: z.lazy(() => ReadStatusEnumSchema).optional().nullable(),
   name: z.string(),
   description: z.string(),
+  image: z.string(),
+  subImages: z.union([ z.lazy(() => BookCreatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.number().int(),
   publishedOn: z.coerce.date(),
   author: z.lazy(() => AuthorCreateNestedOneWithoutBooksInputSchema),
   category: z.lazy(() => CategoryCreateNestedOneWithoutBooksInputSchema),
@@ -1040,6 +1087,9 @@ export const BookUncheckedCreateInputSchema: z.ZodType<Prisma.BookUncheckedCreat
   readStatus: z.lazy(() => ReadStatusEnumSchema).optional().nullable(),
   name: z.string(),
   description: z.string(),
+  image: z.string(),
+  subImages: z.union([ z.lazy(() => BookCreatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.number().int(),
   publishedOn: z.coerce.date(),
   feedback: z.lazy(() => FeedbackUncheckedCreateNestedManyWithoutBookInputSchema).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionUncheckedCreateNestedManyWithoutBookInputSchema).optional()
@@ -1050,6 +1100,9 @@ export const BookUpdateInputSchema: z.ZodType<Prisma.BookUpdateInput> = z.object
   readStatus: z.union([ z.lazy(() => ReadStatusEnumSchema),z.lazy(() => NullableEnumReadStatusEnumFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  subImages: z.union([ z.lazy(() => BookUpdatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   publishedOn: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   author: z.lazy(() => AuthorUpdateOneRequiredWithoutBooksNestedInputSchema).optional(),
   category: z.lazy(() => CategoryUpdateOneRequiredWithoutBooksNestedInputSchema).optional(),
@@ -1064,6 +1117,9 @@ export const BookUncheckedUpdateInputSchema: z.ZodType<Prisma.BookUncheckedUpdat
   readStatus: z.union([ z.lazy(() => ReadStatusEnumSchema),z.lazy(() => NullableEnumReadStatusEnumFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  subImages: z.union([ z.lazy(() => BookUpdatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   publishedOn: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   feedback: z.lazy(() => FeedbackUncheckedUpdateManyWithoutBookNestedInputSchema).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionUncheckedUpdateManyWithoutBookNestedInputSchema).optional()
@@ -1076,6 +1132,9 @@ export const BookCreateManyInputSchema: z.ZodType<Prisma.BookCreateManyInput> = 
   readStatus: z.lazy(() => ReadStatusEnumSchema).optional().nullable(),
   name: z.string(),
   description: z.string(),
+  image: z.string(),
+  subImages: z.union([ z.lazy(() => BookCreatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.number().int(),
   publishedOn: z.coerce.date()
 }).strict();
 
@@ -1084,6 +1143,9 @@ export const BookUpdateManyMutationInputSchema: z.ZodType<Prisma.BookUpdateManyM
   readStatus: z.union([ z.lazy(() => ReadStatusEnumSchema),z.lazy(() => NullableEnumReadStatusEnumFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  subImages: z.union([ z.lazy(() => BookUpdatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   publishedOn: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
@@ -1094,12 +1156,16 @@ export const BookUncheckedUpdateManyInputSchema: z.ZodType<Prisma.BookUncheckedU
   readStatus: z.union([ z.lazy(() => ReadStatusEnumSchema),z.lazy(() => NullableEnumReadStatusEnumFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  subImages: z.union([ z.lazy(() => BookUpdatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   publishedOn: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const FeedbackCreateInputSchema: z.ZodType<Prisma.FeedbackCreateInput> = z.object({
   id: z.string().cuid().optional(),
-  rating: z.number().int(),
+  averageRating: z.number(),
+  totalRatings: z.number().int(),
   comment: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -1112,7 +1178,8 @@ export const FeedbackUncheckedCreateInputSchema: z.ZodType<Prisma.FeedbackUnchec
   id: z.string().cuid().optional(),
   userId: z.string(),
   bookId: z.string(),
-  rating: z.number().int(),
+  averageRating: z.number(),
+  totalRatings: z.number().int(),
   comment: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -1121,7 +1188,8 @@ export const FeedbackUncheckedCreateInputSchema: z.ZodType<Prisma.FeedbackUnchec
 
 export const FeedbackUpdateInputSchema: z.ZodType<Prisma.FeedbackUpdateInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  rating: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  averageRating: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  totalRatings: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   comment: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1134,7 +1202,8 @@ export const FeedbackUncheckedUpdateInputSchema: z.ZodType<Prisma.FeedbackUnchec
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   bookId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  rating: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  averageRating: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  totalRatings: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   comment: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1145,7 +1214,8 @@ export const FeedbackCreateManyInputSchema: z.ZodType<Prisma.FeedbackCreateManyI
   id: z.string().cuid().optional(),
   userId: z.string(),
   bookId: z.string(),
-  rating: z.number().int(),
+  averageRating: z.number(),
+  totalRatings: z.number().int(),
   comment: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -1153,7 +1223,8 @@ export const FeedbackCreateManyInputSchema: z.ZodType<Prisma.FeedbackCreateManyI
 
 export const FeedbackUpdateManyMutationInputSchema: z.ZodType<Prisma.FeedbackUpdateManyMutationInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  rating: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  averageRating: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  totalRatings: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   comment: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1163,7 +1234,8 @@ export const FeedbackUncheckedUpdateManyInputSchema: z.ZodType<Prisma.FeedbackUn
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   bookId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  rating: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  averageRating: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  totalRatings: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   comment: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1306,6 +1378,21 @@ export const StringFilterSchema: z.ZodType<Prisma.StringFilter> = z.object({
   not: z.union([ z.string(),z.lazy(() => NestedStringFilterSchema) ]).optional(),
 }).strict();
 
+export const StringNullableFilterSchema: z.ZodType<Prisma.StringNullableFilter> = z.object({
+  equals: z.string().optional().nullable(),
+  in: z.string().array().optional().nullable(),
+  notIn: z.string().array().optional().nullable(),
+  lt: z.string().optional(),
+  lte: z.string().optional(),
+  gt: z.string().optional(),
+  gte: z.string().optional(),
+  contains: z.string().optional(),
+  startsWith: z.string().optional(),
+  endsWith: z.string().optional(),
+  mode: z.lazy(() => QueryModeSchema).optional(),
+  not: z.union([ z.string(),z.lazy(() => NestedStringNullableFilterSchema) ]).optional().nullable(),
+}).strict();
+
 export const EnumUserRoleEnumFilterSchema: z.ZodType<Prisma.EnumUserRoleEnumFilter> = z.object({
   equals: z.lazy(() => UserRoleEnumSchema).optional(),
   in: z.lazy(() => UserRoleEnumSchema).array().optional(),
@@ -1331,6 +1418,11 @@ export const FeedbackCommentListRelationFilterSchema: z.ZodType<Prisma.FeedbackC
   none: z.lazy(() => FeedbackCommentWhereInputSchema).optional()
 }).strict();
 
+export const SortOrderInputSchema: z.ZodType<Prisma.SortOrderInput> = z.object({
+  sort: z.lazy(() => SortOrderSchema),
+  nulls: z.lazy(() => NullsOrderSchema).optional()
+}).strict();
+
 export const FeedbackOrderByRelationAggregateInputSchema: z.ZodType<Prisma.FeedbackOrderByRelationAggregateInput> = z.object({
   _count: z.lazy(() => SortOrderSchema).optional()
 }).strict();
@@ -1348,6 +1440,7 @@ export const UserCountOrderByAggregateInputSchema: z.ZodType<Prisma.UserCountOrd
   username: z.lazy(() => SortOrderSchema).optional(),
   email: z.lazy(() => SortOrderSchema).optional(),
   password: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
   role: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
@@ -1356,6 +1449,7 @@ export const UserMaxOrderByAggregateInputSchema: z.ZodType<Prisma.UserMaxOrderBy
   username: z.lazy(() => SortOrderSchema).optional(),
   email: z.lazy(() => SortOrderSchema).optional(),
   password: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
   role: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
@@ -1364,6 +1458,7 @@ export const UserMinOrderByAggregateInputSchema: z.ZodType<Prisma.UserMinOrderBy
   username: z.lazy(() => SortOrderSchema).optional(),
   email: z.lazy(() => SortOrderSchema).optional(),
   password: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
   role: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
@@ -1383,6 +1478,24 @@ export const StringWithAggregatesFilterSchema: z.ZodType<Prisma.StringWithAggreg
   _count: z.lazy(() => NestedIntFilterSchema).optional(),
   _min: z.lazy(() => NestedStringFilterSchema).optional(),
   _max: z.lazy(() => NestedStringFilterSchema).optional()
+}).strict();
+
+export const StringNullableWithAggregatesFilterSchema: z.ZodType<Prisma.StringNullableWithAggregatesFilter> = z.object({
+  equals: z.string().optional().nullable(),
+  in: z.string().array().optional().nullable(),
+  notIn: z.string().array().optional().nullable(),
+  lt: z.string().optional(),
+  lte: z.string().optional(),
+  gt: z.string().optional(),
+  gte: z.string().optional(),
+  contains: z.string().optional(),
+  startsWith: z.string().optional(),
+  endsWith: z.string().optional(),
+  mode: z.lazy(() => QueryModeSchema).optional(),
+  not: z.union([ z.string(),z.lazy(() => NestedStringNullableWithAggregatesFilterSchema) ]).optional().nullable(),
+  _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _min: z.lazy(() => NestedStringNullableFilterSchema).optional(),
+  _max: z.lazy(() => NestedStringNullableFilterSchema).optional()
 }).strict();
 
 export const EnumUserRoleEnumWithAggregatesFilterSchema: z.ZodType<Prisma.EnumUserRoleEnumWithAggregatesFilter> = z.object({
@@ -1448,6 +1561,25 @@ export const EnumReadStatusEnumNullableFilterSchema: z.ZodType<Prisma.EnumReadSt
   not: z.union([ z.lazy(() => ReadStatusEnumSchema),z.lazy(() => NestedEnumReadStatusEnumNullableFilterSchema) ]).optional().nullable(),
 }).strict();
 
+export const StringNullableListFilterSchema: z.ZodType<Prisma.StringNullableListFilter> = z.object({
+  equals: z.string().array().optional().nullable(),
+  has: z.string().optional().nullable(),
+  hasEvery: z.string().array().optional(),
+  hasSome: z.string().array().optional(),
+  isEmpty: z.boolean().optional()
+}).strict();
+
+export const IntFilterSchema: z.ZodType<Prisma.IntFilter> = z.object({
+  equals: z.number().optional(),
+  in: z.number().array().optional(),
+  notIn: z.number().array().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntFilterSchema) ]).optional(),
+}).strict();
+
 export const DateTimeFilterSchema: z.ZodType<Prisma.DateTimeFilter> = z.object({
   equals: z.coerce.date().optional(),
   in: z.coerce.date().array().optional(),
@@ -1469,11 +1601,6 @@ export const CategoryRelationFilterSchema: z.ZodType<Prisma.CategoryRelationFilt
   isNot: z.lazy(() => CategoryWhereInputSchema).optional()
 }).strict();
 
-export const SortOrderInputSchema: z.ZodType<Prisma.SortOrderInput> = z.object({
-  sort: z.lazy(() => SortOrderSchema),
-  nulls: z.lazy(() => NullsOrderSchema).optional()
-}).strict();
-
 export const BookCountOrderByAggregateInputSchema: z.ZodType<Prisma.BookCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   authorId: z.lazy(() => SortOrderSchema).optional(),
@@ -1481,7 +1608,14 @@ export const BookCountOrderByAggregateInputSchema: z.ZodType<Prisma.BookCountOrd
   readStatus: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
+  subImages: z.lazy(() => SortOrderSchema).optional(),
+  pages: z.lazy(() => SortOrderSchema).optional(),
   publishedOn: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const BookAvgOrderByAggregateInputSchema: z.ZodType<Prisma.BookAvgOrderByAggregateInput> = z.object({
+  pages: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const BookMaxOrderByAggregateInputSchema: z.ZodType<Prisma.BookMaxOrderByAggregateInput> = z.object({
@@ -1491,6 +1625,8 @@ export const BookMaxOrderByAggregateInputSchema: z.ZodType<Prisma.BookMaxOrderBy
   readStatus: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
+  pages: z.lazy(() => SortOrderSchema).optional(),
   publishedOn: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
@@ -1501,7 +1637,13 @@ export const BookMinOrderByAggregateInputSchema: z.ZodType<Prisma.BookMinOrderBy
   readStatus: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
+  pages: z.lazy(() => SortOrderSchema).optional(),
   publishedOn: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const BookSumOrderByAggregateInputSchema: z.ZodType<Prisma.BookSumOrderByAggregateInput> = z.object({
+  pages: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const EnumReadStatusEnumNullableWithAggregatesFilterSchema: z.ZodType<Prisma.EnumReadStatusEnumNullableWithAggregatesFilter> = z.object({
@@ -1512,79 +1654,6 @@ export const EnumReadStatusEnumNullableWithAggregatesFilterSchema: z.ZodType<Pri
   _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
   _min: z.lazy(() => NestedEnumReadStatusEnumNullableFilterSchema).optional(),
   _max: z.lazy(() => NestedEnumReadStatusEnumNullableFilterSchema).optional()
-}).strict();
-
-export const DateTimeWithAggregatesFilterSchema: z.ZodType<Prisma.DateTimeWithAggregatesFilter> = z.object({
-  equals: z.coerce.date().optional(),
-  in: z.coerce.date().array().optional(),
-  notIn: z.coerce.date().array().optional(),
-  lt: z.coerce.date().optional(),
-  lte: z.coerce.date().optional(),
-  gt: z.coerce.date().optional(),
-  gte: z.coerce.date().optional(),
-  not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeWithAggregatesFilterSchema) ]).optional(),
-  _count: z.lazy(() => NestedIntFilterSchema).optional(),
-  _min: z.lazy(() => NestedDateTimeFilterSchema).optional(),
-  _max: z.lazy(() => NestedDateTimeFilterSchema).optional()
-}).strict();
-
-export const IntFilterSchema: z.ZodType<Prisma.IntFilter> = z.object({
-  equals: z.number().optional(),
-  in: z.number().array().optional(),
-  notIn: z.number().array().optional(),
-  lt: z.number().optional(),
-  lte: z.number().optional(),
-  gt: z.number().optional(),
-  gte: z.number().optional(),
-  not: z.union([ z.number(),z.lazy(() => NestedIntFilterSchema) ]).optional(),
-}).strict();
-
-export const UserRelationFilterSchema: z.ZodType<Prisma.UserRelationFilter> = z.object({
-  is: z.lazy(() => UserWhereInputSchema).optional(),
-  isNot: z.lazy(() => UserWhereInputSchema).optional()
-}).strict();
-
-export const BookRelationFilterSchema: z.ZodType<Prisma.BookRelationFilter> = z.object({
-  is: z.lazy(() => BookWhereInputSchema).optional(),
-  isNot: z.lazy(() => BookWhereInputSchema).optional()
-}).strict();
-
-export const FeedbackCountOrderByAggregateInputSchema: z.ZodType<Prisma.FeedbackCountOrderByAggregateInput> = z.object({
-  id: z.lazy(() => SortOrderSchema).optional(),
-  userId: z.lazy(() => SortOrderSchema).optional(),
-  bookId: z.lazy(() => SortOrderSchema).optional(),
-  rating: z.lazy(() => SortOrderSchema).optional(),
-  comment: z.lazy(() => SortOrderSchema).optional(),
-  createdAt: z.lazy(() => SortOrderSchema).optional(),
-  updatedAt: z.lazy(() => SortOrderSchema).optional()
-}).strict();
-
-export const FeedbackAvgOrderByAggregateInputSchema: z.ZodType<Prisma.FeedbackAvgOrderByAggregateInput> = z.object({
-  rating: z.lazy(() => SortOrderSchema).optional()
-}).strict();
-
-export const FeedbackMaxOrderByAggregateInputSchema: z.ZodType<Prisma.FeedbackMaxOrderByAggregateInput> = z.object({
-  id: z.lazy(() => SortOrderSchema).optional(),
-  userId: z.lazy(() => SortOrderSchema).optional(),
-  bookId: z.lazy(() => SortOrderSchema).optional(),
-  rating: z.lazy(() => SortOrderSchema).optional(),
-  comment: z.lazy(() => SortOrderSchema).optional(),
-  createdAt: z.lazy(() => SortOrderSchema).optional(),
-  updatedAt: z.lazy(() => SortOrderSchema).optional()
-}).strict();
-
-export const FeedbackMinOrderByAggregateInputSchema: z.ZodType<Prisma.FeedbackMinOrderByAggregateInput> = z.object({
-  id: z.lazy(() => SortOrderSchema).optional(),
-  userId: z.lazy(() => SortOrderSchema).optional(),
-  bookId: z.lazy(() => SortOrderSchema).optional(),
-  rating: z.lazy(() => SortOrderSchema).optional(),
-  comment: z.lazy(() => SortOrderSchema).optional(),
-  createdAt: z.lazy(() => SortOrderSchema).optional(),
-  updatedAt: z.lazy(() => SortOrderSchema).optional()
-}).strict();
-
-export const FeedbackSumOrderByAggregateInputSchema: z.ZodType<Prisma.FeedbackSumOrderByAggregateInput> = z.object({
-  rating: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const IntWithAggregatesFilterSchema: z.ZodType<Prisma.IntWithAggregatesFilter> = z.object({
@@ -1601,6 +1670,100 @@ export const IntWithAggregatesFilterSchema: z.ZodType<Prisma.IntWithAggregatesFi
   _sum: z.lazy(() => NestedIntFilterSchema).optional(),
   _min: z.lazy(() => NestedIntFilterSchema).optional(),
   _max: z.lazy(() => NestedIntFilterSchema).optional()
+}).strict();
+
+export const DateTimeWithAggregatesFilterSchema: z.ZodType<Prisma.DateTimeWithAggregatesFilter> = z.object({
+  equals: z.coerce.date().optional(),
+  in: z.coerce.date().array().optional(),
+  notIn: z.coerce.date().array().optional(),
+  lt: z.coerce.date().optional(),
+  lte: z.coerce.date().optional(),
+  gt: z.coerce.date().optional(),
+  gte: z.coerce.date().optional(),
+  not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeWithAggregatesFilterSchema) ]).optional(),
+  _count: z.lazy(() => NestedIntFilterSchema).optional(),
+  _min: z.lazy(() => NestedDateTimeFilterSchema).optional(),
+  _max: z.lazy(() => NestedDateTimeFilterSchema).optional()
+}).strict();
+
+export const FloatFilterSchema: z.ZodType<Prisma.FloatFilter> = z.object({
+  equals: z.number().optional(),
+  in: z.number().array().optional(),
+  notIn: z.number().array().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedFloatFilterSchema) ]).optional(),
+}).strict();
+
+export const UserRelationFilterSchema: z.ZodType<Prisma.UserRelationFilter> = z.object({
+  is: z.lazy(() => UserWhereInputSchema).optional(),
+  isNot: z.lazy(() => UserWhereInputSchema).optional()
+}).strict();
+
+export const BookRelationFilterSchema: z.ZodType<Prisma.BookRelationFilter> = z.object({
+  is: z.lazy(() => BookWhereInputSchema).optional(),
+  isNot: z.lazy(() => BookWhereInputSchema).optional()
+}).strict();
+
+export const FeedbackCountOrderByAggregateInputSchema: z.ZodType<Prisma.FeedbackCountOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  userId: z.lazy(() => SortOrderSchema).optional(),
+  bookId: z.lazy(() => SortOrderSchema).optional(),
+  averageRating: z.lazy(() => SortOrderSchema).optional(),
+  totalRatings: z.lazy(() => SortOrderSchema).optional(),
+  comment: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const FeedbackAvgOrderByAggregateInputSchema: z.ZodType<Prisma.FeedbackAvgOrderByAggregateInput> = z.object({
+  averageRating: z.lazy(() => SortOrderSchema).optional(),
+  totalRatings: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const FeedbackMaxOrderByAggregateInputSchema: z.ZodType<Prisma.FeedbackMaxOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  userId: z.lazy(() => SortOrderSchema).optional(),
+  bookId: z.lazy(() => SortOrderSchema).optional(),
+  averageRating: z.lazy(() => SortOrderSchema).optional(),
+  totalRatings: z.lazy(() => SortOrderSchema).optional(),
+  comment: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const FeedbackMinOrderByAggregateInputSchema: z.ZodType<Prisma.FeedbackMinOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  userId: z.lazy(() => SortOrderSchema).optional(),
+  bookId: z.lazy(() => SortOrderSchema).optional(),
+  averageRating: z.lazy(() => SortOrderSchema).optional(),
+  totalRatings: z.lazy(() => SortOrderSchema).optional(),
+  comment: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const FeedbackSumOrderByAggregateInputSchema: z.ZodType<Prisma.FeedbackSumOrderByAggregateInput> = z.object({
+  averageRating: z.lazy(() => SortOrderSchema).optional(),
+  totalRatings: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const FloatWithAggregatesFilterSchema: z.ZodType<Prisma.FloatWithAggregatesFilter> = z.object({
+  equals: z.number().optional(),
+  in: z.number().array().optional(),
+  notIn: z.number().array().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedFloatWithAggregatesFilterSchema) ]).optional(),
+  _count: z.lazy(() => NestedIntFilterSchema).optional(),
+  _avg: z.lazy(() => NestedFloatFilterSchema).optional(),
+  _sum: z.lazy(() => NestedFloatFilterSchema).optional(),
+  _min: z.lazy(() => NestedFloatFilterSchema).optional(),
+  _max: z.lazy(() => NestedFloatFilterSchema).optional()
 }).strict();
 
 export const FeedbackRelationFilterSchema: z.ZodType<Prisma.FeedbackRelationFilter> = z.object({
@@ -1723,6 +1886,10 @@ export const FeedbackCommentUncheckedCreateNestedManyWithoutUserInputSchema: z.Z
 
 export const StringFieldUpdateOperationsInputSchema: z.ZodType<Prisma.StringFieldUpdateOperationsInput> = z.object({
   set: z.string().optional()
+}).strict();
+
+export const NullableStringFieldUpdateOperationsInputSchema: z.ZodType<Prisma.NullableStringFieldUpdateOperationsInput> = z.object({
+  set: z.string().optional().nullable()
 }).strict();
 
 export const EnumUserRoleEnumFieldUpdateOperationsInputSchema: z.ZodType<Prisma.EnumUserRoleEnumFieldUpdateOperationsInput> = z.object({
@@ -1897,6 +2064,10 @@ export const BookUncheckedUpdateManyWithoutCategoryNestedInputSchema: z.ZodType<
   deleteMany: z.union([ z.lazy(() => BookScalarWhereInputSchema),z.lazy(() => BookScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
+export const BookCreatesubImagesInputSchema: z.ZodType<Prisma.BookCreatesubImagesInput> = z.object({
+  set: z.string().array()
+}).strict();
+
 export const AuthorCreateNestedOneWithoutBooksInputSchema: z.ZodType<Prisma.AuthorCreateNestedOneWithoutBooksInput> = z.object({
   create: z.union([ z.lazy(() => AuthorCreateWithoutBooksInputSchema),z.lazy(() => AuthorUncheckedCreateWithoutBooksInputSchema) ]).optional(),
   connectOrCreate: z.lazy(() => AuthorCreateOrConnectWithoutBooksInputSchema).optional(),
@@ -1939,6 +2110,19 @@ export const UserBookSubscriptionUncheckedCreateNestedManyWithoutBookInputSchema
 
 export const NullableEnumReadStatusEnumFieldUpdateOperationsInputSchema: z.ZodType<Prisma.NullableEnumReadStatusEnumFieldUpdateOperationsInput> = z.object({
   set: z.lazy(() => ReadStatusEnumSchema).optional().nullable()
+}).strict();
+
+export const BookUpdatesubImagesInputSchema: z.ZodType<Prisma.BookUpdatesubImagesInput> = z.object({
+  set: z.string().array().optional(),
+  push: z.union([ z.string(),z.string().array() ]).optional(),
+}).strict();
+
+export const IntFieldUpdateOperationsInputSchema: z.ZodType<Prisma.IntFieldUpdateOperationsInput> = z.object({
+  set: z.number().optional(),
+  increment: z.number().optional(),
+  decrement: z.number().optional(),
+  multiply: z.number().optional(),
+  divide: z.number().optional()
 }).strict();
 
 export const DateTimeFieldUpdateOperationsInputSchema: z.ZodType<Prisma.DateTimeFieldUpdateOperationsInput> = z.object({
@@ -2043,7 +2227,7 @@ export const FeedbackCommentUncheckedCreateNestedManyWithoutFeedbackInputSchema:
   connect: z.union([ z.lazy(() => FeedbackCommentWhereUniqueInputSchema),z.lazy(() => FeedbackCommentWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
-export const IntFieldUpdateOperationsInputSchema: z.ZodType<Prisma.IntFieldUpdateOperationsInput> = z.object({
+export const FloatFieldUpdateOperationsInputSchema: z.ZodType<Prisma.FloatFieldUpdateOperationsInput> = z.object({
   set: z.number().optional(),
   increment: z.number().optional(),
   decrement: z.number().optional(),
@@ -2169,6 +2353,20 @@ export const NestedStringFilterSchema: z.ZodType<Prisma.NestedStringFilter> = z.
   not: z.union([ z.string(),z.lazy(() => NestedStringFilterSchema) ]).optional(),
 }).strict();
 
+export const NestedStringNullableFilterSchema: z.ZodType<Prisma.NestedStringNullableFilter> = z.object({
+  equals: z.string().optional().nullable(),
+  in: z.string().array().optional().nullable(),
+  notIn: z.string().array().optional().nullable(),
+  lt: z.string().optional(),
+  lte: z.string().optional(),
+  gt: z.string().optional(),
+  gte: z.string().optional(),
+  contains: z.string().optional(),
+  startsWith: z.string().optional(),
+  endsWith: z.string().optional(),
+  not: z.union([ z.string(),z.lazy(() => NestedStringNullableFilterSchema) ]).optional().nullable(),
+}).strict();
+
 export const NestedEnumUserRoleEnumFilterSchema: z.ZodType<Prisma.NestedEnumUserRoleEnumFilter> = z.object({
   equals: z.lazy(() => UserRoleEnumSchema).optional(),
   in: z.lazy(() => UserRoleEnumSchema).array().optional(),
@@ -2202,6 +2400,34 @@ export const NestedIntFilterSchema: z.ZodType<Prisma.NestedIntFilter> = z.object
   gt: z.number().optional(),
   gte: z.number().optional(),
   not: z.union([ z.number(),z.lazy(() => NestedIntFilterSchema) ]).optional(),
+}).strict();
+
+export const NestedStringNullableWithAggregatesFilterSchema: z.ZodType<Prisma.NestedStringNullableWithAggregatesFilter> = z.object({
+  equals: z.string().optional().nullable(),
+  in: z.string().array().optional().nullable(),
+  notIn: z.string().array().optional().nullable(),
+  lt: z.string().optional(),
+  lte: z.string().optional(),
+  gt: z.string().optional(),
+  gte: z.string().optional(),
+  contains: z.string().optional(),
+  startsWith: z.string().optional(),
+  endsWith: z.string().optional(),
+  not: z.union([ z.string(),z.lazy(() => NestedStringNullableWithAggregatesFilterSchema) ]).optional().nullable(),
+  _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _min: z.lazy(() => NestedStringNullableFilterSchema).optional(),
+  _max: z.lazy(() => NestedStringNullableFilterSchema).optional()
+}).strict();
+
+export const NestedIntNullableFilterSchema: z.ZodType<Prisma.NestedIntNullableFilter> = z.object({
+  equals: z.number().optional().nullable(),
+  in: z.number().array().optional().nullable(),
+  notIn: z.number().array().optional().nullable(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntNullableFilterSchema) ]).optional().nullable(),
 }).strict();
 
 export const NestedEnumUserRoleEnumWithAggregatesFilterSchema: z.ZodType<Prisma.NestedEnumUserRoleEnumWithAggregatesFilter> = z.object({
@@ -2242,31 +2468,6 @@ export const NestedEnumReadStatusEnumNullableWithAggregatesFilterSchema: z.ZodTy
   _max: z.lazy(() => NestedEnumReadStatusEnumNullableFilterSchema).optional()
 }).strict();
 
-export const NestedIntNullableFilterSchema: z.ZodType<Prisma.NestedIntNullableFilter> = z.object({
-  equals: z.number().optional().nullable(),
-  in: z.number().array().optional().nullable(),
-  notIn: z.number().array().optional().nullable(),
-  lt: z.number().optional(),
-  lte: z.number().optional(),
-  gt: z.number().optional(),
-  gte: z.number().optional(),
-  not: z.union([ z.number(),z.lazy(() => NestedIntNullableFilterSchema) ]).optional().nullable(),
-}).strict();
-
-export const NestedDateTimeWithAggregatesFilterSchema: z.ZodType<Prisma.NestedDateTimeWithAggregatesFilter> = z.object({
-  equals: z.coerce.date().optional(),
-  in: z.coerce.date().array().optional(),
-  notIn: z.coerce.date().array().optional(),
-  lt: z.coerce.date().optional(),
-  lte: z.coerce.date().optional(),
-  gt: z.coerce.date().optional(),
-  gte: z.coerce.date().optional(),
-  not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeWithAggregatesFilterSchema) ]).optional(),
-  _count: z.lazy(() => NestedIntFilterSchema).optional(),
-  _min: z.lazy(() => NestedDateTimeFilterSchema).optional(),
-  _max: z.lazy(() => NestedDateTimeFilterSchema).optional()
-}).strict();
-
 export const NestedIntWithAggregatesFilterSchema: z.ZodType<Prisma.NestedIntWithAggregatesFilter> = z.object({
   equals: z.number().optional(),
   in: z.number().array().optional(),
@@ -2294,6 +2495,36 @@ export const NestedFloatFilterSchema: z.ZodType<Prisma.NestedFloatFilter> = z.ob
   not: z.union([ z.number(),z.lazy(() => NestedFloatFilterSchema) ]).optional(),
 }).strict();
 
+export const NestedDateTimeWithAggregatesFilterSchema: z.ZodType<Prisma.NestedDateTimeWithAggregatesFilter> = z.object({
+  equals: z.coerce.date().optional(),
+  in: z.coerce.date().array().optional(),
+  notIn: z.coerce.date().array().optional(),
+  lt: z.coerce.date().optional(),
+  lte: z.coerce.date().optional(),
+  gt: z.coerce.date().optional(),
+  gte: z.coerce.date().optional(),
+  not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeWithAggregatesFilterSchema) ]).optional(),
+  _count: z.lazy(() => NestedIntFilterSchema).optional(),
+  _min: z.lazy(() => NestedDateTimeFilterSchema).optional(),
+  _max: z.lazy(() => NestedDateTimeFilterSchema).optional()
+}).strict();
+
+export const NestedFloatWithAggregatesFilterSchema: z.ZodType<Prisma.NestedFloatWithAggregatesFilter> = z.object({
+  equals: z.number().optional(),
+  in: z.number().array().optional(),
+  notIn: z.number().array().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedFloatWithAggregatesFilterSchema) ]).optional(),
+  _count: z.lazy(() => NestedIntFilterSchema).optional(),
+  _avg: z.lazy(() => NestedFloatFilterSchema).optional(),
+  _sum: z.lazy(() => NestedFloatFilterSchema).optional(),
+  _min: z.lazy(() => NestedFloatFilterSchema).optional(),
+  _max: z.lazy(() => NestedFloatFilterSchema).optional()
+}).strict();
+
 export const NestedEnumReadStatusEnumFilterSchema: z.ZodType<Prisma.NestedEnumReadStatusEnumFilter> = z.object({
   equals: z.lazy(() => ReadStatusEnumSchema).optional(),
   in: z.lazy(() => ReadStatusEnumSchema).array().optional(),
@@ -2313,7 +2544,8 @@ export const NestedEnumReadStatusEnumWithAggregatesFilterSchema: z.ZodType<Prism
 
 export const FeedbackCreateWithoutUserInputSchema: z.ZodType<Prisma.FeedbackCreateWithoutUserInput> = z.object({
   id: z.string().cuid().optional(),
-  rating: z.number().int(),
+  averageRating: z.number(),
+  totalRatings: z.number().int(),
   comment: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -2324,7 +2556,8 @@ export const FeedbackCreateWithoutUserInputSchema: z.ZodType<Prisma.FeedbackCrea
 export const FeedbackUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.FeedbackUncheckedCreateWithoutUserInput> = z.object({
   id: z.string().cuid().optional(),
   bookId: z.string(),
-  rating: z.number().int(),
+  averageRating: z.number(),
+  totalRatings: z.number().int(),
   comment: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -2416,7 +2649,8 @@ export const FeedbackScalarWhereInputSchema: z.ZodType<Prisma.FeedbackScalarWher
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   bookId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  rating: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  averageRating: z.union([ z.lazy(() => FloatFilterSchema),z.number() ]).optional(),
+  totalRatings: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
   comment: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -2483,6 +2717,9 @@ export const BookCreateWithoutAuthorInputSchema: z.ZodType<Prisma.BookCreateWith
   readStatus: z.lazy(() => ReadStatusEnumSchema).optional().nullable(),
   name: z.string(),
   description: z.string(),
+  image: z.string(),
+  subImages: z.union([ z.lazy(() => BookCreatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.number().int(),
   publishedOn: z.coerce.date(),
   category: z.lazy(() => CategoryCreateNestedOneWithoutBooksInputSchema),
   feedback: z.lazy(() => FeedbackCreateNestedManyWithoutBookInputSchema).optional(),
@@ -2495,6 +2732,9 @@ export const BookUncheckedCreateWithoutAuthorInputSchema: z.ZodType<Prisma.BookU
   readStatus: z.lazy(() => ReadStatusEnumSchema).optional().nullable(),
   name: z.string(),
   description: z.string(),
+  image: z.string(),
+  subImages: z.union([ z.lazy(() => BookCreatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.number().int(),
   publishedOn: z.coerce.date(),
   feedback: z.lazy(() => FeedbackUncheckedCreateNestedManyWithoutBookInputSchema).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionUncheckedCreateNestedManyWithoutBookInputSchema).optional()
@@ -2536,6 +2776,9 @@ export const BookScalarWhereInputSchema: z.ZodType<Prisma.BookScalarWhereInput> 
   readStatus: z.union([ z.lazy(() => EnumReadStatusEnumNullableFilterSchema),z.lazy(() => ReadStatusEnumSchema) ]).optional().nullable(),
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   description: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  image: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  subImages: z.lazy(() => StringNullableListFilterSchema).optional(),
+  pages: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
   publishedOn: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
 
@@ -2544,6 +2787,9 @@ export const BookCreateWithoutCategoryInputSchema: z.ZodType<Prisma.BookCreateWi
   readStatus: z.lazy(() => ReadStatusEnumSchema).optional().nullable(),
   name: z.string(),
   description: z.string(),
+  image: z.string(),
+  subImages: z.union([ z.lazy(() => BookCreatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.number().int(),
   publishedOn: z.coerce.date(),
   author: z.lazy(() => AuthorCreateNestedOneWithoutBooksInputSchema),
   feedback: z.lazy(() => FeedbackCreateNestedManyWithoutBookInputSchema).optional(),
@@ -2556,6 +2802,9 @@ export const BookUncheckedCreateWithoutCategoryInputSchema: z.ZodType<Prisma.Boo
   readStatus: z.lazy(() => ReadStatusEnumSchema).optional().nullable(),
   name: z.string(),
   description: z.string(),
+  image: z.string(),
+  subImages: z.union([ z.lazy(() => BookCreatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.number().int(),
   publishedOn: z.coerce.date(),
   feedback: z.lazy(() => FeedbackUncheckedCreateNestedManyWithoutBookInputSchema).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionUncheckedCreateNestedManyWithoutBookInputSchema).optional()
@@ -2623,7 +2872,8 @@ export const CategoryCreateOrConnectWithoutBooksInputSchema: z.ZodType<Prisma.Ca
 
 export const FeedbackCreateWithoutBookInputSchema: z.ZodType<Prisma.FeedbackCreateWithoutBookInput> = z.object({
   id: z.string().cuid().optional(),
-  rating: z.number().int(),
+  averageRating: z.number(),
+  totalRatings: z.number().int(),
   comment: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -2634,7 +2884,8 @@ export const FeedbackCreateWithoutBookInputSchema: z.ZodType<Prisma.FeedbackCrea
 export const FeedbackUncheckedCreateWithoutBookInputSchema: z.ZodType<Prisma.FeedbackUncheckedCreateWithoutBookInput> = z.object({
   id: z.string().cuid().optional(),
   userId: z.string(),
-  rating: z.number().int(),
+  averageRating: z.number(),
+  totalRatings: z.number().int(),
   comment: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -2760,6 +3011,7 @@ export const UserCreateWithoutFeedbackInputSchema: z.ZodType<Prisma.UserCreateWi
   username: z.string(),
   email: z.string(),
   password: z.string(),
+  image: z.string().optional().nullable(),
   role: z.lazy(() => UserRoleEnumSchema).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionCreateNestedManyWithoutUserInputSchema).optional(),
   FeedbackComment: z.lazy(() => FeedbackCommentCreateNestedManyWithoutUserInputSchema).optional()
@@ -2770,6 +3022,7 @@ export const UserUncheckedCreateWithoutFeedbackInputSchema: z.ZodType<Prisma.Use
   username: z.string(),
   email: z.string(),
   password: z.string(),
+  image: z.string().optional().nullable(),
   role: z.lazy(() => UserRoleEnumSchema).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   FeedbackComment: z.lazy(() => FeedbackCommentUncheckedCreateNestedManyWithoutUserInputSchema).optional()
@@ -2785,6 +3038,9 @@ export const BookCreateWithoutFeedbackInputSchema: z.ZodType<Prisma.BookCreateWi
   readStatus: z.lazy(() => ReadStatusEnumSchema).optional().nullable(),
   name: z.string(),
   description: z.string(),
+  image: z.string(),
+  subImages: z.union([ z.lazy(() => BookCreatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.number().int(),
   publishedOn: z.coerce.date(),
   author: z.lazy(() => AuthorCreateNestedOneWithoutBooksInputSchema),
   category: z.lazy(() => CategoryCreateNestedOneWithoutBooksInputSchema),
@@ -2798,6 +3054,9 @@ export const BookUncheckedCreateWithoutFeedbackInputSchema: z.ZodType<Prisma.Boo
   readStatus: z.lazy(() => ReadStatusEnumSchema).optional().nullable(),
   name: z.string(),
   description: z.string(),
+  image: z.string(),
+  subImages: z.union([ z.lazy(() => BookCreatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.number().int(),
   publishedOn: z.coerce.date(),
   subscriptions: z.lazy(() => UserBookSubscriptionUncheckedCreateNestedManyWithoutBookInputSchema).optional()
 }).strict();
@@ -2849,6 +3108,7 @@ export const UserUpdateWithoutFeedbackInputSchema: z.ZodType<Prisma.UserUpdateWi
   username: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   role: z.union([ z.lazy(() => UserRoleEnumSchema),z.lazy(() => EnumUserRoleEnumFieldUpdateOperationsInputSchema) ]).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionUpdateManyWithoutUserNestedInputSchema).optional(),
   FeedbackComment: z.lazy(() => FeedbackCommentUpdateManyWithoutUserNestedInputSchema).optional()
@@ -2859,6 +3119,7 @@ export const UserUncheckedUpdateWithoutFeedbackInputSchema: z.ZodType<Prisma.Use
   username: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   role: z.union([ z.lazy(() => UserRoleEnumSchema),z.lazy(() => EnumUserRoleEnumFieldUpdateOperationsInputSchema) ]).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   FeedbackComment: z.lazy(() => FeedbackCommentUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
@@ -2880,6 +3141,9 @@ export const BookUpdateWithoutFeedbackInputSchema: z.ZodType<Prisma.BookUpdateWi
   readStatus: z.union([ z.lazy(() => ReadStatusEnumSchema),z.lazy(() => NullableEnumReadStatusEnumFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  subImages: z.union([ z.lazy(() => BookUpdatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   publishedOn: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   author: z.lazy(() => AuthorUpdateOneRequiredWithoutBooksNestedInputSchema).optional(),
   category: z.lazy(() => CategoryUpdateOneRequiredWithoutBooksNestedInputSchema).optional(),
@@ -2893,6 +3157,9 @@ export const BookUncheckedUpdateWithoutFeedbackInputSchema: z.ZodType<Prisma.Boo
   readStatus: z.union([ z.lazy(() => ReadStatusEnumSchema),z.lazy(() => NullableEnumReadStatusEnumFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  subImages: z.union([ z.lazy(() => BookUpdatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   publishedOn: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionUncheckedUpdateManyWithoutBookNestedInputSchema).optional()
 }).strict();
@@ -2915,7 +3182,8 @@ export const FeedbackCommentUpdateManyWithWhereWithoutFeedbackInputSchema: z.Zod
 
 export const FeedbackCreateWithoutCommentsInputSchema: z.ZodType<Prisma.FeedbackCreateWithoutCommentsInput> = z.object({
   id: z.string().cuid().optional(),
-  rating: z.number().int(),
+  averageRating: z.number(),
+  totalRatings: z.number().int(),
   comment: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -2927,7 +3195,8 @@ export const FeedbackUncheckedCreateWithoutCommentsInputSchema: z.ZodType<Prisma
   id: z.string().cuid().optional(),
   userId: z.string(),
   bookId: z.string(),
-  rating: z.number().int(),
+  averageRating: z.number(),
+  totalRatings: z.number().int(),
   comment: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -2943,6 +3212,7 @@ export const UserCreateWithoutFeedbackCommentInputSchema: z.ZodType<Prisma.UserC
   username: z.string(),
   email: z.string(),
   password: z.string(),
+  image: z.string().optional().nullable(),
   role: z.lazy(() => UserRoleEnumSchema).optional(),
   feedback: z.lazy(() => FeedbackCreateNestedManyWithoutUserInputSchema).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionCreateNestedManyWithoutUserInputSchema).optional()
@@ -2953,6 +3223,7 @@ export const UserUncheckedCreateWithoutFeedbackCommentInputSchema: z.ZodType<Pri
   username: z.string(),
   email: z.string(),
   password: z.string(),
+  image: z.string().optional().nullable(),
   role: z.lazy(() => UserRoleEnumSchema).optional(),
   feedback: z.lazy(() => FeedbackUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionUncheckedCreateNestedManyWithoutUserInputSchema).optional()
@@ -2976,7 +3247,8 @@ export const FeedbackUpdateToOneWithWhereWithoutCommentsInputSchema: z.ZodType<P
 
 export const FeedbackUpdateWithoutCommentsInputSchema: z.ZodType<Prisma.FeedbackUpdateWithoutCommentsInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  rating: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  averageRating: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  totalRatings: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   comment: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2988,7 +3260,8 @@ export const FeedbackUncheckedUpdateWithoutCommentsInputSchema: z.ZodType<Prisma
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   bookId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  rating: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  averageRating: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  totalRatings: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   comment: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3010,6 +3283,7 @@ export const UserUpdateWithoutFeedbackCommentInputSchema: z.ZodType<Prisma.UserU
   username: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   role: z.union([ z.lazy(() => UserRoleEnumSchema),z.lazy(() => EnumUserRoleEnumFieldUpdateOperationsInputSchema) ]).optional(),
   feedback: z.lazy(() => FeedbackUpdateManyWithoutUserNestedInputSchema).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionUpdateManyWithoutUserNestedInputSchema).optional()
@@ -3020,6 +3294,7 @@ export const UserUncheckedUpdateWithoutFeedbackCommentInputSchema: z.ZodType<Pri
   username: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   role: z.union([ z.lazy(() => UserRoleEnumSchema),z.lazy(() => EnumUserRoleEnumFieldUpdateOperationsInputSchema) ]).optional(),
   feedback: z.lazy(() => FeedbackUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
@@ -3030,6 +3305,7 @@ export const UserCreateWithoutSubscriptionsInputSchema: z.ZodType<Prisma.UserCre
   username: z.string(),
   email: z.string(),
   password: z.string(),
+  image: z.string().optional().nullable(),
   role: z.lazy(() => UserRoleEnumSchema).optional(),
   feedback: z.lazy(() => FeedbackCreateNestedManyWithoutUserInputSchema).optional(),
   FeedbackComment: z.lazy(() => FeedbackCommentCreateNestedManyWithoutUserInputSchema).optional()
@@ -3040,6 +3316,7 @@ export const UserUncheckedCreateWithoutSubscriptionsInputSchema: z.ZodType<Prism
   username: z.string(),
   email: z.string(),
   password: z.string(),
+  image: z.string().optional().nullable(),
   role: z.lazy(() => UserRoleEnumSchema).optional(),
   feedback: z.lazy(() => FeedbackUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   FeedbackComment: z.lazy(() => FeedbackCommentUncheckedCreateNestedManyWithoutUserInputSchema).optional()
@@ -3055,6 +3332,9 @@ export const BookCreateWithoutSubscriptionsInputSchema: z.ZodType<Prisma.BookCre
   readStatus: z.lazy(() => ReadStatusEnumSchema).optional().nullable(),
   name: z.string(),
   description: z.string(),
+  image: z.string(),
+  subImages: z.union([ z.lazy(() => BookCreatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.number().int(),
   publishedOn: z.coerce.date(),
   author: z.lazy(() => AuthorCreateNestedOneWithoutBooksInputSchema),
   category: z.lazy(() => CategoryCreateNestedOneWithoutBooksInputSchema),
@@ -3068,6 +3348,9 @@ export const BookUncheckedCreateWithoutSubscriptionsInputSchema: z.ZodType<Prism
   readStatus: z.lazy(() => ReadStatusEnumSchema).optional().nullable(),
   name: z.string(),
   description: z.string(),
+  image: z.string(),
+  subImages: z.union([ z.lazy(() => BookCreatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.number().int(),
   publishedOn: z.coerce.date(),
   feedback: z.lazy(() => FeedbackUncheckedCreateNestedManyWithoutBookInputSchema).optional()
 }).strict();
@@ -3093,6 +3376,7 @@ export const UserUpdateWithoutSubscriptionsInputSchema: z.ZodType<Prisma.UserUpd
   username: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   role: z.union([ z.lazy(() => UserRoleEnumSchema),z.lazy(() => EnumUserRoleEnumFieldUpdateOperationsInputSchema) ]).optional(),
   feedback: z.lazy(() => FeedbackUpdateManyWithoutUserNestedInputSchema).optional(),
   FeedbackComment: z.lazy(() => FeedbackCommentUpdateManyWithoutUserNestedInputSchema).optional()
@@ -3103,6 +3387,7 @@ export const UserUncheckedUpdateWithoutSubscriptionsInputSchema: z.ZodType<Prism
   username: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   role: z.union([ z.lazy(() => UserRoleEnumSchema),z.lazy(() => EnumUserRoleEnumFieldUpdateOperationsInputSchema) ]).optional(),
   feedback: z.lazy(() => FeedbackUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   FeedbackComment: z.lazy(() => FeedbackCommentUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
@@ -3124,6 +3409,9 @@ export const BookUpdateWithoutSubscriptionsInputSchema: z.ZodType<Prisma.BookUpd
   readStatus: z.union([ z.lazy(() => ReadStatusEnumSchema),z.lazy(() => NullableEnumReadStatusEnumFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  subImages: z.union([ z.lazy(() => BookUpdatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   publishedOn: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   author: z.lazy(() => AuthorUpdateOneRequiredWithoutBooksNestedInputSchema).optional(),
   category: z.lazy(() => CategoryUpdateOneRequiredWithoutBooksNestedInputSchema).optional(),
@@ -3137,6 +3425,9 @@ export const BookUncheckedUpdateWithoutSubscriptionsInputSchema: z.ZodType<Prism
   readStatus: z.union([ z.lazy(() => ReadStatusEnumSchema),z.lazy(() => NullableEnumReadStatusEnumFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  subImages: z.union([ z.lazy(() => BookUpdatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   publishedOn: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   feedback: z.lazy(() => FeedbackUncheckedUpdateManyWithoutBookNestedInputSchema).optional()
 }).strict();
@@ -3144,7 +3435,8 @@ export const BookUncheckedUpdateWithoutSubscriptionsInputSchema: z.ZodType<Prism
 export const FeedbackCreateManyUserInputSchema: z.ZodType<Prisma.FeedbackCreateManyUserInput> = z.object({
   id: z.string().cuid().optional(),
   bookId: z.string(),
-  rating: z.number().int(),
+  averageRating: z.number(),
+  totalRatings: z.number().int(),
   comment: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -3168,7 +3460,8 @@ export const FeedbackCommentCreateManyUserInputSchema: z.ZodType<Prisma.Feedback
 
 export const FeedbackUpdateWithoutUserInputSchema: z.ZodType<Prisma.FeedbackUpdateWithoutUserInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  rating: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  averageRating: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  totalRatings: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   comment: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3179,7 +3472,8 @@ export const FeedbackUpdateWithoutUserInputSchema: z.ZodType<Prisma.FeedbackUpda
 export const FeedbackUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.FeedbackUncheckedUpdateWithoutUserInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   bookId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  rating: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  averageRating: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  totalRatings: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   comment: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3189,7 +3483,8 @@ export const FeedbackUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.Fee
 export const FeedbackUncheckedUpdateManyWithoutUserInputSchema: z.ZodType<Prisma.FeedbackUncheckedUpdateManyWithoutUserInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   bookId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  rating: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  averageRating: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  totalRatings: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   comment: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3249,6 +3544,9 @@ export const BookCreateManyAuthorInputSchema: z.ZodType<Prisma.BookCreateManyAut
   readStatus: z.lazy(() => ReadStatusEnumSchema).optional().nullable(),
   name: z.string(),
   description: z.string(),
+  image: z.string(),
+  subImages: z.union([ z.lazy(() => BookCreatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.number().int(),
   publishedOn: z.coerce.date()
 }).strict();
 
@@ -3257,6 +3555,9 @@ export const BookUpdateWithoutAuthorInputSchema: z.ZodType<Prisma.BookUpdateWith
   readStatus: z.union([ z.lazy(() => ReadStatusEnumSchema),z.lazy(() => NullableEnumReadStatusEnumFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  subImages: z.union([ z.lazy(() => BookUpdatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   publishedOn: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   category: z.lazy(() => CategoryUpdateOneRequiredWithoutBooksNestedInputSchema).optional(),
   feedback: z.lazy(() => FeedbackUpdateManyWithoutBookNestedInputSchema).optional(),
@@ -3269,6 +3570,9 @@ export const BookUncheckedUpdateWithoutAuthorInputSchema: z.ZodType<Prisma.BookU
   readStatus: z.union([ z.lazy(() => ReadStatusEnumSchema),z.lazy(() => NullableEnumReadStatusEnumFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  subImages: z.union([ z.lazy(() => BookUpdatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   publishedOn: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   feedback: z.lazy(() => FeedbackUncheckedUpdateManyWithoutBookNestedInputSchema).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionUncheckedUpdateManyWithoutBookNestedInputSchema).optional()
@@ -3280,6 +3584,9 @@ export const BookUncheckedUpdateManyWithoutAuthorInputSchema: z.ZodType<Prisma.B
   readStatus: z.union([ z.lazy(() => ReadStatusEnumSchema),z.lazy(() => NullableEnumReadStatusEnumFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  subImages: z.union([ z.lazy(() => BookUpdatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   publishedOn: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
@@ -3289,6 +3596,9 @@ export const BookCreateManyCategoryInputSchema: z.ZodType<Prisma.BookCreateManyC
   readStatus: z.lazy(() => ReadStatusEnumSchema).optional().nullable(),
   name: z.string(),
   description: z.string(),
+  image: z.string(),
+  subImages: z.union([ z.lazy(() => BookCreatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.number().int(),
   publishedOn: z.coerce.date()
 }).strict();
 
@@ -3297,6 +3607,9 @@ export const BookUpdateWithoutCategoryInputSchema: z.ZodType<Prisma.BookUpdateWi
   readStatus: z.union([ z.lazy(() => ReadStatusEnumSchema),z.lazy(() => NullableEnumReadStatusEnumFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  subImages: z.union([ z.lazy(() => BookUpdatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   publishedOn: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   author: z.lazy(() => AuthorUpdateOneRequiredWithoutBooksNestedInputSchema).optional(),
   feedback: z.lazy(() => FeedbackUpdateManyWithoutBookNestedInputSchema).optional(),
@@ -3309,6 +3622,9 @@ export const BookUncheckedUpdateWithoutCategoryInputSchema: z.ZodType<Prisma.Boo
   readStatus: z.union([ z.lazy(() => ReadStatusEnumSchema),z.lazy(() => NullableEnumReadStatusEnumFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  subImages: z.union([ z.lazy(() => BookUpdatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   publishedOn: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   feedback: z.lazy(() => FeedbackUncheckedUpdateManyWithoutBookNestedInputSchema).optional(),
   subscriptions: z.lazy(() => UserBookSubscriptionUncheckedUpdateManyWithoutBookNestedInputSchema).optional()
@@ -3320,13 +3636,17 @@ export const BookUncheckedUpdateManyWithoutCategoryInputSchema: z.ZodType<Prisma
   readStatus: z.union([ z.lazy(() => ReadStatusEnumSchema),z.lazy(() => NullableEnumReadStatusEnumFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  subImages: z.union([ z.lazy(() => BookUpdatesubImagesInputSchema),z.string().array() ]).optional(),
+  pages: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   publishedOn: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const FeedbackCreateManyBookInputSchema: z.ZodType<Prisma.FeedbackCreateManyBookInput> = z.object({
   id: z.string().cuid().optional(),
   userId: z.string(),
-  rating: z.number().int(),
+  averageRating: z.number(),
+  totalRatings: z.number().int(),
   comment: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -3342,7 +3662,8 @@ export const UserBookSubscriptionCreateManyBookInputSchema: z.ZodType<Prisma.Use
 
 export const FeedbackUpdateWithoutBookInputSchema: z.ZodType<Prisma.FeedbackUpdateWithoutBookInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  rating: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  averageRating: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  totalRatings: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   comment: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3353,7 +3674,8 @@ export const FeedbackUpdateWithoutBookInputSchema: z.ZodType<Prisma.FeedbackUpda
 export const FeedbackUncheckedUpdateWithoutBookInputSchema: z.ZodType<Prisma.FeedbackUncheckedUpdateWithoutBookInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  rating: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  averageRating: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  totalRatings: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   comment: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3363,7 +3685,8 @@ export const FeedbackUncheckedUpdateWithoutBookInputSchema: z.ZodType<Prisma.Fee
 export const FeedbackUncheckedUpdateManyWithoutBookInputSchema: z.ZodType<Prisma.FeedbackUncheckedUpdateManyWithoutBookInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  rating: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  averageRating: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  totalRatings: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   comment: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),

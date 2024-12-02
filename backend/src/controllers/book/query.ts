@@ -22,7 +22,9 @@ const getRecommendedBooks = asyncHandler(
         },
         feedback: {
           select: {
-            rating: true,
+            averageRating: true,
+            totalRatings: true,
+            comments: true,
           },
         },
       },
@@ -60,6 +62,76 @@ const getAllBooks = asyncHandler(async (req: Request, res: Response) => {
     },
     success: true,
     message: "Fetched all the books successfully",
+  });
+});
+
+const getBookById = asyncHandler(async (req: Request, res: Response) => {
+  const { bookId } = req.params;
+
+  if (!bookId) {
+    return res.status(400).json({
+      status: 400,
+      body: {
+        data: null,
+        message: "Please provide the book id",
+      },
+      success: false,
+    });
+  }
+
+  const book = await prisma.book.findFirst({
+    where: {
+      id: bookId,
+    },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      image: true,
+      subImages: true,
+      pages: true,
+      readStatus: true,
+      publishedOn: true,
+      category: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      author: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      feedback: {
+        select: {
+          averageRating: true,
+          totalRatings: true,
+          comments: true,
+        },
+      },
+    },
+  });
+
+  if (!book) {
+    return res.status(404).json({
+      status: 404,
+      body: {
+        data: null,
+        message: `Book with the id ${bookId} doesnot exist`,
+      },
+      success: false,
+    });
+  }
+
+  return res.status(200).json({
+    status: 200,
+    body: {
+      data: book,
+      message: "Fetched the book successfully",
+    },
+    success: true,
   });
 });
 
@@ -191,6 +263,7 @@ const getUsersBooksByReadStatus = asyncHandler(
 export const BookQueries = {
   getRecommendedBooks,
   getAllBooks,
+  getBookById,
   getBooksByCategoryId,
   getBooksByAuthorId,
 } as const;

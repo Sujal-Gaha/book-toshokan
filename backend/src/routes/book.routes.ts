@@ -7,10 +7,12 @@ const router = Router();
 const {
   getRecommendedBooks,
   getAllBooks,
+  getBookById,
   getBooksByCategoryId,
   getBooksByAuthorId,
 } = BookQueries;
 router.get("/", getAllBooks);
+router.get("/getBookById/:bookId", getBookById);
 router.get("/getRecommendedBooks", getRecommendedBooks);
 router.get("/getBooksByCategoryId/:categoryId", getBooksByCategoryId);
 router.get("/getBooksByAuthorId/:authorId", getBooksByAuthorId);

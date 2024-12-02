@@ -13,6 +13,7 @@ import { readingStatuses } from "../../constants/reading-status";
 import { useQuery } from "@tanstack/react-query";
 import { getRecommendedBooks } from "../../api/data/book";
 import { TGetRecommendedBooks } from "../../api/contracts/book/schema";
+import { useNavigate } from "react-router-dom";
 
 const Welcome = () => {
   return (
@@ -107,6 +108,8 @@ const RecommendedBooks = () => {
   });
   const recommendedBooks = recommendedBooksData?.body.data;
 
+  const navigate = useNavigate();
+
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 bg-background/50 flex items-center justify-center">
       <div className="container px-4 md:px-6">
@@ -116,7 +119,12 @@ const RecommendedBooks = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {recommendedBooks?.map((book) => {
             return (
-              <Card key={book.id} className="bg-background/80 border-none">
+              <Card
+                key={book.id}
+                className="bg-background/80 hover:bg-primary cursor-pointer group"
+                isPressable
+                onPress={() => navigate(`/book/${book.id}`)}
+              >
                 <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
                   <Image
                     alt="Book cover"
@@ -140,7 +148,7 @@ const RecommendedBooks = () => {
                       {book.feedback.rating || "4.8"}
                     </span>
                   </div>
-                  <div className="flex items-center text-default-500">
+                  <div className="flex items-center text-default-500 group-hover:text-white">
                     <BookOpen className="w-4 h-4 mr-1" />
                     <span className="text-sm">{book.category.name}</span>
                   </div>

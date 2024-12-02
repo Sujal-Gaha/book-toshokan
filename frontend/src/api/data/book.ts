@@ -16,3 +16,23 @@ export const getRecommendedBooks = async () => {
 
   return data;
 };
+
+export const getBookById = async (bookId: string) => {
+  const response = await fetch(
+    `${BACKEND_URL}/api/books/getBookById/${bookId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message);
+  }
+
+  return data;
+};

@@ -3,9 +3,20 @@ import { asyncHandler } from "../../utils";
 import { prisma } from "../../config/client";
 
 const addBook = asyncHandler(async (req: Request, res: Response) => {
-  const { name, description, publishedOn, categoryId, authorId } = req.body;
+  const {
+    name,
+    description,
+    publishedOn,
+    categoryId,
+    authorId,
+    image,
+    pages,
+    subImages,
+  } = req.body;
 
-  if (!(name && description && publishedOn && categoryId && authorId)) {
+  if (
+    !(name && description && publishedOn && categoryId && authorId && image)
+  ) {
     return res.status(400).json({
       status: 400,
       body: {
@@ -74,6 +85,13 @@ const addBook = asyncHandler(async (req: Request, res: Response) => {
       publishedOn: publishedOn,
       categoryId: categoryId,
       authorId: authorId,
+      image: image,
+      pages: pages,
+      ...(subImages
+        ? {
+            subImages: subImages,
+          }
+        : []),
     },
   });
 

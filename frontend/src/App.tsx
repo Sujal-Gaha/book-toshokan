@@ -5,8 +5,8 @@ import { AuthLayout } from "./pages/common/auth-layout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import { AppLayout } from "./pages/common/app-layout";
-import { HomePage } from "./pages/user/home";
-import { BookPage } from "./pages/user/book";
+import { HomePage } from "./pages/user/home.page";
+import { BookPage } from "./pages/user/book.page";
 import { BookRecommendationsPage } from "./pages/user/recommendation";
 import { SubscribedBooksTable } from "./pages/user/subscribed";
 import { Navbar } from "./components/navbar";
@@ -28,7 +28,7 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "/book",
+        path: "/book/:bookId",
         element: <BookPage />,
       },
       {

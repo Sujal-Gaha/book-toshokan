@@ -17,8 +17,22 @@ import {
   Share2,
   MessageCircle,
 } from "lucide-react";
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getBookById } from "../../api/data/book";
+import { BookResponse } from "../../api/contracts/book/schema";
 
 export const BookPage = () => {
+  const params = useParams();
+  const bookId = params.bookId || "";
+  console.log("bookId ", bookId);
+
+  const { data, isLoading } = useQuery<BookResponse>({
+    queryKey: ["getBookById", bookId],
+    queryFn: () => getBookById(bookId),
+  });
+  const bookData = data?.body.data;
+
   const [readingStatus, setReadingStatus] = useState<
     "to-read" | "reading" | "read"
   >("to-read");
@@ -27,14 +41,15 @@ export const BookPage = () => {
 
   const bookDetails = {
     title: "To Kill a Mockingbird",
-    author: "Harper Lee",
-    coverImage: "/placeholder.svg?height=400&width=300",
-    publishDate: "July 11, 1960",
-    genre: "Southern Gothic, Bildungsroman",
-    isbn: "978-0446310789",
-    pages: 281,
     description:
       "To Kill a Mockingbird is a novel by Harper Lee published in 1960. It was immediately successful, winning the Pulitzer Prize, and has become a classic of modern American literature. The plot and characters are loosely based on Lee's observations of her family, her neighbors and an event that occurred near her hometown of Monroeville, Alabama, in 1936, when she was 10 years old.",
+    image: "/placeholder.svg?height=400&width=300",
+    category: {
+      name: "Gothic",
+    },
+    author: "Harper Lee",
+    publishDate: "July 11, 1960",
+    pages: 281,
     averageRating: 4.27,
     totalRatings: 4829,
     totalReviews: 982,
@@ -48,6 +63,10 @@ export const BookPage = () => {
     setRating(newRating);
   };
 
+  if (isLoading) {
+    return <p>Loading....</p>;
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground p-8">
       <div className="max-w-4xl mx-auto">
@@ -55,7 +74,7 @@ export const BookPage = () => {
           <CardBody className="flex flex-col md:flex-row gap-8">
             <div className="md:w-1/3">
               <img
-                src={bookDetails.coverImage}
+                src={bookDetails.image}
                 alt={`${bookDetails.title} cover`}
                 className="w-full h-auto rounded-lg shadow-lg"
               />
@@ -65,7 +84,9 @@ export const BookPage = () => {
                   variant={readingStatus === "to-read" ? "solid" : "bordered"}
                   onClick={() => handleStatusChange("to-read")}
                 >
-                  <BookOpen className="w-4 h-4 mr-2" />
+                  <div>
+                    <BookOpen className="w-4 h-4" />
+                  </div>
                   To Read
                 </Button>
                 <Button
@@ -73,7 +94,9 @@ export const BookPage = () => {
                   variant={readingStatus === "reading" ? "solid" : "bordered"}
                   onClick={() => handleStatusChange("reading")}
                 >
-                  <BookMarked className="w-4 h-4 mr-2" />
+                  <div>
+                    <BookMarked className="w-4 h-4" />
+                  </div>
                   Reading
                 </Button>
                 <Button
@@ -81,15 +104,17 @@ export const BookPage = () => {
                   variant={readingStatus === "read" ? "solid" : "bordered"}
                   onClick={() => handleStatusChange("read")}
                 >
-                  <Star className="w-4 h-4 mr-2" />
+                  <div>
+                    <Star className="w-4 h-4" />
+                  </div>
                   Read
                 </Button>
               </div>
             </div>
             <div className="md:w-2/3">
-              <h1 className="text-3xl font-bold mb-2">{bookDetails.title}</h1>
+              <h1 className="text-3xl font-bold mb-2">{bookData?.name}</h1>
               <h2 className="text-xl text-default-500 mb-4">
-                by {bookDetails.author}
+                by {bookData?.author.name}
               </h2>
               <div className="flex items-center mb-4">
                 <div className="flex">
@@ -97,7 +122,9 @@ export const BookPage = () => {
                     <Star
                       key={star}
                       className={`w-5 h-5 ${
-                        star <= bookDetails.averageRating
+                        star <=
+                        (bookData?.feedback.averageRating ||
+                          bookDetails.averageRating)
                           ? "text-warning fill-warning"
                           : "text-default-300"
                       }`}
@@ -106,26 +133,22 @@ export const BookPage = () => {
                 </div>
                 <span className="ml-2 text-default-500">
                   {bookDetails.averageRating.toFixed(2)} ·{" "}
-                  {bookDetails.totalRatings} ratings
+                  {bookData?.feedback.totalRatings || 4829} ratings
                 </span>
               </div>
-              <p className="text-default-500 mb-4">{bookDetails.description}</p>
+              <p className="text-default-500 mb-4">{bookData?.description}</p>
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <p className="font-semibold">Published</p>
-                  <p className="text-default-500">{bookDetails.publishDate}</p>
+                  <p className="text-default-500">{bookData?.publishedOn}</p>
                 </div>
                 <div>
-                  <p className="font-semibold">Genre</p>
-                  <p className="text-default-500">{bookDetails.genre}</p>
-                </div>
-                <div>
-                  <p className="font-semibold">ISBN</p>
-                  <p className="text-default-500">{bookDetails.isbn}</p>
+                  <p className="font-semibold">Category</p>
+                  <p className="text-default-500">{bookData?.category.name}</p>
                 </div>
                 <div>
                   <p className="font-semibold">Pages</p>
-                  <p className="text-default-500">{bookDetails.pages}</p>
+                  <p className="text-default-500">{bookData?.pages}</p>
                 </div>
               </div>
               <div className="flex gap-2 mb-4">

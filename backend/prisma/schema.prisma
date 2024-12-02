@@ -28,6 +28,7 @@ model User {
   username        String                 @unique
   email           String                 @unique
   password        String
+  image           String?
   role            UserRoleEnum           @default(USER)
   feedback        Feedback[]
   subscriptions   UserBookSubscription[]
@@ -61,6 +62,9 @@ model Book {
   readStatus    ReadStatusEnum?
   name          String                 @unique()
   description   String
+  image         String
+  subImages     String[]               @default([])
+  pages         Int
   publishedOn   DateTime
   author        Author                 @relation(fields: [authorId], references: [id])
   category      Category               @relation(fields: [categoryId], references: [id])
@@ -69,16 +73,17 @@ model Book {
 }
 
 model Feedback {
-  id        String            @id @default(cuid())
-  userId    String
-  bookId    String
-  rating    Int
-  comment   String
-  user      User              @relation(fields: [userId], references: [id])
-  book      Book              @relation(fields: [bookId], references: [id])
-  comments  FeedbackComment[]
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
+  id            String            @id @default(cuid())
+  userId        String
+  bookId        String
+  averageRating Float
+  totalRatings  Int
+  comment       String
+  user          User              @relation(fields: [userId], references: [id])
+  book          Book              @relation(fields: [bookId], references: [id])
+  comments      FeedbackComment[]
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
 }
 
 model FeedbackComment {
