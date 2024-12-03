@@ -1,14 +1,46 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
+import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
+import {
+  authorRoutes,
+  bookRoutes,
+  categoryRoutes,
+  userRoutes,
+  userBookSubscriptionRouter,
+} from './routes';
+import cors from 'cors';
 
-const host = process.env.HOST ?? 'localhost';
-const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+dotenv.config();
+export const app = express();
+const PORT = process.env.PORT || 5000;
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
-const app = express();
+if (!FRONTEND_URL) {
+  throw new Error('FRONTEND_URL is missing from the env');
+}
 
-app.get('/', (req, res) => {
-  res.send({ message: 'Hello API' });
+app.use(express.json());
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: [FRONTEND_URL],
+  })
+);
+
+app.get('/', (req: Request, res: Response) => {
+  res.json({
+    status: 200,
+    success: true,
+    message: 'Hello from the server!',
+  });
 });
 
-app.listen(port, host, () => {
-  console.log(`[ ready ] http://${host}:${port}`);
+app.use('/api/users', userRoutes);
+app.use('/api/authors', authorRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/books', bookRoutes);
+app.use('/api/userBookSubscription', userBookSubscriptionRouter);
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
