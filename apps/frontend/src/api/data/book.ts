@@ -1,10 +1,10 @@
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
 
 export const getRecommendedBooks = async () => {
   const response = await fetch(`${BACKEND_URL}/api/books/getRecommendedBooks`, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   });
 
@@ -21,9 +21,9 @@ export const getBookById = async (bookId: string) => {
   const response = await fetch(
     `${BACKEND_URL}/api/books/getBookById/${bookId}`,
     {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     }
   );

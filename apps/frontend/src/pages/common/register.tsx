@@ -1,31 +1,31 @@
-import { useState } from "react";
-import { Input } from "../../components/ui/input";
-import { FiEye, FiEyeOff } from "react-icons/fi";
-import { Image } from "@nextui-org/react";
-import { Button } from "../../components/ui/button";
-import { Link, useNavigate } from "react-router-dom";
-import { Checkbox } from "../../components/ui/checkbox";
-import { Divider } from "../../components/divider";
-import { FaGithub, FaGoogle } from "react-icons/fa";
-import { getAppsPath } from "../../utils/getAppsPath";
-import { useMutation } from "@tanstack/react-query";
-import { registerUser } from "../../api/data/user";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useState } from 'react';
+import { Input } from '../../components/ui/input';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
+import { Image } from '@nextui-org/react';
+import { Button } from '../../components/ui/button';
+import { Link, useNavigate } from 'react-router-dom';
+import { Checkbox } from '../../components/ui/checkbox';
+import { Divider } from '../../components/divider';
+import { FaGithub, FaGoogle } from 'react-icons/fa';
+import { getAppsPath } from '../../utils/getAppsPath';
+import { useMutation } from '@tanstack/react-query';
+import { registerUser } from '../../api/data/user';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import {
   RegisterUserSchema,
   TRegisterUserInput,
   TRegisterUserOutput,
   TError,
-} from "../../api/contracts/user/schema";
-import { toastError, toastSuccess } from "../../components/toast";
-import { zodResolver } from "@hookform/resolvers/zod";
+} from '../../api/contracts/user/schema';
+import { toastError, toastSuccess } from '../../components/toast';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export const RegisterPage = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
 
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [hasTermsBeenAccepted, setHasTermsBeenAccepted] = useState(false);
 
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ export const RegisterPage = () => {
     mutationFn: registerUser,
     onSuccess: (data) => {
       toastSuccess(data.body.message);
-      navigate("/auth/login");
+      navigate('/auth/login');
     },
     onError: (error) => {
       toastError(error.body.message);
@@ -53,11 +53,11 @@ export const RegisterPage = () => {
   } = useForm<TRegisterUserInput>({
     resolver: zodResolver(RegisterUserSchema),
     defaultValues: {
-      password: "",
+      password: '',
     },
   });
 
-  const password = watch("password");
+  const password = watch('password');
   const passwordMatches = confirmPassword === password;
 
   const registerForm: SubmitHandler<TRegisterUserInput> = async (data) => {
@@ -66,7 +66,7 @@ export const RegisterPage = () => {
         await registerUserMtn.mutateAsync(data);
       }
     } catch (error) {
-      console.error("error ", error);
+      console.error('error ', error);
     }
   };
 
@@ -75,7 +75,7 @@ export const RegisterPage = () => {
   const toggleIsConfirmPasswordVisible = () =>
     setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
 
-  const { loginPage } = getAppsPath;
+  const { loginPage } = getAppsPath();
 
   return (
     <main className="flex bg-black">
@@ -99,7 +99,7 @@ export const RegisterPage = () => {
                 label="Username"
                 placeholder="Create your username"
                 isRequired
-                {...register("username")}
+                {...register('username')}
                 isInvalid={!!errors.username?.message}
                 errorMessage={errors.username?.message}
               />
@@ -110,18 +110,18 @@ export const RegisterPage = () => {
                 label="Enter Address"
                 placeholder="Enter your email"
                 isRequired
-                {...register("email")}
+                {...register('email')}
                 isInvalid={!!errors.email?.message}
                 errorMessage={errors.email?.message}
               />
               <Input
                 color="primary"
                 variant="underlined"
-                type={isPasswordVisible ? "text" : "password"}
+                type={isPasswordVisible ? 'text' : 'password'}
                 label="Password"
                 placeholder="Create a password"
                 isRequired
-                {...register("password")}
+                {...register('password')}
                 endContent={
                   <button
                     className="focus:outline-none"
@@ -142,7 +142,7 @@ export const RegisterPage = () => {
               <Input
                 color="primary"
                 variant="underlined"
-                type={isConfirmPasswordVisible ? "text" : "password"}
+                type={isConfirmPasswordVisible ? 'text' : 'password'}
                 className="!placeholder:text-white"
                 label="Confirm Password"
                 placeholder="Confirm your password"
@@ -164,14 +164,14 @@ export const RegisterPage = () => {
                   </button>
                 }
                 isInvalid={!passwordMatches}
-                errorMessage={"Password doesnot match"}
+                errorMessage={'Password doesnot match'}
               />
             </div>
             <Checkbox
               isRequired
               onClick={(e) => setHasTermsBeenAccepted(!e.currentTarget.value)}
             >
-              I agree with the{" "}
+              I agree with the{' '}
               <span
                 className="text-blue-500 hover:underline"
                 onClick={(e) => e.stopPropagation()}
@@ -186,11 +186,11 @@ export const RegisterPage = () => {
                 size="lg"
                 disabled={registerUserMtn.isPending}
               >
-                {registerUserMtn.isPending ? "Signing Up..." : "Sign Up"}
+                {registerUserMtn.isPending ? 'Signing Up...' : 'Sign Up'}
               </Button>
             </div>
             <p className="text-white text-center">
-              Already have an account?{" "}
+              Already have an account?{' '}
               <Link to={loginPage} className="text-blue-500 hover:underline">
                 Log In
               </Link>

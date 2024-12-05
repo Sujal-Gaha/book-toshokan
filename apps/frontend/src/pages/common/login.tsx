@@ -1,24 +1,24 @@
-import { useState } from "react";
-import { Input } from "../../components/ui/input";
-import { FiEye, FiEyeOff } from "react-icons/fi";
-import { Image } from "@nextui-org/react";
-import { Button } from "../../components/ui/button";
-import { Link, useNavigate } from "react-router-dom";
-import { Checkbox } from "../../components/ui/checkbox";
-import { Divider } from "../../components/divider";
-import { FaGithub, FaGoogle } from "react-icons/fa";
-import { getAppsPath } from "../../utils/getAppsPath";
-import { useMutation } from "@tanstack/react-query";
-import { loginUser } from "../../api/data/user";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from 'react';
+import { Input } from '../../components/ui/input';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
+import { Image } from '@nextui-org/react';
+import { Button } from '../../components/ui/button';
+import { Link, useNavigate } from 'react-router-dom';
+import { Checkbox } from '../../components/ui/checkbox';
+import { Divider } from '../../components/divider';
+import { FaGithub, FaGoogle } from 'react-icons/fa';
+import { getAppsPath } from '../../utils/getAppsPath';
+import { useMutation } from '@tanstack/react-query';
+import { loginUser } from '../../api/data/user';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   LoginUserSchema,
   TError,
   TLoginUserInput,
   TLoginUserOutput,
-} from "../../api/contracts/user/schema";
-import { toastError, toastSuccess } from "../../components/toast";
+} from '../../api/contracts/user/schema';
+import { toastError, toastSuccess } from '../../components/toast';
 
 export const LoginPage = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -37,7 +37,7 @@ export const LoginPage = () => {
     mutationFn: loginUser,
     onSuccess: (data) => {
       toastSuccess(data.body.message);
-      navigate("/");
+      navigate('/');
     },
     onError: (error) => {
       toastError(error.body.message);
@@ -48,14 +48,14 @@ export const LoginPage = () => {
     try {
       await loginMtn.mutateAsync(data);
     } catch (error) {
-      console.error("error ", error);
+      console.error('error ', error);
     }
   };
 
   const toggleIsPasswordVisible = () =>
     setIsPasswordVisible(!isPasswordVisible);
 
-  const { forgotPasswordPage, registerPage } = getAppsPath;
+  const { forgotPasswordPage, registerPage } = getAppsPath();
   return (
     <main className="flex bg-black">
       <section className="h-screen w-1/2 flex items-center justify-center">
@@ -74,17 +74,17 @@ export const LoginPage = () => {
                 variant="underlined"
                 label="Enter Address"
                 placeholder="Enter your email"
-                {...register("email")}
+                {...register('email')}
                 isInvalid={!!errors.email?.message}
                 errorMessage={errors.email?.message}
               />
               <Input
                 color="primary"
                 variant="underlined"
-                type={isPasswordVisible ? "text" : "password"}
+                type={isPasswordVisible ? 'text' : 'password'}
                 label="Password"
                 placeholder="Enter your password"
-                {...register("password")}
+                {...register('password')}
                 isInvalid={!!errors.password?.message}
                 errorMessage={errors.password?.message}
                 endContent={
@@ -119,11 +119,11 @@ export const LoginPage = () => {
                 size="lg"
                 disabled={loginMtn.isPending}
               >
-                {loginMtn.isPending ? "Logging In..." : "Log In"}
+                {loginMtn.isPending ? 'Logging In...' : 'Log In'}
               </Button>
             </div>
             <p className="text-white text-center">
-              Need to create an account?{" "}
+              Need to create an account?{' '}
               <Link to={registerPage} className="text-blue-500 hover:underline">
                 Sign Up
               </Link>

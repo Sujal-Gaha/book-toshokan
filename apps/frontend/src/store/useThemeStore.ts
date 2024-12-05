@@ -1,8 +1,8 @@
-import { Dispatch, SetStateAction } from "react";
-import { create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
+import { Dispatch, SetStateAction } from 'react';
+import { create } from 'zustand';
+import { devtools, persist } from 'zustand/middleware';
 
-type TMode = "light" | "dark";
+type TMode = 'light' | 'dark';
 
 type TState = {
   mode: TMode;
@@ -14,22 +14,22 @@ type TAction = {
 };
 
 export const useThemeStore = create<TState & TAction>((set) => ({
-  mode: "dark",
+  mode: 'dark',
   setMode: () => set((state) => ({ mode: state.mode })),
   toggleMode: () =>
-    set((state) => ({ mode: state.mode === "dark" ? "light" : "dark" })),
+    set((state) => ({ mode: state.mode === 'dark' ? 'light' : 'dark' })),
 }));
 
 export const useStore = create<TState & TAction>()(
   devtools(
     persist(
       (set) => ({
-        mode: "dark",
+        mode: 'dark',
         setMode: () => set((state) => ({ mode: state.mode })),
         toggleMode: () =>
-          set((state) => ({ mode: state.mode === "dark" ? "light" : "dark" })),
+          set((state) => ({ mode: state.mode === 'dark' ? 'light' : 'dark' })),
       }),
-      { name: "theme-storage" }
+      { name: 'theme-storage' }
     )
   )
 );

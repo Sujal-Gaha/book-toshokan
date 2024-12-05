@@ -11,17 +11,19 @@ import {
   DropdownItem,
   Avatar,
 } from '@nextui-org/react';
-import { BookOpen } from 'lucide-react';
+import { BookOpen, MoonIcon, SunIcon, UserIcon } from 'lucide-react';
 import { getAppsPath } from '../utils/getAppsPath';
+import { useThemeStore } from '../store/useThemeStore';
 
 export const Navbar = () => {
-  const { registerPage } = getAppsPath;
+  const { registerPage } = getAppsPath();
+  const { mode, toggleMode } = useThemeStore();
 
   return (
-    <NextUINavbar className="bg-background">
+    <NextUINavbar className="bg-background border-b dark:border-none">
       <NavbarBrand>
         <BookOpen className="h-6 w-6 mr-2 text-primary" />
-        <p className="font-bold text-white">Book-Toshokan</p>
+        <p className="font-bold text-gray-900 dark:text-white">Book-Toshokan</p>
       </NavbarBrand>
       {/* <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
@@ -46,7 +48,7 @@ export const Navbar = () => {
             Sign Up
           </Button>
         </NavbarItem>
-        <Dropdown placement="bottom-end">
+        <Dropdown type="menu" placement="bottom-end">
           <DropdownTrigger>
             <Avatar
               isBordered
@@ -58,13 +60,36 @@ export const Navbar = () => {
               src="/placeholder.svg?height=32&width=32"
             />
           </DropdownTrigger>
-          <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="profile" className="h-14 gap-2">
-              <p className="font-semibold">Signed in as</p>
-              <p className="font-semibold">user@example.com</p>
-            </DropdownItem>
-            <DropdownItem key="settings">My Settings</DropdownItem>
-            <DropdownItem key="logout" color="danger">
+          <DropdownMenu
+            aria-label="Profile Actions"
+            variant="flat"
+            className={mode}
+          >
+            {mode === 'dark' ? (
+              <DropdownItem
+                key="light"
+                onClick={toggleMode}
+                className={mode}
+                startContent={<SunIcon />}
+              >
+                Switch to light
+              </DropdownItem>
+            ) : (
+              <DropdownItem
+                key="dark"
+                onClick={toggleMode}
+                className={mode}
+                startContent={<MoonIcon />}
+              >
+                Switch to dark
+              </DropdownItem>
+            )}
+            <DropdownItem
+              key="logout"
+              color="danger"
+              className={mode}
+              startContent={<UserIcon />}
+            >
               Log Out
             </DropdownItem>
           </DropdownMenu>

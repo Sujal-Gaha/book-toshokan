@@ -6,31 +6,39 @@ import {
   CardBody,
   CardFooter,
   Image,
-} from "@nextui-org/react";
-import { BookOpen, Star } from "lucide-react";
-import { keyFeatures } from "../../constants/key-features";
-import { readingStatuses } from "../../constants/reading-status";
-import { useQuery } from "@tanstack/react-query";
-import { getRecommendedBooks } from "../../api/data/book";
-import { TGetRecommendedBooks } from "../../api/contracts/book/schema";
-import { useNavigate } from "react-router-dom";
+} from '@nextui-org/react';
+import { BookOpen, Star } from 'lucide-react';
+import { keyFeatures } from '../../constants/key-features';
+import { readingStatuses } from '../../constants/reading-status';
+import { useQuery } from '@tanstack/react-query';
+import { getRecommendedBooks } from '../../api/data/book';
+import { TGetRecommendedBooks } from '../../api/contracts/book/schema';
+import { useNavigate } from 'react-router-dom';
+import { getAppsPath } from '../../utils/getAppsPath';
 
 const Welcome = () => {
+  const navigate = useNavigate();
+  const { recommendationPage } = getAppsPath();
+
   return (
-    <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-b from-background to-background/80 flex justify-center items-center">
+    <section className="w-full md:mt-48 py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-b from-background to-background/80 flex justify-center items-center">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center space-y-4 text-center">
           <div className="space-y-2">
             <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
               Welcome to Book-Toshokan
             </h1>
-            <p className="mx-auto max-w-[700px] text-gray-400 md:text-xl">
+            <p className="mx-auto max-w-[700px] text-gray-600 dark:text-white md:text-xl">
               Your personal book library manager. Catalog, track, and review
               your reading journey.
             </p>
           </div>
           <div className="space-x-4">
-            <Button color="primary" size="lg">
+            <Button
+              color="primary"
+              size="lg"
+              onClick={() => navigate(recommendationPage)}
+            >
               Get Started
             </Button>
             <Button variant="bordered" size="lg">
@@ -103,7 +111,7 @@ const ReadingStatus = () => {
 
 const RecommendedBooks = () => {
   const { data: recommendedBooksData } = useQuery<TGetRecommendedBooks>({
-    queryKey: ["getRecommendedBooks"],
+    queryKey: ['getRecommendedBooks'],
     queryFn: getRecommendedBooks,
   });
   const recommendedBooks = recommendedBooksData?.body.data;
@@ -145,7 +153,7 @@ const RecommendedBooks = () => {
                   <div className="flex items-center">
                     <Star className="w-4 h-4 fill-warning text-warning mr-1" />
                     <span className="text-sm font-bold">
-                      {book.feedback.rating || "4.8"}
+                      {book.feedback.rating || '4.8'}
                     </span>
                   </div>
                   <div className="flex items-center text-default-500 group-hover:text-white">
@@ -188,7 +196,7 @@ const StartToday = () => {
               </Button>
             </form>
             <p className="text-xs text-gray-400">
-              By signing up, you agree to our{" "}
+              By signing up, you agree to our{' '}
               <Link href="#" className="underline underline-offset-2">
                 Terms & Privacy Policy
               </Link>
