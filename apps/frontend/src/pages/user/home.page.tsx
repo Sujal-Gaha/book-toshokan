@@ -15,6 +15,7 @@ import { getRecommendedBooks } from '../../api/data/book';
 import { TGetRecommendedBooks } from '../../api/contracts/book/schema';
 import { useNavigate } from 'react-router-dom';
 import { getAppsPath } from '../../utils/getAppsPath';
+import { FormEvent, useState } from 'react';
 
 const Welcome = () => {
   const navigate = useNavigate();
@@ -169,6 +170,17 @@ const RecommendedBooks = () => {
 };
 
 const StartToday = () => {
+  const [email, setEmail] = useState('');
+
+  const navigate = useNavigate();
+
+  const { registerPage } = getAppsPath();
+
+  const handleFormSubmission = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    navigate(`${registerPage}?email=${encodeURI(email)}`);
+  };
+
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-t from-background to-background/80 flex items-center justify-center">
       <div className="container px-4 md:px-6">
@@ -183,11 +195,15 @@ const StartToday = () => {
             </p>
           </div>
           <div className="w-full max-w-sm space-y-2">
-            <form className="flex space-x-2">
+            <form className="flex space-x-2" onSubmit={handleFormSubmission}>
               <input
                 className="max-w-lg flex-1 px-4 py-2 rounded-md bg-background border border-gray-600 text-foreground"
                 placeholder="Enter your email"
                 type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
               />
               <Button color="primary" type="submit">
                 Sign Up
@@ -209,14 +225,13 @@ const StartToday = () => {
 export const HomePage = () => {
   return (
     <div className="flex flex-col min-h-screen">
-      {/* <Navbar /> */}
-      <main className="flex-1 bg-background text-foregroun items-center justify-center">
+      <div className="flex-1 bg-background text-foregroun items-center justify-center">
         <Welcome />
         <KeyFeatures />
         <ReadingStatus />
         <RecommendedBooks />
         <StartToday />
-      </main>
+      </div>
     </div>
   );
 };

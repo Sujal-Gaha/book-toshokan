@@ -1,6 +1,6 @@
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 import { LoginPage } from '../pages/common/login';
-import { RegisterPage } from '../pages/common/register';
+import { RegisterPage } from '../pages/common/register.page';
 import { AuthLayout } from '../pages/common/auth-layout';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';

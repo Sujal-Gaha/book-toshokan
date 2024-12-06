@@ -3,7 +3,7 @@ import { Input } from '../../components/ui/input';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { Image } from '@nextui-org/react';
 import { Button } from '../../components/ui/button';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Checkbox } from '../../components/ui/checkbox';
 import { Divider } from '../../components/divider';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
@@ -12,10 +12,10 @@ import { useMutation } from '@tanstack/react-query';
 import { registerUser } from '../../api/data/user';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import {
-  RegisterUserSchema,
-  TRegisterUserInput,
-  TRegisterUserOutput,
   TError,
+  TRegisterUserInput,
+  RegisterUserSchema,
+  TRegisterUserOutput,
 } from '../../api/contracts/user/schema';
 import { toastError, toastSuccess } from '../../components/toast';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -30,30 +30,30 @@ export const RegisterPage = () => {
 
   const navigate = useNavigate();
 
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const email = queryParams.get('email');
+
+  const { loginPage } = getAppsPath();
+
   const registerUserMtn = useMutation<
     TRegisterUserOutput,
     TError,
     TRegisterUserInput
   >({
     mutationFn: registerUser,
-    onSuccess: (data) => {
-      toastSuccess(data.body.message);
-      navigate('/auth/login');
-    },
-    onError: (error) => {
-      toastError(error.body.message);
-    },
   });
 
   const {
+    watch,
     register,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm<TRegisterUserInput>({
     resolver: zodResolver(RegisterUserSchema),
     defaultValues: {
       password: '',
+      email: email ? email : '',
     },
   });
 
@@ -63,7 +63,23 @@ export const RegisterPage = () => {
   const registerForm: SubmitHandler<TRegisterUserInput> = async (data) => {
     try {
       if (passwordMatches && hasTermsBeenAccepted) {
-        await registerUserMtn.mutateAsync(data);
+        await registerUserMtn.mutateAsync(
+          {
+            email: data.email,
+            password: data.password,
+            username: data.username,
+          },
+          {
+            onSuccess: (data) => {
+              toastSuccess(data.body.message);
+              navigate(loginPage);
+            },
+            onError: (error) => {
+              toastError(error.body.message);
+              console.log('error ', error);
+            },
+          }
+        );
       }
     } catch (error) {
       console.error('error ', error);
@@ -74,8 +90,6 @@ export const RegisterPage = () => {
     setIsPasswordVisible(!isPasswordVisible);
   const toggleIsConfirmPasswordVisible = () =>
     setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
-
-  const { loginPage } = getAppsPath();
 
   return (
     <main className="flex bg-black">
