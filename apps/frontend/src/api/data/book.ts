@@ -36,3 +36,29 @@ export const getBookById = async (bookId: string) => {
 
   return data;
 };
+
+export const getAllBooks = async ({
+  page,
+  perPage,
+}: {
+  page: number;
+  perPage: number;
+}) => {
+  const response = await fetch(
+    `${BACKEND_URL}/api/books/getAllBooks?page=${page}&perPage=${perPage}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message);
+  }
+
+  return data;
+};

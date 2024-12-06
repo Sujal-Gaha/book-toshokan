@@ -68,14 +68,14 @@ model Book {
   publishedOn   DateTime
   author        Author                 @relation(fields: [authorId], references: [id])
   category      Category               @relation(fields: [categoryId], references: [id])
-  feedback      Feedback[]
+  feedback      Feedback?
   subscriptions UserBookSubscription[]
 }
 
 model Feedback {
   id            String            @id @default(cuid())
   userId        String
-  bookId        String
+  bookId        String            @unique
   averageRating Float
   totalRatings  Int
   comment       String

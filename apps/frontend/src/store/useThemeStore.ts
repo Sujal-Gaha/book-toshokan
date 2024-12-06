@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
-type TMode = 'light' | 'dark';
+export type TMode = 'light' | 'dark';
 
 type TState = {
   mode: TMode;

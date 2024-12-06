@@ -1,8 +1,8 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const BookSchema = z.object({
   readStatus: z
-    .enum(["NOT_STARTED", "IN_PROGRESS", "COMPLETED"])
+    .enum(['NOT_STARTED', 'IN_PROGRESS', 'COMPLETED'])
     .optional()
     .nullable(),
   id: z.string().cuid(),
@@ -30,7 +30,7 @@ export const RecommendedBooksSchema = BookSchema.pick({
   })
   .extend({
     feedback: z.object({
-      rating: z.number(),
+      averageRating: z.number(),
     }),
   });
 

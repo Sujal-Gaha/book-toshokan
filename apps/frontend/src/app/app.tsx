@@ -7,7 +7,7 @@ import { Toaster } from 'sonner';
 import { AppLayout } from '../pages/common/app-layout';
 import { HomePage } from '../pages/user/home.page';
 import { BookPage } from '../pages/user/book.page';
-import { BookRecommendationsPage } from '../pages/user/recommendation';
+import { BookFeedPage } from '../pages/user/feed.page';
 import { SubscribedBooksTable } from '../pages/user/subscribed';
 import { Navbar } from '../components/navbar';
 import { Footer } from '../components/footer';
@@ -32,8 +32,8 @@ const router = createBrowserRouter([
         element: <BookPage />,
       },
       {
-        path: '/recommendation',
-        element: <BookRecommendationsPage />,
+        path: '/feed',
+        element: <BookFeedPage />,
       },
       {
         path: '/subscribed',

@@ -42,7 +42,36 @@ const getRecommendedBooks = asyncHandler(
 );
 
 const getAllBooks = asyncHandler(async (req: Request, res: Response) => {
-  const books = await prisma.book.findMany({});
+  const page = parseInt(req.query.page as string) || 1;
+  const perPage = parseInt(req.query.perPage as string) || 10;
+
+  const skip = (page - 1) * perPage;
+  const take = perPage;
+
+  const books = await prisma.book.findMany({
+    skip,
+    take,
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      category: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      feedback: {
+        select: {
+          id: true,
+          averageRating: true,
+        },
+      },
+    },
+  });
 
   if (!books) {
     return res.status(404).json({
@@ -55,10 +84,19 @@ const getAllBooks = asyncHandler(async (req: Request, res: Response) => {
     });
   }
 
+  const totalBooks = await prisma.book.count();
+
+  const totalPage = Math.ceil(totalBooks / perPage);
+
   return res.status(200).json({
     status: 200,
     body: {
       data: books,
+      pageInfo: {
+        page: page,
+        perPage: perPage,
+        totalPage: totalPage,
+      },
     },
     success: true,
     message: 'Fetched all the books successfully',

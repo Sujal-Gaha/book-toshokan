@@ -18,10 +18,10 @@ import { getAppsPath } from '../../utils/getAppsPath';
 
 const Welcome = () => {
   const navigate = useNavigate();
-  const { recommendationPage } = getAppsPath();
+  const { feedPage } = getAppsPath();
 
   return (
-    <section className="w-full md:mt-48 py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-b from-background to-background/80 flex justify-center items-center">
+    <section className="w-full md:my-40 py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-b from-background to-background/80 flex justify-center items-center">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center space-y-4 text-center">
           <div className="space-y-2">
@@ -37,7 +37,7 @@ const Welcome = () => {
             <Button
               color="primary"
               size="lg"
-              onClick={() => navigate(recommendationPage)}
+              onClick={() => navigate(feedPage)}
             >
               Get Started
             </Button>
@@ -53,7 +53,7 @@ const Welcome = () => {
 
 const KeyFeatures = () => {
   return (
-    <section className="w-full py-12 md:py-24 lg:py-32 bg-background/50 flex justify-center items-center">
+    <section className="w-full py-12 md:py-24 lg:py-32 bg-[#f3f4f6] dark:bg-background/50 flex justify-center items-center">
       <div className="container px-4 md:px-6">
         <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
           Key Features
@@ -66,7 +66,7 @@ const KeyFeatures = () => {
                 className="flex flex-col items-center text-center p-6 bg-background/80 rounded-xl shadow-lg transition-all hover:shadow-xl"
               >
                 {feature.icon}
-                <h3 className="text-xl font-bold mb-2 text-white">
+                <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
                   {feature.name}
                 </h3>
                 <p className="text-gray-400">{feature.description}</p>
@@ -81,7 +81,7 @@ const KeyFeatures = () => {
 
 const ReadingStatus = () => {
   return (
-    <section className="w-full py-12 md:py-24 lg:py-32 flex items-center justify-center">
+    <section className="w-full py-12 md:py-24 bg-[#f3f4f6] dark:bg-background/50 lg:py-32 flex items-center justify-center">
       <div className="container px-4 md:px-6">
         <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-10 bg-clip-text pb-2 text-transparent bg-gradient-to-r from-primary to-secondary">
           Manage Your Reading Status
@@ -94,7 +94,7 @@ const ReadingStatus = () => {
                 className="flex flex-col items-center p-6 bg-background/80 rounded-xl shadow-lg transition-all hover:shadow-xl"
               >
                 {status.icon}
-                <h3 className="text-xl font-bold mb-2 text-white">
+                <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
                   {status.name}
                 </h3>
                 <p className="text-center text-gray-400">
@@ -129,9 +129,9 @@ const RecommendedBooks = () => {
             return (
               <Card
                 key={book.id}
-                className="bg-background/80 hover:bg-primary cursor-pointer group"
                 isPressable
                 onPress={() => navigate(`/book/${book.id}`)}
+                className="bg-background/80 hover:bg-primary cursor-pointer group"
               >
                 <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
                   <Image
@@ -152,9 +152,7 @@ const RecommendedBooks = () => {
                 <CardFooter className="flex justify-between">
                   <div className="flex items-center">
                     <Star className="w-4 h-4 fill-warning text-warning mr-1" />
-                    <span className="text-sm font-bold">
-                      {book.feedback.rating || '4.8'}
-                    </span>
+                    <span className="text-sm font-bold">4.8</span>
                   </div>
                   <div className="flex items-center text-default-500 group-hover:text-white">
                     <BookOpen className="w-4 h-4 mr-1" />
