@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Card,
   CardBody,
@@ -8,7 +8,7 @@ import {
   Textarea,
   Avatar,
   Divider,
-} from "@nextui-org/react";
+} from '@nextui-org/react';
 import {
   BookOpen,
   BookMarked,
@@ -16,46 +16,45 @@ import {
   Heart,
   Share2,
   MessageCircle,
-} from "lucide-react";
-import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { getBookById } from "../../api/data/book";
-import { BookResponse } from "../../api/contracts/book/schema";
+} from 'lucide-react';
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { getBookById } from '../../api/data/book';
+import { BookResponse } from '../../api/contracts/book/schema';
 
 export const BookPage = () => {
   const params = useParams();
-  const bookId = params.bookId || "";
-  console.log("bookId ", bookId);
+  const bookId = params.bookId || '';
 
   const { data, isLoading } = useQuery<BookResponse>({
-    queryKey: ["getBookById", bookId],
+    queryKey: ['getBookById', bookId],
     queryFn: () => getBookById(bookId),
   });
   const bookData = data?.body.data;
 
   const [readingStatus, setReadingStatus] = useState<
-    "to-read" | "reading" | "read"
-  >("to-read");
+    'to-read' | 'reading' | 'read'
+  >('to-read');
   const [rating, setRating] = useState(0);
-  const [review, setReview] = useState("");
+  const [review, setReview] = useState('');
 
   const bookDetails = {
-    title: "To Kill a Mockingbird",
+    title: 'To Kill a Mockingbird',
     description:
       "To Kill a Mockingbird is a novel by Harper Lee published in 1960. It was immediately successful, winning the Pulitzer Prize, and has become a classic of modern American literature. The plot and characters are loosely based on Lee's observations of her family, her neighbors and an event that occurred near her hometown of Monroeville, Alabama, in 1936, when she was 10 years old.",
-    image: "/placeholder.svg?height=400&width=300",
+    image: '/placeholder.svg?height=400&width=300',
     category: {
-      name: "Gothic",
+      name: 'Gothic',
     },
-    author: "Harper Lee",
-    publishDate: "July 11, 1960",
+    author: 'Harper Lee',
+    publishDate: 'July 11, 1960',
     pages: 281,
     averageRating: 4.27,
     totalRatings: 4829,
     totalReviews: 982,
   };
 
-  const handleStatusChange = (status: "to-read" | "reading" | "read") => {
+  const handleStatusChange = (status: 'to-read' | 'reading' | 'read') => {
     setReadingStatus(status);
   };
 
@@ -80,9 +79,9 @@ export const BookPage = () => {
               />
               <div className="mt-4 flex justify-between">
                 <Button
-                  color={readingStatus === "to-read" ? "primary" : "default"}
-                  variant={readingStatus === "to-read" ? "solid" : "bordered"}
-                  onClick={() => handleStatusChange("to-read")}
+                  color={readingStatus === 'to-read' ? 'primary' : 'default'}
+                  variant={readingStatus === 'to-read' ? 'solid' : 'bordered'}
+                  onClick={() => handleStatusChange('to-read')}
                 >
                   <div>
                     <BookOpen className="w-4 h-4" />
@@ -90,9 +89,9 @@ export const BookPage = () => {
                   To Read
                 </Button>
                 <Button
-                  color={readingStatus === "reading" ? "primary" : "default"}
-                  variant={readingStatus === "reading" ? "solid" : "bordered"}
-                  onClick={() => handleStatusChange("reading")}
+                  color={readingStatus === 'reading' ? 'primary' : 'default'}
+                  variant={readingStatus === 'reading' ? 'solid' : 'bordered'}
+                  onClick={() => handleStatusChange('reading')}
                 >
                   <div>
                     <BookMarked className="w-4 h-4" />
@@ -100,9 +99,9 @@ export const BookPage = () => {
                   Reading
                 </Button>
                 <Button
-                  color={readingStatus === "read" ? "primary" : "default"}
-                  variant={readingStatus === "read" ? "solid" : "bordered"}
-                  onClick={() => handleStatusChange("read")}
+                  color={readingStatus === 'read' ? 'primary' : 'default'}
+                  variant={readingStatus === 'read' ? 'solid' : 'bordered'}
+                  onClick={() => handleStatusChange('read')}
                 >
                   <div>
                     <Star className="w-4 h-4" />
@@ -125,14 +124,14 @@ export const BookPage = () => {
                         star <=
                         (bookData?.feedback.averageRating ||
                           bookDetails.averageRating)
-                          ? "text-warning fill-warning"
-                          : "text-default-300"
+                          ? 'text-warning fill-warning'
+                          : 'text-default-300'
                       }`}
                     />
                   ))}
                 </div>
                 <span className="ml-2 text-default-500">
-                  {bookDetails.averageRating.toFixed(2)} ·{" "}
+                  {bookDetails.averageRating.toFixed(2)} ·{' '}
                   {bookData?.feedback.totalRatings || 4829} ratings
                 </span>
               </div>
@@ -178,8 +177,8 @@ export const BookPage = () => {
                     key={star}
                     className={`w-6 h-6 cursor-pointer ${
                       star <= rating
-                        ? "text-warning fill-warning"
-                        : "text-default-300"
+                        ? 'text-warning fill-warning'
+                        : 'text-default-300'
                     }`}
                     onClick={() => handleRatingChange(star)}
                   />
@@ -236,8 +235,8 @@ export const BookPage = () => {
                             key={star}
                             className={`w-4 h-4 ${
                               star <= 4
-                                ? "text-warning fill-warning"
-                                : "text-default-300"
+                                ? 'text-warning fill-warning'
+                                : 'text-default-300'
                             }`}
                           />
                         ))}

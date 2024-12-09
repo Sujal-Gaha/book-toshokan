@@ -1,7 +1,8 @@
 import { ReactNode } from 'react';
-import { useThemeStore } from '../../store/useThemeStore';
+import { useTheme } from 'next-themes';
 
 export const AppLayout = ({ children }: { children: ReactNode }) => {
-  const { mode } = useThemeStore();
-  return <main className={mode}>{children}</main>;
+  const { theme } = useTheme();
+
+  return <main className={theme}>{children}</main>;
 };
