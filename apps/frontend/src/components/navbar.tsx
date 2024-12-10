@@ -4,7 +4,6 @@ import {
   NavbarContent,
   NavbarItem,
   Link,
-  Button,
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
@@ -13,20 +12,29 @@ import {
   NavbarMenuToggle,
   NavbarMenu,
   NavbarMenuItem,
+  Switch,
 } from '@nextui-org/react';
-import { BookOpen, MoonIcon, SunIcon, UserIcon } from 'lucide-react';
+import { BookOpen, UserIcon } from 'lucide-react';
 import { getAppsPath } from '../utils/getAppsPath';
-import { useThemeStore } from '../store/useThemeStore';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useTheme } from 'next-themes';
+import { SunIcon } from './icons';
+import { MoonIcon } from './icons';
+import { usePathState } from '../hooks/usePathState';
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navigate = useNavigate();
-  const { mode, toggleMode } = useThemeStore();
+  const { theme, setTheme } = useTheme();
+  const { isHomePage, isFeedPage, isMyBooksPage } = usePathState();
 
-  const { homePage, feedPage, registerPage } = getAppsPath();
+  const onThemeChange = (isSelected: boolean) => {
+    setTheme(isSelected ? 'dark' : 'light');
+  };
+
+  const { homePage, feedPage, myBooksPage } = getAppsPath();
 
   return (
     <NextUINavbar
@@ -57,16 +65,26 @@ export const Navbar = () => {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <Link color="foreground" href={myBooksPage}>
             My Books
           </Link>
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem>
-          <Button color="primary" as={Link} href={registerPage} variant="flat">
-            Sign Up
-          </Button>
+          <Switch
+            isSelected={theme === 'dark'}
+            color="primary"
+            size="lg"
+            thumbIcon={({ isSelected, className }) =>
+              isSelected ? (
+                <MoonIcon className={className} />
+              ) : (
+                <SunIcon className={className} />
+              )
+            }
+            onValueChange={onThemeChange}
+          />
         </NavbarItem>
         <Dropdown type="menu" placement="bottom-end">
           <DropdownTrigger>
@@ -74,40 +92,20 @@ export const Navbar = () => {
               isBordered
               as="button"
               className="transition-transform"
-              color="secondary"
+              color="primary"
               name="Jason Hughes"
               size="sm"
               src="/placeholder.svg?height=32&width=32"
             />
           </DropdownTrigger>
-          <DropdownMenu
-            aria-label="Profile Actions"
-            variant="flat"
-            className={mode}
-          >
-            {mode === 'dark' ? (
-              <DropdownItem
-                key="light"
-                onClick={toggleMode}
-                className={mode}
-                startContent={<SunIcon />}
-              >
-                Switch to light
-              </DropdownItem>
-            ) : (
-              <DropdownItem
-                key="dark"
-                onClick={toggleMode}
-                className={mode}
-                startContent={<MoonIcon />}
-              >
-                Switch to dark
-              </DropdownItem>
-            )}
+          <DropdownMenu aria-label="Profile Actions" variant="flat">
+            <DropdownItem key="profile" className="h-14 gap-2">
+              <p className="font-semibold">Signed in as</p>
+              <p className="font-semibold">zoey@example.com</p>
+            </DropdownItem>
             <DropdownItem
               key="logout"
               color="danger"
-              className={mode}
               startContent={<UserIcon />}
             >
               Log Out
@@ -117,17 +115,29 @@ export const Navbar = () => {
       </NavbarContent>
       <NavbarMenu>
         <NavbarMenuItem key="home">
-          <Link color="primary" href={homePage} size="lg">
+          <Link
+            color={isHomePage ? 'primary' : 'foreground'}
+            href={homePage}
+            size="lg"
+          >
             Home
           </Link>
         </NavbarMenuItem>
         <NavbarMenuItem key="Feed">
-          <Link color="primary" href={feedPage} size="lg">
+          <Link
+            color={isFeedPage ? 'primary' : 'foreground'}
+            href={feedPage}
+            size="lg"
+          >
             Feed
           </Link>
         </NavbarMenuItem>
         <NavbarMenuItem key="My Books">
-          <Link color="primary" href="#" size="lg">
+          <Link
+            color={isMyBooksPage ? 'primary' : 'foreground'}
+            href={myBooksPage}
+            size="lg"
+          >
             My Books
           </Link>
         </NavbarMenuItem>

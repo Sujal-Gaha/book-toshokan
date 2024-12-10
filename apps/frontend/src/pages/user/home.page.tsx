@@ -132,7 +132,7 @@ const RecommendedBooks = () => {
                 key={book.id}
                 isPressable
                 onPress={() => navigate(`/book/${book.id}`)}
-                className="bg-background/80 hover:bg-primary cursor-pointer group"
+                className="bg-background/80 border border-background/80 hover:border-primary hover:shadow-md hover:shadow-primary cursor-pointer group"
               >
                 <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
                   <Image
