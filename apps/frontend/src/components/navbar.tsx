@@ -4,7 +4,6 @@ import {
   NavbarContent,
   NavbarItem,
   Link,
-  Button,
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
@@ -35,7 +34,7 @@ export const Navbar = () => {
     setTheme(isSelected ? 'dark' : 'light');
   };
 
-  const { homePage, feedPage, registerPage, myBooksPage } = getAppsPath();
+  const { homePage, feedPage, myBooksPage } = getAppsPath();
 
   return (
     <NextUINavbar
@@ -72,11 +71,6 @@ export const Navbar = () => {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        {/* <NavbarItem>
-          <Button color="primary" as={Link} href={registerPage} variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem> */}
         <NavbarItem>
           <Switch
             isSelected={theme === 'dark'}
@@ -105,6 +99,10 @@ export const Navbar = () => {
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
+            <DropdownItem key="profile" className="h-14 gap-2">
+              <p className="font-semibold">Signed in as</p>
+              <p className="font-semibold">zoey@example.com</p>
+            </DropdownItem>
             <DropdownItem
               key="logout"
               color="danger"

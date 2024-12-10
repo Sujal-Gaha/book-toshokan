@@ -54,7 +54,10 @@ type PageInfo = {
 
 const BookCard = ({ book }: { book: Book }) => {
   return (
-    <Card key={book.id} className="bg-background/60 border hover:border-gray">
+    <Card
+      key={book.id}
+      className="bg-background/60 border border-gray-100 hover:border-primary hover:shadow-md hover:shadow-primary cursor-pointer"
+    >
       <CardBody className="p-0">
         <Image
           src={book.image}
