@@ -13,22 +13,22 @@ const tabItems: ITabItem[] = [
     key: 'books',
     title: 'Books',
     icon: BookOpen,
-    content: <BooksManagementTab />,
     isDisabled: false,
+    content: <BooksManagementTab />,
   },
   {
     key: 'category',
     title: 'Category',
     icon: Album,
-    content: <CategoriesManagementTab />,
     isDisabled: true,
+    content: <CategoriesManagementTab />,
   },
   {
     key: 'authors',
     title: 'Authors',
     icon: Users,
-    content: <AuthorManagementTab />,
     isDisabled: true,
+    content: <AuthorManagementTab />,
   },
 ];
 
