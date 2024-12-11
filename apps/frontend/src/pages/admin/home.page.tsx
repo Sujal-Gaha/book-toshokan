@@ -39,7 +39,7 @@ export const AdminHomePage = () => {
         <h1 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">
           Book Catalogue Admin
         </h1>
-        <TabsComponent color="primary" items={tabItems} />
+        <TabsComponent color="secondary" items={tabItems} />
       </div>
     </div>
   );

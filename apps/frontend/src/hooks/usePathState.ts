@@ -9,6 +9,7 @@ export const usePathState = () => {
     loginPage,
     registerPage,
     myBooksPage,
+    adminHomePage,
   } = getAppsPath();
 
   const { pathname } = useLocation();
@@ -20,6 +21,8 @@ export const usePathState = () => {
   const isRegisterPage = pathname === registerPage;
   const isMyBooksPage = pathname === myBooksPage;
 
+  const isAdminHomePage = pathname === adminHomePage;
+
   return {
     isHomePage,
     isFeedPage,
@@ -27,5 +30,6 @@ export const usePathState = () => {
     isLoginPage,
     isRegisterPage,
     isMyBooksPage,
+    isAdminHomePage,
   } as const;
 };

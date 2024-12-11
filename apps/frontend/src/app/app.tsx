@@ -16,6 +16,7 @@ import {
 import { Navbar } from '../components/navbar';
 import { Footer } from '../components/footer';
 import { AdminHomePage } from '../pages/admin';
+import { AdminNavbar } from '../components/admin-navbar';
 
 const router = createBrowserRouter([
   {
@@ -50,7 +51,7 @@ const router = createBrowserRouter([
     path: '/admin',
     element: (
       <>
-        <Navbar />
+        <AdminNavbar />
         <AdminHomePage />
       </>
     ),
