@@ -8,7 +8,7 @@ import {
 } from '@nextui-org/react';
 import { PlusCircle, Search } from 'lucide-react';
 import { useAddBookModal } from './add-book-modal';
-import { Key, useCallback, useState } from 'react';
+import { Dispatch, Key, SetStateAction, useCallback, useState } from 'react';
 import {
   Table,
   TableHeader,
@@ -20,6 +20,9 @@ import {
 } from '@nextui-org/react';
 import { DeleteIcon, EyeIcon } from '../../components/icons';
 import { EditIcon } from '../../components/icons/edit.icon';
+import { useQuery } from '@tanstack/react-query';
+import { getAllBooks } from '../../api/data/book';
+import { Loading } from '../../components/loading';
 
 type TColumn = {
   name: string;
@@ -31,6 +34,48 @@ type TBook = {
   name: string;
   author: string;
   category: string;
+};
+
+type BookResponse = {
+  status: number;
+  body: {
+    data: Book[];
+    pageInfo: PageInfo;
+    message: string;
+  };
+  success: boolean;
+};
+
+type Book = {
+  id: string;
+  authorId: string;
+  categoryId: string;
+  readStatus: string | null;
+  name: string;
+  description: string;
+  image: string;
+  subImages: string[];
+  pages: number;
+  publishedOn: string;
+  author: Author;
+  category: Category;
+  feedback: any;
+};
+
+type Author = {
+  id: string;
+  name: string;
+};
+
+type Category = {
+  id: string;
+  name: string;
+};
+
+type PageInfo = {
+  page: number;
+  perPage: number;
+  totalPage: number;
 };
 
 const columns: TColumn[] = [
@@ -61,10 +106,13 @@ const books: TBook[] = [
   },
 ];
 
-const BooksManagementTable = () => {
-  const [page, setPage] = useState(0);
-  const pages = 10;
-
+const BooksManagementTable = ({
+  page,
+  setPage,
+}: {
+  page: number;
+  setPage: Dispatch<SetStateAction<number>>;
+}) => {
   const renderCell = useCallback((book: TBook, columnKey: Key) => {
     const cellValue = book[columnKey as keyof TBook];
 
@@ -102,20 +150,8 @@ const BooksManagementTable = () => {
 
   return (
     <Table
+      removeWrapper
       aria-label="Book Management Table"
-      bottomContent={
-        <div className="flex w-full justify-center">
-          <Pagination
-            isCompact
-            showControls
-            showShadow
-            color="secondary"
-            page={page}
-            total={pages}
-            onChange={(page) => setPage(page)}
-          />
-        </div>
-      }
       classNames={{
         wrapper: 'min-h-[222px]',
       }}
@@ -145,6 +181,15 @@ const BooksManagementTable = () => {
 
 export const BooksManagementTab = () => {
   const { AddBookModalNode, openAddBookModal } = useAddBookModal();
+  const [page, setPage] = useState(1);
+
+  const pages = 20;
+  const perPage = 10;
+
+  const { data, isLoading } = useQuery<BookResponse>({
+    queryKey: ['getAllBooks', page, perPage],
+    queryFn: () => getAllBooks({ page, perPage }),
+  });
 
   return (
     <>
@@ -176,7 +221,23 @@ export const BooksManagementTab = () => {
           </div>
         </CardHeader>
         <CardBody>
-          <BooksManagementTable />
+          {isLoading && (
+            <div className="py-20 absolute inset-0">
+              <Loading />
+            </div>
+          )}
+          <BooksManagementTable page={page} setPage={setPage} />
+          <div className="flex w-full justify-center mt-8">
+            <Pagination
+              isCompact
+              showControls
+              showShadow
+              color="secondary"
+              page={page}
+              total={pages}
+              onChange={(page) => setPage(page)}
+            />
+          </div>
         </CardBody>
       </Card>
     </>

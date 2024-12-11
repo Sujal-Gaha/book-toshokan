@@ -78,9 +78,9 @@ const getAllBooks = asyncHandler(async (req: Request, res: Response) => {
       status: 404,
       body: {
         data: null,
+        message: 'There are no books',
       },
       success: false,
-      message: 'There are no books',
     });
   }
 
@@ -96,10 +96,10 @@ const getAllBooks = asyncHandler(async (req: Request, res: Response) => {
         page: page,
         perPage: perPage,
         totalPage: totalPage,
+        message: 'Fetched all the books successfully',
       },
     },
     success: true,
-    message: 'Fetched all the books successfully',
   });
 });
 
