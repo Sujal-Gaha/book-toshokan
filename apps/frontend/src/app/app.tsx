@@ -1,16 +1,22 @@
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
-import { LoginPage } from '../pages/common/login';
-import { RegisterPage } from '../pages/common/register.page';
-import { AuthLayout } from '../pages/common/auth-layout';
+import {
+  LoginPage,
+  RegisterPage,
+  AppLayout,
+  AuthLayout,
+} from '../pages/common';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
-import { AppLayout } from '../pages/common/app-layout';
-import { HomePage } from '../pages/user/home.page';
-import { BookPage } from '../pages/user/book.page';
-import { BookFeedPage } from '../pages/user/feed.page';
-import { SubscribedBooksTable } from '../pages/user/subscribed';
+import {
+  HomePage,
+  BookFeedPage,
+  BookPage,
+  SubscribedBooksTable,
+} from '../pages/user';
 import { Navbar } from '../components/navbar';
 import { Footer } from '../components/footer';
+import { AdminHomePage } from '../pages/admin';
+import { AdminNavbar } from '../components/admin-navbar';
 
 const router = createBrowserRouter([
   {
@@ -40,6 +46,15 @@ const router = createBrowserRouter([
         element: <SubscribedBooksTable />,
       },
     ],
+  },
+  {
+    path: '/admin',
+    element: (
+      <>
+        <AdminNavbar />
+        <AdminHomePage />
+      </>
+    ),
   },
   {
     path: 'auth',

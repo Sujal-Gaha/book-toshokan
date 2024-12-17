@@ -21,20 +21,18 @@ import { useState } from 'react';
 import { useTheme } from 'next-themes';
 import { SunIcon } from './icons';
 import { MoonIcon } from './icons';
-import { usePathState } from '../hooks/usePathState';
 
-export const Navbar = () => {
+export const AdminNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
-  const { isHomePage, isFeedPage, isMyBooksPage } = usePathState();
 
   const onThemeChange = (isSelected: boolean) => {
     setTheme(isSelected ? 'dark' : 'light');
   };
 
-  const { homePage, feedPage, myBooksPage } = getAppsPath();
+  const { adminHomePage } = getAppsPath();
 
   return (
     <NextUINavbar
@@ -48,33 +46,16 @@ export const Navbar = () => {
       />
       <NavbarBrand
         className="cursor-pointer"
-        onClick={() => navigate(homePage)}
+        onClick={() => navigate(adminHomePage)}
       >
-        <BookOpen className="h-6 w-6 mr-2 text-primary" />
+        <BookOpen className="h-6 w-6 mr-2 text-secondary" />
         <p className="font-bold text-gray-900 dark:text-white">Book-Toshokan</p>
       </NavbarBrand>
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem>
-          <Link color="foreground" href={homePage}>
-            Home
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href={feedPage}>
-            Feed
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href={myBooksPage}>
-            My Books
-          </Link>
-        </NavbarItem>
-      </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem>
           <Switch
             isSelected={theme === 'dark'}
-            color="primary"
+            color="secondary"
             size="lg"
             thumbIcon={({ isSelected, className }) =>
               isSelected ? (
@@ -92,7 +73,7 @@ export const Navbar = () => {
               isBordered
               as="button"
               className="transition-transform"
-              color="primary"
+              color="secondary"
               name="Jason Hughes"
               size="sm"
               src="/placeholder.svg?height=32&width=32"
@@ -113,7 +94,7 @@ export const Navbar = () => {
           </DropdownMenu>
         </Dropdown>
       </NavbarContent>
-      <NavbarMenu>
+      {/* <NavbarMenu>
         <NavbarMenuItem key="home">
           <Link
             color={isHomePage ? 'primary' : 'foreground'}
@@ -146,7 +127,7 @@ export const Navbar = () => {
             Log Out
           </Link>
         </NavbarMenuItem>
-      </NavbarMenu>
+      </NavbarMenu> */}
     </NextUINavbar>
   );
 };

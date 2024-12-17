@@ -5,5 +5,7 @@ export const getAppsPath = () => {
     loginPage: '/auth/login',
     registerPage: '/auth/register',
     forgotPasswordPage: '/auth/forgot-password',
+    myBooksPage: '/books',
+    adminHomePage: '/admin',
   };
 };
