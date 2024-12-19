@@ -18,11 +18,10 @@ import {
   TableCell,
   Tooltip,
 } from '@nextui-org/react';
-import { DeleteIcon, EyeIcon } from '../../components/icons';
-import { EditIcon } from '../../components/icons/edit.icon';
+import { DeleteIcon, EyeIcon, EditIcon } from '../../icons';
 import { useQuery } from '@tanstack/react-query';
-import { getAllBooks } from '../../api/data/book';
-import { Loading } from '../../components/loading';
+import { getAllBooks } from '../../../api/data/book';
+import { Loading } from '../../../components/loading';
 
 type TColumn = {
   name: string;

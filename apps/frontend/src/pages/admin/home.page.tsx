@@ -6,7 +6,7 @@ import {
   BooksManagementTab,
   AuthorManagementTab,
   CategoriesManagementTab,
-} from '../../modules/admin';
+} from '../../components/modules/admin';
 
 const tabItems: ITabItem[] = [
   {

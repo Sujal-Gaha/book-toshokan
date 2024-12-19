@@ -1,6 +1,6 @@
 import { Card, CardBody, CardHeader, Input } from '@nextui-org/react';
 import { Search } from 'lucide-react';
-import { TableComponent } from '../../components/table';
+import { TableComponent } from '../../table';
 
 const authorsData = [
   { name: 'F. Scott Fitzgerald', bookscount: '4', genres: 'Classic, Fiction' },
