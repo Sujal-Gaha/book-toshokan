@@ -1,44 +1,30 @@
-import {
-  Input,
-  Button,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-} from '@nextui-org/react';
+import { useDisclosure } from '@nextui-org/react';
+import { ModalComponent } from '../../ui/modal';
+import { Input } from '../../ui/input';
+import { Button } from '../../ui/button';
 
 interface IAddBookModal {
-  isOpen: boolean;
   onClose: () => void;
 }
 
-const AddBookModal = ({ isOpen, onClose }: IAddBookModal) => {
+const AddBookModal = ({ onClose }: IAddBookModal) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} backdrop="transparent" size="4xl">
-      <ModalContent>
-        <ModalHeader className="flex flex-col gap-1">Add New Book</ModalHeader>
-        <ModalBody>
-          <form className="space-y-4">
-            <Input label="Title" placeholder="Enter book title" required />
-            <Input label="Author" placeholder="Enter author name" required />
-            <Input label="Category" placeholder="Enter book genre" required />
-            <Input
-              label="Published Year"
-              placeholder="Enter published year"
-              required
-            />
-          </form>
-        </ModalBody>
-        <ModalFooter>
-          <Button color="danger" variant="light" onPress={onClose}>
-            Cancel
-          </Button>
-          <Button color="primary">Add Book</Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+    <div className="flex flex-col gap-4">
+      <form className="space-y-4">
+        <Input label="Title" color="default" required />
+        <Input label="Author" required />
+        <Input label="Category" required />
+        <Input label="Published Year" required />
+      </form>
+      <div className="flex justify-end gap-4">
+        <Button onPress={onClose} color="danger">
+          Cancel
+        </Button>
+        <Button onPress={onClose} color="secondary">
+          Add
+        </Button>
+      </div>
+    </div>
   );
 };
 
@@ -47,6 +33,15 @@ export const useAddBookModal = () => {
 
   return {
     openAddBookModal: onOpen,
-    AddBookModalNode: <AddBookModal isOpen={isOpen} onClose={onClose} />,
+    AddBookModalNode: (
+      <ModalComponent
+        title="Add New Book"
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onClose={onClose}
+      >
+        <AddBookModal onClose={onClose} />
+      </ModalComponent>
+    ),
   };
 };

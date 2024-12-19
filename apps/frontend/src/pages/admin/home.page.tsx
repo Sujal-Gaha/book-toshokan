@@ -1,7 +1,7 @@
 'use client';
 
 import { BookOpen, Users, Album } from 'lucide-react';
-import { ITabItem, TabsComponent } from '../../components/tabs';
+import { ITabItem, TabsComponent } from '../../components/ui/tabs';
 import {
   BooksManagementTab,
   AuthorManagementTab,
@@ -27,7 +27,7 @@ const tabItems: ITabItem[] = [
     key: 'authors',
     title: 'Authors',
     icon: Users,
-    isDisabled: true,
+    isDisabled: false,
     content: <AuthorManagementTab />,
   },
 ];

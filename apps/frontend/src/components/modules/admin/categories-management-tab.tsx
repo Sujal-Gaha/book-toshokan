@@ -1,4 +1,6 @@
-import { Card, CardBody, CardHeader, Input, Button } from '@nextui-org/react';
+import { Card, CardBody, CardHeader } from '@nextui-org/react';
+import { Input } from '../../ui/input';
+import { Button } from '../../ui/button';
 
 export const CategoriesManagementTab = () => {
   return (
