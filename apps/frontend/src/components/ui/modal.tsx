@@ -1,47 +1,39 @@
-"use client";
+'use client';
 
 import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  ModalProps,
-} from "@nextui-org/react";
-import { ReactNode } from "react";
+  Modal as NextUIModal,
+  ModalContent as NextUIModalContent,
+  ModalHeader as NextUIModalHeader,
+  ModalBody as NextUIModalBody,
+  ModalProps as NextUIModalProps,
+} from '@nextui-org/react';
+import { Dispatch, ReactNode, SetStateAction } from 'react';
 
-interface ModalComponentProps extends ModalProps {
+interface ModalComponentProps extends Omit<NextUIModalProps, 'backdrop'> {
+  isOpen: boolean;
+  onClose: () => void;
+  onOpen: () => void;
+  title: string;
   children: ReactNode;
-  footer?: ReactNode;
 }
 
 export const ModalComponent = ({
   children,
-  footer,
+  title,
   ...props
 }: ModalComponentProps) => {
   return (
-    <Modal isOpen={props.isOpen} onOpenChange={props.onOpenChange} {...props}>
-      <ModalContent>
-        {(onClose) => (
+    <NextUIModal backdrop="transparent" {...props}>
+      <NextUIModalContent>
+        {() => (
           <>
-            <ModalHeader className="flex flex-col gap-1">
-              {props.title}
-            </ModalHeader>
-            <ModalBody>{children}</ModalBody>
-            <ModalFooter>
-              {footer ? (
-                footer
-              ) : (
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-              )}
-            </ModalFooter>
+            <NextUIModalHeader className="flex flex-col gap-1">
+              {title}
+            </NextUIModalHeader>
+            <NextUIModalBody>{children}</NextUIModalBody>
           </>
         )}
-      </ModalContent>
-    </Modal>
+      </NextUIModalContent>
+    </NextUIModal>
   );
 };

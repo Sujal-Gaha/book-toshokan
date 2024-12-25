@@ -193,16 +193,14 @@ export const RegisterPage = () => {
                 Terms & Privacy Policy
               </span>
             </Checkbox>
-            <div>
-              <Button
-                type="submit"
-                color="blue"
-                size="lg"
-                disabled={registerUserMtn.isPending}
-              >
-                {registerUserMtn.isPending ? 'Signing Up...' : 'Sign Up'}
-              </Button>
-            </div>
+            <Button
+              type="submit"
+              color="primary"
+              size="lg"
+              disabled={registerUserMtn.isPending}
+            >
+              {registerUserMtn.isPending ? 'Signing Up...' : 'Sign Up'}
+            </Button>
             <p className="text-white text-center">
               Already have an account?{' '}
               <Link to={loginPage} className="text-blue-500 hover:underline">

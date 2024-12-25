@@ -112,16 +112,14 @@ export const LoginPage = () => {
                 Forgot password?
               </Link>
             </div>
-            <div>
-              <Button
-                type="submit"
-                color="blue"
-                size="lg"
-                disabled={loginMtn.isPending}
-              >
-                {loginMtn.isPending ? 'Logging In...' : 'Log In'}
-              </Button>
-            </div>
+            <Button
+              type="submit"
+              color="primary"
+              size="lg"
+              disabled={loginMtn.isPending}
+            >
+              {loginMtn.isPending ? 'Logging In...' : 'Log In'}
+            </Button>
             <p className="text-white text-center">
               Need to create an account?{' '}
               <Link to={registerPage} className="text-blue-500 hover:underline">

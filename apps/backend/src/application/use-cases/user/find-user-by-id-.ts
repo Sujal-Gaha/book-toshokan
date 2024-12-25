@@ -1,0 +1,19 @@
+import { IUserRepository } from '../../repository/user.repository';
+import { User } from '../../../domain/entities/user.entity';
+
+export class FindUserByIdUseCase {
+  constructor(private userRepository: IUserRepository) {}
+
+  async execute(user: User): Promise<User> {
+    if (!user.id) {
+      throw new Error('User id is required');
+    }
+
+    const userById = await this.userRepository.findById(user.id);
+    if (!userById) {
+      throw new Error(`User with the id ${user.id} not found`);
+    }
+
+    return this.userRepository.findById(user.id);
+  }
+}
