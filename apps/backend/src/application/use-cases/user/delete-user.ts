@@ -1,5 +1,5 @@
 import { User } from '../../../domain/entities/user.entity';
-import { IUserRepository } from '../../interfaces/user-repository.interface';
+import { IUserRepository } from '../../repository/user.repository';
 
 export class DeleteUserUseCase {
   constructor(private userRepository: IUserRepository) {}

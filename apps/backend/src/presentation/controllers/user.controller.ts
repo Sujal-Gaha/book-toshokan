@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { CreateUserUseCase } from '../../application/use-cases/user/create-user';
-import { UserRepository } from '../../infrastructure/database/user-repository';
+import { UserRepository } from '../../infrastructure/database/user.repository.impl';
 import { FindUserByIdUseCase } from '../../application/use-cases/user/find-user-by-id-';
 import { UpdateUserUseCase } from '../../application/use-cases/user/update-user';
 import { FindUserByEmailUseCase } from '../../application/use-cases/user/find-user-by-email';

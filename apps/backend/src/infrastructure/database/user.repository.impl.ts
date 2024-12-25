@@ -1,6 +1,6 @@
 import { User } from '../../domain/entities/user.entity';
-import { IUserRepository } from '../../application/interfaces/user-repository.interface';
-import prisma from '../../prisma';
+import { IUserRepository } from '../../application/repository/user.repository';
+import { db } from '../../db';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -9,7 +9,7 @@ export class UserRepository implements IUserRepository {
 
   async create(user: User): Promise<User> {
     const hashedPassword = await bcrypt.hash(user.password, 10);
-    return prisma.user.create({
+    return db.user.create({
       data: {
         ...user,
         password: hashedPassword,
@@ -18,27 +18,27 @@ export class UserRepository implements IUserRepository {
   }
 
   async findById(id: string): Promise<User | null> {
-    return prisma.user.findUnique({ where: { id } });
+    return db.user.findUnique({ where: { id } });
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return prisma.user.findUnique({ where: { email } });
+    return db.user.findUnique({ where: { email } });
   }
 
   async update(user: User): Promise<User> {
-    return prisma.user.update({
+    return db.user.update({
       where: { id: user.id },
       data: { ...user },
     });
   }
 
   async delete(id: string): Promise<void> {
-    await prisma.user.delete({ where: { id } });
+    await db.user.delete({ where: { id } });
   }
 
   private generateToken(user: User): string {
     const payload = { id: user.id, email: user.email };
-    return jwt.sign(payload, this.jwtSecret, { expiresIn: '1h' }); // Token expires in 1 hour
+    return jwt.sign(payload, this.jwtSecret, { expiresIn: '1h' });
   }
 
   async login(email: string, password: string): Promise<string | null> {
