@@ -14,8 +14,21 @@ datasource db {
 }
 
 generator zod {
-  provider = "zod-prisma-types"
-  output   = "./contract/generated-zod"
+  provider                         = "npx zod-prisma-types"
+  output                           = "./contract/generated-zod"
+  useMultipleFiles                 = false
+  writeBarrelFiles                 = false
+  createInputTypes                 = false
+  addInputTypeValidation           = false
+  addIncludeType                   = false
+  addSelectType                    = false
+  validateWhereUniqueInput         = true
+  createOptionalDefaultValuesTypes = false
+  createRelationValuesTypes        = false
+  createPartialTypes               = false
+  useDefaultValidators             = false
+  coerceDate                       = true
+  writeNullishInModelTypes         = false
 }
 
 enum UserRoleEnum {

@@ -5,9 +5,10 @@ import {
   authorRoutes,
   bookRoutes,
   categoryRoutes,
-  userRoutes,
+  // userRoutes,
   userBookSubscriptionRouter,
 } from './routes';
+import userRoutes from './presentation/routes/user.routes';
 import cors from 'cors';
 
 dotenv.config();
@@ -36,10 +37,12 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use('/api/users', userRoutes);
-app.use('/api/authors', authorRoutes);
-app.use('/api/categories', categoryRoutes);
-app.use('/api/books', bookRoutes);
-app.use('/api/userBookSubscription', userBookSubscriptionRouter);
+
+// app.use('/api/users', userRoutes);
+// app.use('/api/authors', authorRoutes);
+// app.use('/api/categories', categoryRoutes);
+// app.use('/api/books', bookRoutes);
+// app.use('/api/userBookSubscription', userBookSubscriptionRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
