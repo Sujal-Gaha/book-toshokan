@@ -1,14 +1,19 @@
-import { IUserRepository } from '../../repository/user.repository';
-import { User } from '../../../domain/entities/user.entity';
+import {
+  AbstractUserRepository,
+  TFindUserByEmailInput,
+  TFindUserByEmailOutput,
+} from '../../repository/user.repository';
 
 export class FindUserByEmailUseCase {
-  constructor(private userRepository: IUserRepository) {}
+  constructor(private userRepository: AbstractUserRepository) {}
 
-  async execute(user: User): Promise<User> {
-    if (!user.email) {
+  async execute(input: TFindUserByEmailInput): Promise<TFindUserByEmailOutput> {
+    if (!input.email) {
       throw new Error('User email is required');
     }
 
-    return this.userRepository.findByEmail(user.email);
+    return this.userRepository.findUserByEmail({
+      email: input.email,
+    });
   }
 }
