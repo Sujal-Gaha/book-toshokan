@@ -1,14 +1,15 @@
-import { User } from '../../../domain/entities/user.entity';
-import { IUserRepository } from '../../repository/user.repository';
+import { AbstractUserRepository, TDeleteUserInput, TDeleteUserOutput } from '../../repository/user.repository';
 
 export class DeleteUserUseCase {
-  constructor(private userRepository: IUserRepository) {}
+  constructor(private userRepository: AbstractUserRepository) {}
 
-  async execute(user: User): Promise<void> {
-    if (!user.id) {
+  async execute(input: TDeleteUserInput): Promise<TDeleteUserOutput> {
+    if (!input.id) {
       throw new Error('User id is required');
     }
 
-    return this.userRepository.delete(user.id);
+    return this.userRepository.deleteUser({
+      id: input.id,
+    });
   }
 }

@@ -1,39 +1,59 @@
 import { User } from '../../domain/entities/user.entity';
-import { IUserRepository } from '../../application/repository/user.repository';
+import {
+  AbstractUserRepository,
+  TCreateUserInput,
+  TCreateUserOutput,
+  TDeleteUserInput,
+  TDeleteUserOutput,
+  TFindUserByEmailInput,
+  TFindUserByEmailOutput,
+  TFindUserByIdInput,
+  TFindUserByIdOutput,
+  TUpdateUserInput,
+  TUpdateUserOutput,
+} from '../../application/repository/user.repository';
 import { db } from '../../db';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-export class UserRepository implements IUserRepository {
+export class UserRepository implements AbstractUserRepository {
   private jwtSecret: string = process.env.JWT_SECRET || 'your_jwt_secret';
 
-  async create(user: User): Promise<User> {
-    const hashedPassword = await bcrypt.hash(user.password, 10);
-    return db.user.create({
+  async createUser(input: TCreateUserInput): Promise<TCreateUserOutput> {
+    const { username, email, password } = input;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await db.user.create({
       data: {
-        ...user,
+        username,
+        email,
         password: hashedPassword,
       },
     });
+    return { data: user };
   }
 
-  async findById(id: string): Promise<User | null> {
-    return db.user.findUnique({ where: { id } });
+  async findUserById(input: TFindUserByIdInput): Promise<TFindUserByIdOutput> {
+    const user = await db.user.findUnique({ where: { id: input.id } });
+    return { data: user };
   }
 
-  async findByEmail(email: string): Promise<User | null> {
-    return db.user.findUnique({ where: { email } });
+  async findUserByEmail(input: TFindUserByEmailInput): Promise<TFindUserByEmailOutput> {
+    const user = await db.user.findUnique({ where: { email: input.email } });
+    return { data: user };
   }
 
-  async update(user: User): Promise<User> {
-    return db.user.update({
-      where: { id: user.id },
-      data: { ...user },
+  async updateUser(input: TUpdateUserInput): Promise<TUpdateUserOutput> {
+    const { id, username, email, password, image } = input;
+    const updatedUser = await db.user.update({
+      where: { id },
+      data: { username, email, password, image },
     });
+    return { data: updatedUser };
   }
 
-  async delete(id: string): Promise<void> {
-    await db.user.delete({ where: { id } });
+  async deleteUser(input: TDeleteUserInput): Promise<TDeleteUserOutput> {
+    const deletedUser = await db.user.delete({ where: { id: input.id } });
+    return { data: deletedUser };
   }
 
   private generateToken(user: User): string {
@@ -42,18 +62,18 @@ export class UserRepository implements IUserRepository {
   }
 
   async login(email: string, password: string): Promise<string | null> {
-    const user = await this.findByEmail(email);
+    const user = await this.findUserByEmail({ email });
 
-    if (!user) {
+    if (!user.data) {
       return null;
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.data.password);
 
     if (!isPasswordValid) {
       return null;
     }
 
-    return this.generateToken(user);
+    return this.generateToken(user.data);
   }
 }

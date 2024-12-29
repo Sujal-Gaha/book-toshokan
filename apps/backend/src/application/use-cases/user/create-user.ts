@@ -1,16 +1,21 @@
-import { IUserRepository } from '../../repository/user.repository';
-import { User } from '../../../domain/entities/user.entity';
+import { AbstractUserRepository, TCreateUserInput, TCreateUserOutput } from '../../repository/user.repository';
 
 export class CreateUserUseCase {
-  constructor(private userRepository: IUserRepository) {}
+  constructor(private userRepository: AbstractUserRepository) {}
 
-  async execute(user: User): Promise<User> {
-    const existingUser = await this.userRepository.findByEmail(user.email);
+  async execute(input: TCreateUserInput): Promise<TCreateUserOutput> {
+    const userExists = await this.userRepository.findUserByEmail({
+      email: input.email,
+    });
 
-    if (existingUser) {
+    if (userExists) {
       throw new Error('User already exists');
     }
 
-    return this.userRepository.create(user);
+    return this.userRepository.createUser({
+      username: input.username,
+      email: input.email,
+      password: input.password,
+    });
   }
 }

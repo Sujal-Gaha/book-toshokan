@@ -1,20 +1,27 @@
-import { IUserRepository } from '../../repository/user.repository';
-import { User } from '../../../domain/entities/user.entity';
+import { AbstractUserRepository, TUpdateUserInput, TUpdateUserOutput } from '../../repository/user.repository';
 
 export class UpdateUserUseCase {
-  constructor(private userRepository: IUserRepository) {}
+  constructor(private userRepository: AbstractUserRepository) {}
 
-  async execute(user: User): Promise<User> {
-    if (!user.id) {
+  async execute(input: TUpdateUserInput): Promise<TUpdateUserOutput> {
+    if (!input.id) {
       throw new Error('User id is required');
     }
 
-    const userById = await this.userRepository.findById(user.id);
+    const userById = await this.userRepository.findUserById({
+      id: input.id,
+    });
 
     if (!userById) {
-      throw new Error(`User with the id ${user.id} not found`);
+      throw new Error(`User with the id ${input.id} not found`);
     }
 
-    return this.userRepository.update(user);
+    return this.userRepository.updateUser({
+      id: input.id,
+      username: input.username,
+      email: input.email,
+      password: input.password,
+      image: input.image,
+    });
   }
 }
