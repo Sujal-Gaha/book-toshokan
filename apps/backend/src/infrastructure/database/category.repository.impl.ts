@@ -4,9 +4,8 @@ import {
   TCreateCategoryOutput,
   TDeleteCategoryInput,
   TDeleteCategoryOutput,
+  TFindAllCategoryOutput,
   TFindCategoryByIdInput,
-  TFindCategoryByNameInput,
-  TFindCategoryByNameOutput,
   TUpdateCategoryInput,
   TUpdateCategoryOutput,
 } from '../../application/repository/category.repository';
@@ -30,6 +29,18 @@ export class CategoryRepository implements AbstractCategoryRepository {
     };
   }
 
+  async findAllCategory(): Promise<TFindAllCategoryOutput> {
+    const categories = await db.category.findMany({});
+
+    return {
+      data: categories.map((category) => ({
+        id: category.id,
+        name: category.name,
+        description: category.description,
+      })),
+    };
+  }
+
   async findCategoryById(input: TFindCategoryByIdInput): Promise<TCreateCategoryOutput> {
     const categoryById = await db.category.findFirst({
       where: {
@@ -42,22 +53,6 @@ export class CategoryRepository implements AbstractCategoryRepository {
         id: categoryById.id,
         name: categoryById.name,
         description: categoryById.description,
-      },
-    };
-  }
-
-  async findCategoryByName(input: TFindCategoryByNameInput): Promise<TFindCategoryByNameOutput> {
-    const categoryByName = await db.category.findFirst({
-      where: {
-        name: input.name,
-      },
-    });
-
-    return {
-      data: {
-        id: categoryByName.id,
-        name: categoryByName.name,
-        description: categoryByName.description,
       },
     };
   }
