@@ -24,7 +24,17 @@ export class CategoryController {
         description: description,
       });
 
-      res.status(201).json(category);
+      res.status(201).json({
+        status: 201,
+        body: {
+          data: {
+            id: category.data.id,
+            name: category.data.name,
+            description: category.data.description,
+          },
+          message: 'Created category successfully',
+        },
+      });
     } catch (error) {
       console.log('error ', error);
       res.status(400).json({ error: error.message });

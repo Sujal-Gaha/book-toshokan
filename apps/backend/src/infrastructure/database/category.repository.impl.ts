@@ -6,6 +6,7 @@ import {
   TDeleteCategoryOutput,
   TFindAllCategoryOutput,
   TFindCategoryByIdInput,
+  TFindCategoryByIdOutput,
   TUpdateCategoryInput,
   TUpdateCategoryOutput,
 } from '../../application/repository/category.repository';
@@ -41,7 +42,7 @@ export class CategoryRepository implements AbstractCategoryRepository {
     };
   }
 
-  async findCategoryById(input: TFindCategoryByIdInput): Promise<TCreateCategoryOutput> {
+  async findCategoryById(input: TFindCategoryByIdInput): Promise<TFindCategoryByIdOutput> {
     const categoryById = await db.category.findFirst({
       where: {
         id: input.id,
