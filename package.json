@@ -8,10 +8,10 @@
     "build": "yarn build:frontend && yarn build:backend",
     "dev:frontend": "nx run frontend:serve",
     "dev:backend": "nx run backend:serve",
-    "prisma:migrate-dev": "npx prisma migrate dev --schema=apps/backend/src/prisma/schema.prisma",
-    "prisma:migrate-deploy": "npx prisma migrate deploy --schema=apps/backend/src/prisma/schema.prisma",
-    "prisma:migrate-reset": "npx prisma migrate reset --schema=apps/backend/src/prisma/schema.prisma",
-    "prisma:generate": "prisma generate --schema=apps/backend/src/prisma/schema.prisma"
+    "prisma:migrate-dev": "npx prisma migrate dev --schema=libs/backend-db/prisma/schema.prisma",
+    "prisma:migrate-deploy": "npx prisma migrate deploy --schema=libs/backend-db/prisma/schema.prisma",
+    "prisma:migrate-reset": "npx prisma migrate reset --schema=libs/backend-db/prisma/schema.prisma",
+    "prisma:generate": "prisma generate --schema=libs/backend-db/prisma/schema.prisma"
   },
   "private": true,
   "dependencies": {

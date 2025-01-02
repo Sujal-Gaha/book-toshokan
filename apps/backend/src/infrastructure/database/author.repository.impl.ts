@@ -1,4 +1,4 @@
-import { db } from '../../db';
+import { db } from '@book-toshokan/backend-db';
 import {
   AbstractAuthorRepository,
   TCreateAuthorInput,

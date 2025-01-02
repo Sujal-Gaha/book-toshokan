@@ -12,7 +12,7 @@ import {
   TUpdateUserInput,
   TUpdateUserOutput,
 } from '../../application/repository/user.repository';
-import { db } from '../../db';
+import { db } from '@book-toshokan/backend-db';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 

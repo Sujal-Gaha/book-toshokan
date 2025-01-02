@@ -10,7 +10,7 @@ import {
   TUpdateCategoryInput,
   TUpdateCategoryOutput,
 } from '../../application/repository/category.repository';
-import { db } from '../../db';
+import { db } from '@book-toshokan/backend-db';
 
 export class CategoryRepository implements AbstractCategoryRepository {
   async createCategory(input: TCreateCategoryInput): Promise<TCreateCategoryOutput> {
