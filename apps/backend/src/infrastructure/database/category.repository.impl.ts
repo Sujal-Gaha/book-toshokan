@@ -1,5 +1,4 @@
 import {
-  AbstractCategoryRepository,
   TCreateCategoryInput,
   TCreateCategoryOutput,
   TDeleteCategoryInput,
@@ -9,8 +8,9 @@ import {
   TFindCategoryByIdOutput,
   TUpdateCategoryInput,
   TUpdateCategoryOutput,
-} from '../../application/repository/category.repository';
-import { db } from '@book-toshokan/backend-db';
+} from '@book-toshokan/libs/domain';
+import { AbstractCategoryRepository } from '../../application/repository/category.repository';
+import { db } from '@book-toshokan/libs/backend-db';
 
 export class CategoryRepository implements AbstractCategoryRepository {
   async createCategory(input: TCreateCategoryInput): Promise<TCreateCategoryOutput> {

@@ -1,4 +1,5 @@
-import { AbstractUserRepository, TCreateUserInput, TCreateUserOutput } from '../../repository/user.repository';
+import { TCreateUserInput, TCreateUserOutput } from '@book-toshokan/libs/domain';
+import { AbstractUserRepository } from '../../repository/user.repository';
 
 export class CreateUserUseCase {
   constructor(private userRepository: AbstractUserRepository) {}
@@ -16,6 +17,7 @@ export class CreateUserUseCase {
       username: input.username,
       email: input.email,
       password: input.password,
+      image: input.image,
     });
   }
 }

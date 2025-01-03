@@ -1,8 +1,5 @@
-import {
-  AbstractCategoryRepository,
-  TCreateCategoryInput,
-  TCreateCategoryOutput,
-} from '../../repository/category.repository';
+import { TCreateCategoryInput, TCreateCategoryOutput } from '@book-toshokan/libs/domain';
+import { AbstractCategoryRepository } from '../../repository/category.repository';
 
 export class CreateCategoryUseCase {
   constructor(private categoryRepository: AbstractCategoryRepository) {}

@@ -1,19 +1,15 @@
-import { User } from '../../domain/entities/user.entity';
-
-export type TCreateUserInput = Pick<User, 'username' | 'email' | 'password'>;
-export type TCreateUserOutput = User;
-
-export type TFindUserByIdInput = Pick<User, 'id'>;
-export type TFindUserByIdOutput = User | null;
-
-export type TFindUserByEmailInput = Pick<User, 'email'>;
-export type TFindUserByEmailOutput = User | null;
-
-export type TUpdateUserInput = Pick<User, 'id' | 'username' | 'email' | 'password' | 'image'>;
-export type TUpdateUserOutput = User;
-
-export type TDeleteUserInput = Pick<User, 'id'>;
-export type TDeleteUserOutput = User;
+import {
+  TCreateUserInput,
+  TCreateUserOutput,
+  TDeleteUserInput,
+  TDeleteUserOutput,
+  TFindUserByEmailInput,
+  TFindUserByEmailOutput,
+  TFindUserByIdInput,
+  TFindUserByIdOutput,
+  TUpdateUserInput,
+  TUpdateUserOutput,
+} from '@book-toshokan/libs/domain';
 
 export abstract class AbstractUserRepository {
   abstract createUser(input: TCreateUserInput): Promise<TCreateUserOutput>;

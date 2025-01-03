@@ -1,4 +1,7 @@
-import { UserRoleEnum } from '@prisma/client';
+export enum UserRoleEnum {
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+}
 
 export class User {
   constructor(

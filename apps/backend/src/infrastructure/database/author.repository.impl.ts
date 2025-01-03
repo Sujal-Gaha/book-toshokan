@@ -1,6 +1,6 @@
-import { db } from '@book-toshokan/backend-db';
+import { db } from '@book-toshokan/libs/backend-db';
+import { AbstractAuthorRepository } from '../../application/repository/author.repository';
 import {
-  AbstractAuthorRepository,
   TCreateAuthorInput,
   TCreateAuthorOutput,
   TDeleteAuthorInput,
@@ -12,7 +12,7 @@ import {
   TFindAuthorByNameOutput,
   TUpdateAuthorInput,
   TUpdateAuthorOutput,
-} from '../../application/repository/author.repository';
+} from '@book-toshokan/libs/domain';
 
 export class AuthorRepository implements AbstractAuthorRepository {
   async createAuthor(input: TCreateAuthorInput): Promise<TCreateAuthorOutput> {

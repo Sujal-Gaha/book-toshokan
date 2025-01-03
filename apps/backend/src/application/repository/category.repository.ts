@@ -1,18 +1,14 @@
-import { Category } from '../../domain/entities/category.entity';
-
-export type TCreateCategoryInput = Pick<Category, 'name' | 'description'>;
-export type TCreateCategoryOutput = Category;
-
-export type TFindAllCategoryOutput = Category[];
-
-export type TFindCategoryByIdInput = Pick<Category, 'id'>;
-export type TFindCategoryByIdOutput = Category | null;
-
-export type TUpdateCategoryInput = Category;
-export type TUpdateCategoryOutput = Category;
-
-export type TDeleteCategoryInput = Pick<Category, 'id'>;
-export type TDeleteCategoryOutput = Category;
+import {
+  TCreateCategoryInput,
+  TCreateCategoryOutput,
+  TDeleteCategoryInput,
+  TDeleteCategoryOutput,
+  TFindAllCategoryOutput,
+  TFindCategoryByIdInput,
+  TFindCategoryByIdOutput,
+  TUpdateCategoryInput,
+  TUpdateCategoryOutput,
+} from '@book-toshokan/libs/domain';
 
 export abstract class AbstractCategoryRepository {
   abstract createCategory(input: TCreateCategoryInput): Promise<TCreateCategoryOutput>;

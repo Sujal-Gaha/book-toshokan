@@ -1,8 +1,5 @@
-import {
-  AbstractCategoryRepository,
-  TFindCategoryByIdInput,
-  TFindCategoryByIdOutput,
-} from '../../repository/category.repository';
+import { TFindCategoryByIdInput, TFindCategoryByIdOutput } from '@book-toshokan/libs/domain';
+import { AbstractCategoryRepository } from '../../repository/category.repository';
 
 export class FindCategoryByIdUseCase {
   constructor(private categoryRepository: AbstractCategoryRepository) {}

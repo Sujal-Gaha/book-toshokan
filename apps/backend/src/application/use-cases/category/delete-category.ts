@@ -1,17 +1,10 @@
-import {
-  AbstractCategoryRepository,
-  TDeleteCategoryInput,
-  TDeleteCategoryOutput,
-} from '../../repository/category.repository';
+import { TDeleteCategoryInput, TDeleteCategoryOutput } from '@book-toshokan/libs/domain';
+import { AbstractCategoryRepository } from '../../repository/category.repository';
 
 export class DeleteCategoryUseCase {
   constructor(private categoryRepository: AbstractCategoryRepository) {}
 
   async execute(input: TDeleteCategoryInput): Promise<TDeleteCategoryOutput> {
-    if (!input.id) {
-      throw new Error('Category id is required');
-    }
-
     const categoryExists = await this.categoryRepository.findCategoryById({
       id: input.id,
     });
