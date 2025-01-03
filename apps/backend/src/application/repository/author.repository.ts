@@ -1,21 +1,21 @@
 import { Author } from '../../domain/entities/author.entity';
 
 export type TCreateAuthorInput = Pick<Author, 'name' | 'about'>;
-export type TCreateAuthorOutput = { data: Author };
+export type TCreateAuthorOutput = Author;
 
-export type TFindAllAuthorsOutput = { data: Author[] };
+export type TFindAllAuthorsOutput = Author[];
 
 export type TFindAuthorByIdInput = Pick<Author, 'id'>;
-export type TFindAuthorByIdOutput = { data: Author | null };
+export type TFindAuthorByIdOutput = Author | null;
 
 export type TFindAuthorByNameInput = Pick<Author, 'name'>;
-export type TFindAuthorByNameOutput = { data: Author | null };
+export type TFindAuthorByNameOutput = Author | null;
 
 export type TUpdateAuthorInput = Author;
-export type TUpdateAuthorOutput = { data: Author };
+export type TUpdateAuthorOutput = Author;
 
 export type TDeleteAuthorInput = Pick<Author, 'id'>;
-export type TDeleteAuthorOutput = { data: Author };
+export type TDeleteAuthorOutput = Author;
 
 export abstract class AbstractAuthorRepository {
   abstract createAuthor(input: TCreateAuthorInput): Promise<TCreateAuthorOutput>;

@@ -29,17 +29,17 @@ export class UserRepository implements AbstractUserRepository {
         password: hashedPassword,
       },
     });
-    return { data: user };
+    return user;
   }
 
   async findUserById(input: TFindUserByIdInput): Promise<TFindUserByIdOutput> {
     const user = await db.user.findUnique({ where: { id: input.id } });
-    return { data: user };
+    return user;
   }
 
   async findUserByEmail(input: TFindUserByEmailInput): Promise<TFindUserByEmailOutput> {
     const user = await db.user.findUnique({ where: { email: input.email } });
-    return { data: user };
+    return user;
   }
 
   async updateUser(input: TUpdateUserInput): Promise<TUpdateUserOutput> {
@@ -48,12 +48,12 @@ export class UserRepository implements AbstractUserRepository {
       where: { id },
       data: { username, email, password, image },
     });
-    return { data: updatedUser };
+    return updatedUser;
   }
 
   async deleteUser(input: TDeleteUserInput): Promise<TDeleteUserOutput> {
     const deletedUser = await db.user.delete({ where: { id: input.id } });
-    return { data: deletedUser };
+    return deletedUser;
   }
 
   private generateToken(user: User): string {
@@ -64,16 +64,16 @@ export class UserRepository implements AbstractUserRepository {
   async login(email: string, password: string): Promise<string | null> {
     const user = await this.findUserByEmail({ email });
 
-    if (!user.data) {
+    if (!user) {
       return null;
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.data.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       return null;
     }
 
-    return this.generateToken(user.data);
+    return this.generateToken(user);
   }
 }

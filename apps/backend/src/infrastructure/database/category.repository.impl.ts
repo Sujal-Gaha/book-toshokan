@@ -22,24 +22,20 @@ export class CategoryRepository implements AbstractCategoryRepository {
     });
 
     return {
-      data: {
-        id: category.id,
-        name: category.name,
-        description: category.description,
-      },
+      id: category.id,
+      name: category.name,
+      description: category.description,
     };
   }
 
   async findAllCategory(): Promise<TFindAllCategoryOutput> {
     const categories = await db.category.findMany({});
 
-    return {
-      data: categories.map((category) => ({
-        id: category.id,
-        name: category.name,
-        description: category.description,
-      })),
-    };
+    return categories.map((category) => ({
+      id: category.id,
+      name: category.name,
+      description: category.description,
+    }));
   }
 
   async findCategoryById(input: TFindCategoryByIdInput): Promise<TFindCategoryByIdOutput> {
@@ -50,11 +46,9 @@ export class CategoryRepository implements AbstractCategoryRepository {
     });
 
     return {
-      data: {
-        id: categoryById.id,
-        name: categoryById.name,
-        description: categoryById.description,
-      },
+      id: categoryById.id,
+      name: categoryById.name,
+      description: categoryById.description,
     };
   }
 
@@ -70,11 +64,9 @@ export class CategoryRepository implements AbstractCategoryRepository {
     });
 
     return {
-      data: {
-        id: updatedCategory.id,
-        name: updatedCategory.name,
-        description: updatedCategory.description,
-      },
+      id: updatedCategory.id,
+      name: updatedCategory.name,
+      description: updatedCategory.description,
     };
   }
 
@@ -86,11 +78,9 @@ export class CategoryRepository implements AbstractCategoryRepository {
     });
 
     return {
-      data: {
-        id: deletedCategory.id,
-        name: deletedCategory.name,
-        description: deletedCategory.description,
-      },
+      id: deletedCategory.id,
+      name: deletedCategory.name,
+      description: deletedCategory.description,
     };
   }
 }

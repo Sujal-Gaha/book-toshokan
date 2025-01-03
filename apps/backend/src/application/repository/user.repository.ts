@@ -1,19 +1,19 @@
 import { User } from '../../domain/entities/user.entity';
 
 export type TCreateUserInput = Pick<User, 'username' | 'email' | 'password'>;
-export type TCreateUserOutput = { data: User };
+export type TCreateUserOutput = User;
 
 export type TFindUserByIdInput = Pick<User, 'id'>;
-export type TFindUserByIdOutput = { data: User | null };
+export type TFindUserByIdOutput = User | null;
 
 export type TFindUserByEmailInput = Pick<User, 'email'>;
-export type TFindUserByEmailOutput = { data: User | null };
+export type TFindUserByEmailOutput = User | null;
 
 export type TUpdateUserInput = Pick<User, 'id' | 'username' | 'email' | 'password' | 'image'>;
-export type TUpdateUserOutput = { data: User };
+export type TUpdateUserOutput = User;
 
 export type TDeleteUserInput = Pick<User, 'id'>;
-export type TDeleteUserOutput = { data: User };
+export type TDeleteUserOutput = User;
 
 export abstract class AbstractUserRepository {
   abstract createUser(input: TCreateUserInput): Promise<TCreateUserOutput>;

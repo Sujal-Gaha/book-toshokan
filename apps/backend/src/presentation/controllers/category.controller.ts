@@ -28,9 +28,9 @@ export class CategoryController {
         status: 201,
         body: {
           data: {
-            id: category.data.id,
-            name: category.data.name,
-            description: category.data.description,
+            id: category.id,
+            name: category.name,
+            description: category.description,
           },
           message: 'Created category successfully',
         },
