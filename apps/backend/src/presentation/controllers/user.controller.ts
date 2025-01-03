@@ -8,11 +8,16 @@ import {
   TApiError,
   TApiResponse,
   TCreateUserOutput,
+  TDeleteUserOutput,
   TFindUserByEmailOutput,
   TFindUserByIdOutput,
+  TLoginUserOutput,
+  TLogoutUserOutput,
   TUpdateUserOutput,
 } from '@book-toshokan/libs/domain';
 import { StatusCodes } from 'http-status-codes';
+import { LoginUserUseCase } from '../../application/use-cases/user/login-user';
+import { DeleteUserUseCase } from '../../application/use-cases/user/delete-user';
 
 const userRepository = new UserRepository();
 
@@ -20,6 +25,8 @@ const createUserUseCase = new CreateUserUseCase(userRepository);
 const findUserByIdUseCase = new FindUserByIdUseCase(userRepository);
 const findUserByEmailUseCase = new FindUserByEmailUseCase(userRepository);
 const updateUserUseCase = new UpdateUserUseCase(userRepository);
+const deleteUserUseCase = new DeleteUserUseCase(userRepository);
+const loginUserUseCase = new LoginUserUseCase(userRepository);
 
 export class UserController {
   static async createUser(req: Request, res: Response) {
@@ -133,7 +140,7 @@ export class UserController {
   }
 
   static async findUserByEmail(req: Request, res: Response) {
-    const { email } = req.body;
+    const { email } = req.params;
 
     if (!email) {
       const response: TApiError = {
@@ -242,6 +249,126 @@ export class UserController {
       return res.status(StatusCodes.OK).json(response);
     } catch (error) {
       console.error('Error while updating user:', error);
+
+      const response: TApiError = {
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+        body: {
+          data: null,
+          message: error instanceof Error ? error.message : 'An unknown error occurred',
+        },
+      };
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(response);
+    }
+  }
+
+  static async deleteUser(req: Request, res: Response) {
+    const { userId } = req.params;
+
+    if (!userId) {
+      const response: TApiError = {
+        status: StatusCodes.BAD_REQUEST,
+        body: {
+          data: null,
+          message: 'Missing required fields',
+        },
+      };
+      return res.status(StatusCodes.BAD_REQUEST).json(response);
+    }
+
+    try {
+      const deletedUser = await deleteUserUseCase.execute({
+        id: userId,
+      });
+
+      const response: TApiResponse<TDeleteUserOutput> = {
+        status: StatusCodes.OK,
+        body: {
+          data: {
+            id: deletedUser.id,
+            username: deletedUser.username,
+            email: deletedUser.email,
+            role: deletedUser.role,
+          },
+          message: 'Deleted the user successfully',
+        },
+      };
+
+      return res.status(StatusCodes.OK).json(response);
+    } catch (error) {
+      console.error('Error while deleting user:', error);
+
+      const response: TApiError = {
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+        body: {
+          data: null,
+          message: error instanceof Error ? error.message : 'An unknown error occurred',
+        },
+      };
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(response);
+    }
+  }
+
+  static async loginUser(req: Request, res: Response) {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      const response: TApiError = {
+        status: StatusCodes.BAD_REQUEST,
+        body: {
+          data: null,
+          message: 'Missing required fields',
+        },
+      };
+      return res.status(StatusCodes.BAD_REQUEST).json(response);
+    }
+
+    try {
+      const user = await loginUserUseCase.execute({
+        email: email,
+        password: password,
+      });
+
+      const response: TApiResponse<TLoginUserOutput> = {
+        status: StatusCodes.OK,
+        body: {
+          data: {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+          },
+          message: 'Logged in successfully',
+        },
+      };
+
+      return res.status(StatusCodes.OK).json(response);
+    } catch (error) {
+      console.error('Error while logging in user:', error);
+
+      const response: TApiError = {
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+        body: {
+          data: null,
+          message: error instanceof Error ? error.message : 'An unknown error occurred',
+        },
+      };
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(response);
+    }
+  }
+
+  static async logoutUser(req: Request, res: Response) {
+    try {
+      const response: TApiResponse<TLogoutUserOutput> = {
+        status: StatusCodes.OK,
+        body: {
+          data: null,
+          message: 'Logged out successfully',
+        },
+      };
+
+      return res.status(StatusCodes.OK).json(response);
+    } catch (error) {
+      console.error('Error while logging out user:', error);
 
       const response: TApiError = {
         status: StatusCodes.INTERNAL_SERVER_ERROR,
