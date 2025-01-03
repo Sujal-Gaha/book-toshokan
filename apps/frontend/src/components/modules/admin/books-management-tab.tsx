@@ -1,26 +1,11 @@
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Input,
-  Button,
-  Pagination,
-} from '@nextui-org/react';
+import { Card, CardBody, CardHeader, Input, Button, Pagination } from '@nextui-org/react';
 import { PlusCircle, Search } from 'lucide-react';
 import { useAddBookModal } from './add-book-modal';
 import { Dispatch, Key, SetStateAction, useCallback, useState } from 'react';
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Tooltip,
-} from '@nextui-org/react';
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Tooltip } from '@nextui-org/react';
 import { DeleteIcon, EyeIcon, EditIcon } from '../../icons';
 import { useQuery } from '@tanstack/react-query';
-import { getAllBooks } from '../../../api/data/book';
+import { getAllBooks } from '../../../data/book';
 import { Loading } from '../../../components/loading';
 
 type TColumn = {
@@ -105,13 +90,7 @@ const books: TBook[] = [
   },
 ];
 
-const BooksManagementTable = ({
-  page,
-  setPage,
-}: {
-  page: number;
-  setPage: Dispatch<SetStateAction<number>>;
-}) => {
+const BooksManagementTable = ({ page, setPage }: { page: number; setPage: Dispatch<SetStateAction<number>> }) => {
   const renderCell = useCallback((book: TBook, columnKey: Key) => {
     const cellValue = book[columnKey as keyof TBook];
 
@@ -157,21 +136,14 @@ const BooksManagementTable = ({
     >
       <TableHeader columns={columns}>
         {(column) => (
-          <TableColumn
-            key={column.uid}
-            align={column.uid === 'actions' ? 'center' : 'start'}
-          >
+          <TableColumn key={column.uid} align={column.uid === 'actions' ? 'center' : 'start'}>
             {column.name}
           </TableColumn>
         )}
       </TableHeader>
       <TableBody items={books}>
         {(item) => (
-          <TableRow key={item.id}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
+          <TableRow key={item.id}>{(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}</TableRow>
         )}
       </TableBody>
     </Table>
@@ -202,19 +174,14 @@ export const BooksManagementTab = () => {
                 base: 'max-w-full sm:max-w-[10rem] h-10',
                 mainWrapper: 'h-full',
                 input: 'text-small',
-                inputWrapper:
-                  'h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20',
+                inputWrapper: 'h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20',
               }}
               placeholder="Search books..."
               size="sm"
               startContent={<Search size={18} />}
               type="search"
             />
-            <Button
-              color="secondary"
-              endContent={<PlusCircle size={20} />}
-              onPress={openAddBookModal}
-            >
+            <Button color="secondary" endContent={<PlusCircle size={20} />} onPress={openAddBookModal}>
               Add New Book
             </Button>
           </div>

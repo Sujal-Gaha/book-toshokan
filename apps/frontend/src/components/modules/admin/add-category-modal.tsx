@@ -3,9 +3,9 @@ import { useDisclosure, Input } from '@nextui-org/react';
 import { Button } from '../../ui/button';
 import { ModalComponent } from '../../ui/modal';
 import { SubmitHandler, useForm, UseFormHandleSubmit, UseFormRegister } from 'react-hook-form';
-import { TCreateCategoryInput, TCreateCategoryOutput } from '../../../api/contracts/category.schema';
+import { TApiError, TApiResponse, TCreateCategoryInput, TCreateCategoryOutput } from '@book-toshokan/libs/domain';
 import { useMutation } from '@tanstack/react-query';
-import { createCategory } from '../../../api/data/category.data';
+import { createCategory } from '../../../data/category.data';
 import { toastError, toastSuccess } from '../../toast';
 
 interface IAddCategoryModal {
@@ -37,7 +37,7 @@ const AddCategoryModal = ({ onClose, register, handleSubmit, addCategory }: IAdd
 };
 
 export const useAddCategoryModal = () => {
-  const createCategoryMtn = useMutation<TCreateCategoryOutput, { data: null }, TCreateCategoryInput>({
+  const createCategoryMtn = useMutation<TApiResponse<TCreateCategoryOutput>, TApiError, TCreateCategoryInput>({
     mutationFn: createCategory,
   });
 
@@ -57,7 +57,8 @@ export const useAddCategoryModal = () => {
             toastSuccess(data.body.message);
           },
           onError: (error) => {
-            toastError('Something went wrong');
+            console.log('Error:', error.body.message);
+            toastError(error.body.message);
           },
         }
       );

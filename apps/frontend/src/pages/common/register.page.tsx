@@ -9,21 +9,21 @@ import { Divider } from '../../components/divider';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
 import { getAppsPath } from '../../utils/getAppsPath';
 import { useMutation } from '@tanstack/react-query';
-import { registerUser } from '../../api/data/user';
+import { registerUser } from '../../data/user';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import {
-  TError,
-  TRegisterUserInput,
-  RegisterUserSchema,
-  TRegisterUserOutput,
-} from '../../api/contracts/user/schema';
 import { toastError, toastSuccess } from '../../components/toast';
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  CreateUserSchema,
+  TApiError,
+  TApiResponse,
+  TCreateUserInput,
+  TCreateUserOutput,
+} from '@book-toshokan/libs/domain';
 
 export const RegisterPage = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
-    useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
 
   const [confirmPassword, setConfirmPassword] = useState('');
   const [hasTermsBeenAccepted, setHasTermsBeenAccepted] = useState(false);
@@ -36,11 +36,7 @@ export const RegisterPage = () => {
 
   const { loginPage } = getAppsPath();
 
-  const registerUserMtn = useMutation<
-    TRegisterUserOutput,
-    TError,
-    TRegisterUserInput
-  >({
+  const registerUserMtn = useMutation<TApiResponse<TCreateUserOutput>, TApiError, TCreateUserInput>({
     mutationFn: registerUser,
   });
 
@@ -49,8 +45,8 @@ export const RegisterPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TRegisterUserInput>({
-    resolver: zodResolver(RegisterUserSchema),
+  } = useForm<TCreateUserInput>({
+    resolver: zodResolver(CreateUserSchema),
     defaultValues: {
       password: '',
       email: email ? email : '',
@@ -60,7 +56,7 @@ export const RegisterPage = () => {
   const password = watch('password');
   const passwordMatches = confirmPassword === password;
 
-  const registerForm: SubmitHandler<TRegisterUserInput> = async (data) => {
+  const registerForm: SubmitHandler<TCreateUserInput> = async (data) => {
     try {
       if (passwordMatches && hasTermsBeenAccepted) {
         await registerUserMtn.mutateAsync(
@@ -86,10 +82,8 @@ export const RegisterPage = () => {
     }
   };
 
-  const toggleIsPasswordVisible = () =>
-    setIsPasswordVisible(!isPasswordVisible);
-  const toggleIsConfirmPasswordVisible = () =>
-    setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
+  const toggleIsPasswordVisible = () => setIsPasswordVisible(!isPasswordVisible);
+  const toggleIsConfirmPasswordVisible = () => setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
 
   return (
     <main className="flex bg-black">
@@ -101,9 +95,7 @@ export const RegisterPage = () => {
           <div className="w-[450px] p-6 flex flex-col gap-6 rounded-md">
             <div className="flex flex-col items-start">
               <h1 className="text-xl font-medium text-white">Create Account</h1>
-              <p className="text-gray-400 text-sm">
-                Sign up for a new account to get started
-              </p>
+              <p className="text-gray-400 text-sm">Sign up for a new account to get started</p>
             </div>
             <div className="flex flex-col gap-4 w-full">
               <Input
@@ -181,24 +173,13 @@ export const RegisterPage = () => {
                 errorMessage={'Password doesnot match'}
               />
             </div>
-            <Checkbox
-              isRequired
-              onClick={(e) => setHasTermsBeenAccepted(!e.currentTarget.value)}
-            >
+            <Checkbox isRequired onClick={(e) => setHasTermsBeenAccepted(!e.currentTarget.value)}>
               I agree with the{' '}
-              <span
-                className="text-blue-500 hover:underline"
-                onClick={(e) => e.stopPropagation()}
-              >
+              <span className="text-blue-500 hover:underline" onClick={(e) => e.stopPropagation()}>
                 Terms & Privacy Policy
               </span>
             </Checkbox>
-            <Button
-              type="submit"
-              color="primary"
-              size="lg"
-              disabled={registerUserMtn.isPending}
-            >
+            <Button type="submit" color="primary" size="lg" disabled={registerUserMtn.isPending}>
               {registerUserMtn.isPending ? 'Signing Up...' : 'Sign Up'}
             </Button>
             <p className="text-white text-center">
