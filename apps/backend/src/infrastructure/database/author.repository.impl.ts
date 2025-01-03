@@ -1,6 +1,6 @@
-import { db } from '../../db';
+import { db } from '@book-toshokan/libs/backend-db';
+import { AbstractAuthorRepository } from '../../application/repository/author.repository';
 import {
-  AbstractAuthorRepository,
   TCreateAuthorInput,
   TCreateAuthorOutput,
   TDeleteAuthorInput,
@@ -12,7 +12,7 @@ import {
   TFindAuthorByNameOutput,
   TUpdateAuthorInput,
   TUpdateAuthorOutput,
-} from '../../application/repository/author.repository';
+} from '@book-toshokan/libs/domain';
 
 export class AuthorRepository implements AbstractAuthorRepository {
   async createAuthor(input: TCreateAuthorInput): Promise<TCreateAuthorOutput> {
@@ -24,11 +24,9 @@ export class AuthorRepository implements AbstractAuthorRepository {
     });
 
     return {
-      data: {
-        id: author.id,
-        name: author.name,
-        about: author.about,
-      },
+      id: author.id,
+      name: author.name,
+      about: author.about,
     };
   }
 
@@ -40,19 +38,19 @@ export class AuthorRepository implements AbstractAuthorRepository {
     });
 
     return {
-      data: {
-        id: authorById.id,
-        name: authorById.name,
-        about: authorById.about,
-      },
+      id: authorById.id,
+      name: authorById.name,
+      about: authorById.about,
     };
   }
 
   async findAllAuthors(): Promise<TFindAllAuthorsOutput> {
     const allAuthors = await db.author.findMany({});
-    return {
-      data: allAuthors,
-    };
+    return allAuthors.map((author) => ({
+      id: author.id,
+      name: author.name,
+      about: author.about,
+    }));
   }
 
   async findAuthorByName(input: TFindAuthorByNameInput): Promise<TFindAuthorByNameOutput> {
@@ -62,11 +60,9 @@ export class AuthorRepository implements AbstractAuthorRepository {
       },
     });
     return {
-      data: {
-        id: authorByName.id,
-        name: authorByName.name,
-        about: authorByName.about,
-      },
+      id: authorByName.id,
+      name: authorByName.name,
+      about: authorByName.about,
     };
   }
 
@@ -83,11 +79,9 @@ export class AuthorRepository implements AbstractAuthorRepository {
     });
 
     return {
-      data: {
-        id: updatedAuthor.id,
-        name: updatedAuthor.name,
-        about: updatedAuthor.about,
-      },
+      id: updatedAuthor.id,
+      name: updatedAuthor.name,
+      about: updatedAuthor.about,
     };
   }
 
@@ -99,11 +93,9 @@ export class AuthorRepository implements AbstractAuthorRepository {
     });
 
     return {
-      data: {
-        id: deletedAuthor.id,
-        name: deletedAuthor.name,
-        about: deletedAuthor.about,
-      },
+      id: deletedAuthor.id,
+      name: deletedAuthor.name,
+      about: deletedAuthor.about,
     };
   }
 }

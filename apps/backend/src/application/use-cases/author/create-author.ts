@@ -1,4 +1,5 @@
-import { AbstractAuthorRepository, TCreateAuthorInput, TCreateAuthorOutput } from '../../repository/author.repository';
+import { TCreateAuthorInput, TCreateAuthorOutput } from '@book-toshokan/libs/domain';
+import { AbstractAuthorRepository } from '../../repository/author.repository';
 
 export class CreateAuthorUseCase {
   constructor(private authorRepository: AbstractAuthorRepository) {}
@@ -8,7 +9,7 @@ export class CreateAuthorUseCase {
       name: input.name,
     });
 
-    if (!authorExist) {
+    if (authorExist) {
       throw new Error('Author already exists');
     }
 

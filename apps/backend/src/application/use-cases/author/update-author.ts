@@ -1,13 +1,10 @@
-import { AbstractAuthorRepository, TUpdateAuthorInput, TUpdateAuthorOutput } from '../../repository/author.repository';
+import { TUpdateAuthorInput, TUpdateAuthorOutput } from '@book-toshokan/libs/domain';
+import { AbstractAuthorRepository } from '../../repository/author.repository';
 
 export class UpdateAuthorUseCase {
   constructor(public authorRepository: AbstractAuthorRepository) {}
 
   async execute(input: TUpdateAuthorInput): Promise<TUpdateAuthorOutput> {
-    if (!input.id) {
-      throw new Error('Author id is required');
-    }
-
     const authorExist = await this.authorRepository.findAuthorById({
       id: input.id,
     });

@@ -14,7 +14,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@book-toshokan/libs/backend-db": ["libs/backend-db/src/index.ts"],
+      "@book-toshokan/libs/domain": ["libs/domain/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

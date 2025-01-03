@@ -1,16 +1,16 @@
 import {
-  AbstractCategoryRepository,
   TCreateCategoryInput,
   TCreateCategoryOutput,
   TDeleteCategoryInput,
   TDeleteCategoryOutput,
+  TFindAllCategoryOutput,
   TFindCategoryByIdInput,
-  TFindCategoryByNameInput,
-  TFindCategoryByNameOutput,
+  TFindCategoryByIdOutput,
   TUpdateCategoryInput,
   TUpdateCategoryOutput,
-} from '../../application/repository/category.repository';
-import { db } from '../../db';
+} from '@book-toshokan/libs/domain';
+import { AbstractCategoryRepository } from '../../application/repository/category.repository';
+import { db } from '@book-toshokan/libs/backend-db';
 
 export class CategoryRepository implements AbstractCategoryRepository {
   async createCategory(input: TCreateCategoryInput): Promise<TCreateCategoryOutput> {
@@ -22,15 +22,23 @@ export class CategoryRepository implements AbstractCategoryRepository {
     });
 
     return {
-      data: {
-        id: category.id,
-        name: category.name,
-        description: category.description,
-      },
+      id: category.id,
+      name: category.name,
+      description: category.description,
     };
   }
 
-  async findCategoryById(input: TFindCategoryByIdInput): Promise<TCreateCategoryOutput> {
+  async findAllCategory(): Promise<TFindAllCategoryOutput> {
+    const categories = await db.category.findMany({});
+
+    return categories.map((category) => ({
+      id: category.id,
+      name: category.name,
+      description: category.description,
+    }));
+  }
+
+  async findCategoryById(input: TFindCategoryByIdInput): Promise<TFindCategoryByIdOutput> {
     const categoryById = await db.category.findFirst({
       where: {
         id: input.id,
@@ -38,27 +46,9 @@ export class CategoryRepository implements AbstractCategoryRepository {
     });
 
     return {
-      data: {
-        id: categoryById.id,
-        name: categoryById.name,
-        description: categoryById.description,
-      },
-    };
-  }
-
-  async findCategoryByName(input: TFindCategoryByNameInput): Promise<TFindCategoryByNameOutput> {
-    const categoryByName = await db.category.findFirst({
-      where: {
-        name: input.name,
-      },
-    });
-
-    return {
-      data: {
-        id: categoryByName.id,
-        name: categoryByName.name,
-        description: categoryByName.description,
-      },
+      id: categoryById.id,
+      name: categoryById.name,
+      description: categoryById.description,
     };
   }
 
@@ -74,11 +64,9 @@ export class CategoryRepository implements AbstractCategoryRepository {
     });
 
     return {
-      data: {
-        id: updatedCategory.id,
-        name: updatedCategory.name,
-        description: updatedCategory.description,
-      },
+      id: updatedCategory.id,
+      name: updatedCategory.name,
+      description: updatedCategory.description,
     };
   }
 
@@ -90,11 +78,9 @@ export class CategoryRepository implements AbstractCategoryRepository {
     });
 
     return {
-      data: {
-        id: deletedCategory.id,
-        name: deletedCategory.name,
-        description: deletedCategory.description,
-      },
+      id: deletedCategory.id,
+      name: deletedCategory.name,
+      description: deletedCategory.description,
     };
   }
 }

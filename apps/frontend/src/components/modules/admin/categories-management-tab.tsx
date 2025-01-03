@@ -1,27 +1,40 @@
 import { Card, CardBody, CardHeader } from '@nextui-org/react';
 import { Input } from '../../ui/input';
 import { Button } from '../../ui/button';
+import { PlusCircle, Search } from 'lucide-react';
+import { useAddCategoryModal } from './add-category-modal';
 
 export const CategoriesManagementTab = () => {
+  const { AddCategoryModalNode, openAddCategoryModal } = useAddCategoryModal();
+
   return (
-    <Card>
-      <CardHeader>
-        <h2 className="text-lg font-semibold">Add New Book</h2>
-      </CardHeader>
-      <CardBody>
-        <form className="space-y-4">
-          <Input label="Title" placeholder="Enter book title" />
-          <Input label="Author" placeholder="Enter author name" />
-          <Input label="Genre" placeholder="Enter book genre" />
-          <Input label="Published Year" placeholder="Enter published year" />
-          <div className="flex justify-end space-x-2">
-            <Button color="danger" variant="light">
-              Cancel
+    <>
+      {AddCategoryModalNode}
+      <Card>
+        <CardHeader className="flex justify-between items-center">
+          <h2 className="text-lg font-semibold">Categories</h2>
+          <div className="flex space-x-2">
+            <Input
+              classNames={{
+                base: 'max-w-full sm:max-w-[12rem] h-10',
+                mainWrapper: 'h-full',
+                input: 'text-small',
+                inputWrapper: 'h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20',
+              }}
+              label=""
+              placeholder="Search categories..."
+              size="sm"
+              startContent={<Search size={18} />}
+              isClearable
+              type="search"
+            />
+            <Button color="secondary" endContent={<PlusCircle size={20} />} onPress={openAddCategoryModal}>
+              Add New Category
             </Button>
-            <Button color="primary">Add Book</Button>
           </div>
-        </form>
-      </CardBody>
-    </Card>
+        </CardHeader>
+        <CardBody>Category Table</CardBody>
+      </Card>
+    </>
   );
 };

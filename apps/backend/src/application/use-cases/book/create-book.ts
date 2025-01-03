@@ -1,5 +1,6 @@
+import { TCreateBookInput, TCreateBookOutput } from '@book-toshokan/libs/domain';
 import { AbstractAuthorRepository } from '../../repository/author.repository';
-import { AbstractBookRepository, TCreateBookInput, TCreateBookOutput } from '../../repository/book.repository';
+import { AbstractBookRepository } from '../../repository/book.repository';
 
 export class CreateBookUseCase {
   constructor(private bookRepository: AbstractBookRepository, private authorRepository: AbstractAuthorRepository) {}

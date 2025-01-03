@@ -14,7 +14,7 @@ if (!FRONTEND_URL) {
   throw new Error('FRONTEND_URL is missing from the env');
 }
 
-app.use(helmet);
+app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
 app.use(
@@ -31,8 +31,9 @@ app.get('/', (req: Request, res: Response) => {
   });
 });
 
-app.use('/api/v1/users', routes.userRoutes);
-app.use('/api/v1/authors', routes.authorRoutes);
+app.use('/api/v1/users', routes.user);
+app.use('/api/v1/authors', routes.author);
+app.use('/api/v1/categories', routes.category);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
