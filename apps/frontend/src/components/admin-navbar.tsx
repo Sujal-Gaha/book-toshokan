@@ -35,19 +35,9 @@ export const AdminNavbar = () => {
   const { adminHomePage } = getAppsPath();
 
   return (
-    <NextUINavbar
-      shouldHideOnScroll
-      onMenuOpenChange={setIsMenuOpen}
-      className="bg-[#f3f4f6] dark:bg-background/50"
-    >
-      <NavbarMenuToggle
-        aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-        className="sm:hidden"
-      />
-      <NavbarBrand
-        className="cursor-pointer"
-        onClick={() => navigate(adminHomePage)}
-      >
+    <NextUINavbar shouldHideOnScroll onMenuOpenChange={setIsMenuOpen} className="bg-[#f3f4f6] dark:bg-background/50">
+      <NavbarMenuToggle aria-label={isMenuOpen ? 'Close menu' : 'Open menu'} className="sm:hidden" />
+      <NavbarBrand className="cursor-pointer" onClick={() => navigate(adminHomePage)}>
         <BookOpen className="h-6 w-6 mr-2 text-secondary" />
         <p className="font-bold text-gray-900 dark:text-white">Book-Toshokan</p>
       </NavbarBrand>
@@ -58,11 +48,7 @@ export const AdminNavbar = () => {
             color="secondary"
             size="lg"
             thumbIcon={({ isSelected, className }) =>
-              isSelected ? (
-                <MoonIcon className={className} />
-              ) : (
-                <SunIcon className={className} />
-              )
+              isSelected ? <MoonIcon className={className} /> : <SunIcon className={className} />
             }
             onValueChange={onThemeChange}
           />
@@ -84,11 +70,7 @@ export const AdminNavbar = () => {
               <p className="font-semibold">Signed in as</p>
               <p className="font-semibold">zoey@example.com</p>
             </DropdownItem>
-            <DropdownItem
-              key="logout"
-              color="danger"
-              startContent={<UserIcon />}
-            >
+            <DropdownItem key="logout" color="danger" startContent={<UserIcon />}>
               Log Out
             </DropdownItem>
           </DropdownMenu>

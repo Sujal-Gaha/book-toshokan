@@ -3,6 +3,7 @@ import {
   TCreateCategoryOutput,
   TDeleteCategoryInput,
   TDeleteCategoryOutput,
+  TFindAllCategoryInput,
   TFindAllCategoryOutput,
   TFindCategoryByIdInput,
   TFindCategoryByIdOutput,
@@ -28,8 +29,17 @@ export class CategoryRepository implements AbstractCategoryRepository {
     };
   }
 
-  async findAllCategory(): Promise<TFindAllCategoryOutput> {
-    const categories = await db.category.findMany({});
+  async findAllCategory(input: TFindAllCategoryInput): Promise<TFindAllCategoryOutput> {
+    const categories = await db.category.findMany({
+      ...(input.name && {
+        where: {
+          name: {
+            contains: input.name,
+            mode: 'insensitive',
+          },
+        },
+      }),
+    });
 
     return categories.map((category) => ({
       id: category.id,

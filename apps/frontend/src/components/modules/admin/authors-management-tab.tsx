@@ -1,6 +1,6 @@
 import { Card, CardBody, CardHeader, Input } from '@nextui-org/react';
 import { Search } from 'lucide-react';
-import { TableComponent } from '../../table';
+import { TableComponent } from '../../ui/table';
 
 const authorsData = [
   { name: 'F. Scott Fitzgerald', bookscount: '4', genres: 'Classic, Fiction' },
@@ -22,8 +22,7 @@ export const AuthorManagementTab = () => {
             base: 'max-w-full sm:max-w-[10rem] h-10',
             mainWrapper: 'h-full',
             input: 'text-small',
-            inputWrapper:
-              'h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20',
+            inputWrapper: 'h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20',
           }}
           placeholder="Search authors..."
           size="sm"
@@ -32,11 +31,11 @@ export const AuthorManagementTab = () => {
         />
       </CardHeader>
       <CardBody>
-        <TableComponent
+        {/* <TableComponent
           aria="Authors list"
           columns={['NAME', 'BOOKS COUNT', 'GENRES']}
           data={authorsData}
-        />
+        /> */}
       </CardBody>
     </Card>
   );

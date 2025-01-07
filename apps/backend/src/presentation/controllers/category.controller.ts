@@ -74,8 +74,12 @@ export class CategoryController {
   }
 
   static async findAllCategory(req: Request, res: Response) {
+    const { name } = req.query;
+
     try {
-      const categories = await findAllCategoryUseCase.execute();
+      const categories = await findAllCategoryUseCase.execute({
+        name: name as string,
+      });
 
       const response: TApiResponse<TFindAllCategoryOutput> = {
         status: StatusCodes.OK,

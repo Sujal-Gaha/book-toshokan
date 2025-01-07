@@ -16,7 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "@book-toshokan/libs/backend-db": ["libs/backend-db/src/index.ts"],
-      "@book-toshokan/libs/domain": ["libs/domain/src/index.ts"]
+      "@book-toshokan/libs/domain": ["libs/domain/src/index.ts"],
+      "@book-toshokan/apps/frontend/components/ui/*": ["apps/frontend/src/components/ui/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

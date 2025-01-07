@@ -1,10 +1,10 @@
-import { useDisclosure, Input } from '@nextui-org/react';
-// import { Input } from '../../ui/input';
+import { useDisclosure } from '@nextui-org/react';
+import { Input } from '../../ui/input';
 import { Button } from '../../ui/button';
 import { ModalComponent } from '../../ui/modal';
 import { SubmitHandler, useForm, UseFormHandleSubmit, UseFormRegister } from 'react-hook-form';
 import { TApiError, TApiResponse, TCreateCategoryInput, TCreateCategoryOutput } from '@book-toshokan/libs/domain';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createCategory } from '../../../data/category.data';
 import { toastError, toastSuccess } from '../../toast';
 
@@ -40,6 +40,7 @@ export const useAddCategoryModal = () => {
   const createCategoryMtn = useMutation<TApiResponse<TCreateCategoryOutput>, TApiError, TCreateCategoryInput>({
     mutationFn: createCategory,
   });
+  const qc = useQueryClient();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -55,6 +56,8 @@ export const useAddCategoryModal = () => {
         {
           onSuccess: (data) => {
             toastSuccess(data.body.message);
+            qc.invalidateQueries({ queryKey: ['findAllCategory'] });
+            onClose();
           },
           onError: (error) => {
             console.log('Error:', error.body.message);

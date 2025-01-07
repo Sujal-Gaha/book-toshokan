@@ -5,6 +5,7 @@ export const CreateCategorySchema = CategorySchema.omit({ id: true });
 export type TCreateCategoryInput = z.infer<typeof CreateCategorySchema>;
 export type TCreateCategoryOutput = Category;
 
+export type TFindAllCategoryInput = { name?: string };
 export type TFindAllCategoryOutput = Category[];
 
 export const FindCategoryByIdSchema = CategorySchema.pick({ id: true });
