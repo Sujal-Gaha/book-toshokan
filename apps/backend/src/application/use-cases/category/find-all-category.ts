@@ -5,6 +5,12 @@ export class FindAllCategoryUseCase {
   constructor(private categoryRepository: AbstractCategoryRepository) {}
 
   async execute(input: TFindAllCategoryInput): Promise<TFindAllCategoryOutput> {
-    return this.categoryRepository.findAllCategory({ name: input.name });
+    return this.categoryRepository.findAllCategory({
+      name: input.name,
+      pageInfo: {
+        page: input.pageInfo.page,
+        perPage: input.pageInfo.perPage,
+      },
+    });
   }
 }

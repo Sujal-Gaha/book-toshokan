@@ -74,21 +74,21 @@ export class CategoryController {
   }
 
   static async findAllCategory(req: Request, res: Response) {
-    const { name } = req.query;
+    const { name, page, perPage } = req.query;
 
     try {
       const categories = await findAllCategoryUseCase.execute({
         name: name as string,
+        pageInfo: {
+          page: +page,
+          perPage: +perPage,
+        },
       });
 
       const response: TApiResponse<TFindAllCategoryOutput> = {
         status: StatusCodes.OK,
         body: {
-          data: categories.map((category) => ({
-            id: category.id,
-            name: category.name,
-            description: category.description,
-          })),
+          data: categories,
           message: 'Fetched all the categories successfully',
         },
       };

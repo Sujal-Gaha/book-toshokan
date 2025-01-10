@@ -5,8 +5,16 @@ export const CreateCategorySchema = CategorySchema.omit({ id: true });
 export type TCreateCategoryInput = z.infer<typeof CreateCategorySchema>;
 export type TCreateCategoryOutput = Category;
 
-export type TFindAllCategoryInput = { name?: string };
-export type TFindAllCategoryOutput = Category[];
+export type TFindAllCategoryInput = { name?: string; pageInfo?: { page: number; perPage: number } };
+export type TFindAllCategoryOutput = {
+  categories: Category[];
+  pageInfo: {
+    currentPage: number;
+    perPage: number;
+    totalCount: number;
+    totalPages: number;
+  };
+};
 
 export const FindCategoryByIdSchema = CategorySchema.pick({ id: true });
 export type TFindCategoryByIdInput = z.infer<typeof FindCategoryByIdSchema>;

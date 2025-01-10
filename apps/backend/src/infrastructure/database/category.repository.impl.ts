@@ -30,7 +30,23 @@ export class CategoryRepository implements AbstractCategoryRepository {
   }
 
   async findAllCategory(input: TFindAllCategoryInput): Promise<TFindAllCategoryOutput> {
+    const take = input.pageInfo?.perPage || 10;
+    const skip = input.pageInfo?.page ? (input.pageInfo.page - 1) * take : 0;
+
     const categories = await db.category.findMany({
+      ...(input.name && {
+        where: {
+          name: {
+            contains: input.name,
+            mode: 'insensitive',
+          },
+        },
+      }),
+      skip: skip,
+      take: take,
+    });
+
+    const totalCount = await db.category.count({
       ...(input.name && {
         where: {
           name: {
@@ -41,11 +57,21 @@ export class CategoryRepository implements AbstractCategoryRepository {
       }),
     });
 
-    return categories.map((category) => ({
-      id: category.id,
-      name: category.name,
-      description: category.description,
-    }));
+    const totalPages = Math.ceil(totalCount / take);
+
+    return {
+      categories: categories.map((category) => ({
+        id: category.id,
+        name: category.name,
+        description: category.description,
+      })),
+      pageInfo: {
+        currentPage: input.pageInfo?.page || 1,
+        perPage: take,
+        totalCount: totalCount,
+        totalPages: totalPages,
+      },
+    };
   }
 
   async findCategoryById(input: TFindCategoryByIdInput): Promise<TFindCategoryByIdOutput> {

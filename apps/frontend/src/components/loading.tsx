@@ -1,18 +1,7 @@
 export const Loading = () => {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 200 200"
-      className="w-32 h-32 mx-auto"
-    >
-      <circle
-        fill="#9353d3"
-        stroke="#9353d3"
-        stroke-width="15"
-        r="15"
-        cx="40"
-        cy="65"
-      >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" className="w-32 h-32 mx-auto">
+      <circle fill="#9353d3" stroke="#9353d3" strokeWidth="15" r="15" cx="40" cy="65">
         <animate
           attributeName="cy"
           calcMode="spline"
@@ -23,14 +12,7 @@ export const Loading = () => {
           begin="-.4"
         ></animate>
       </circle>
-      <circle
-        fill="#9353d3"
-        stroke="#9353d3"
-        stroke-width="15"
-        r="15"
-        cx="100"
-        cy="65"
-      >
+      <circle fill="#9353d3" stroke="#9353d3" strokeWidth="15" r="15" cx="100" cy="65">
         <animate
           attributeName="cy"
           calcMode="spline"
@@ -41,14 +23,7 @@ export const Loading = () => {
           begin="-.2"
         ></animate>
       </circle>
-      <circle
-        fill="#9353d3"
-        stroke="#9353d3"
-        stroke-width="15"
-        r="15"
-        cx="160"
-        cy="65"
-      >
+      <circle fill="#9353d3" stroke="#9353d3" strokeWidth="15" r="15" cx="160" cy="65">
         <animate
           attributeName="cy"
           calcMode="spline"

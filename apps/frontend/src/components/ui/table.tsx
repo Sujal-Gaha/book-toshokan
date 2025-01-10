@@ -10,6 +10,7 @@ import {
 } from '@tanstack/react-table';
 import { IPaginationProps, Pagination } from './pagination';
 import { Loading } from '../loading';
+import React from 'react';
 
 interface TableComponentProps<T extends object> {
   data: T[];
@@ -52,13 +53,13 @@ export function TableComponent<T extends object>({
       >
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <>
+            <React.Fragment key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <TableColumn key={header.id}>
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                 </TableColumn>
               ))}
-            </>
+            </React.Fragment>
           ))}
         </TableHeader>
         <TableBody emptyContent={isLoading ? <Loading /> : 'No data to display'}>
