@@ -3,6 +3,7 @@ import {
   TCreateCategoryOutput,
   TDeleteCategoryInput,
   TDeleteCategoryOutput,
+  TFindAllCategoryInput,
   TFindAllCategoryOutput,
   TFindCategoryByIdInput,
   TFindCategoryByIdOutput,
@@ -12,7 +13,7 @@ import {
 
 export abstract class AbstractCategoryRepository {
   abstract createCategory(input: TCreateCategoryInput): Promise<TCreateCategoryOutput>;
-  abstract findAllCategory(): Promise<TFindAllCategoryOutput>;
+  abstract findAllCategory(input: TFindAllCategoryInput): Promise<TFindAllCategoryOutput>;
   abstract findCategoryById(input: TFindCategoryByIdInput): Promise<TFindCategoryByIdOutput>;
   abstract updateCategory(input: TUpdateCategoryInput): Promise<TUpdateCategoryOutput>;
   abstract deleteCategory(input: TDeleteCategoryInput): Promise<TDeleteCategoryOutput>;

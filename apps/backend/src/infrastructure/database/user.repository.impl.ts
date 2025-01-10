@@ -7,6 +7,9 @@ import {
   TFindUserByEmailOutput,
   TFindUserByIdInput,
   TFindUserByIdOutput,
+  TLoginUserInput,
+  TLoginUserOutput,
+  TLogoutUserOutput,
   TUpdateUserInput,
   TUpdateUserOutput,
   User,
@@ -112,21 +115,25 @@ export class UserRepository implements AbstractUserRepository {
     return jwt.sign(payload, this.jwtSecret, { expiresIn: '1h' });
   }
 
-  async login(email: string, password: string): Promise<string | null> {
+  async loginUser(input: TLoginUserInput): Promise<TLoginUserOutput> {
     const user = await this.findUserByEmail({
-      email: email,
+      email: input.email,
     });
 
     if (!user) {
       return null;
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(input.password, user.password);
 
     if (!isPasswordValid) {
       return null;
     }
 
-    return this.generateToken(user);
+    this.generateToken(user);
+  }
+
+  async logoutUser(): Promise<TLogoutUserOutput> {
+    return null;
   }
 }

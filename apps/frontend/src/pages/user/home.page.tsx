@@ -1,18 +1,10 @@
-import {
-  Link,
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Image,
-} from '@nextui-org/react';
+import { Link, Button, Card, CardHeader, CardBody, CardFooter, Image } from '@nextui-org/react';
 import { BookOpen, Star } from 'lucide-react';
 import { keyFeatures } from '../../constants/key-features';
 import { readingStatuses } from '../../constants/reading-status';
 import { useQuery } from '@tanstack/react-query';
-import { getRecommendedBooks } from '../../api/data/book';
-import { TGetRecommendedBooks } from '../../api/contracts/book/schema';
+import { getRecommendedBooks } from '../../data/book';
+// import { TGetRecommendedBooks } from '../../data/contracts/book/schema';
 import { useNavigate } from 'react-router-dom';
 import { getAppsPath } from '../../utils/getAppsPath';
 import { FormEvent, useState } from 'react';
@@ -30,16 +22,11 @@ const Welcome = () => {
               Welcome to Book-Toshokan
             </h1>
             <p className="mx-auto max-w-[700px] text-gray-600 dark:text-white md:text-xl">
-              Your personal book library manager. Catalog, track, and review
-              your reading journey.
+              Your personal book library manager. Catalog, track, and review your reading journey.
             </p>
           </div>
           <div className="space-x-4">
-            <Button
-              color="primary"
-              size="lg"
-              onClick={() => navigate(feedPage)}
-            >
+            <Button color="primary" size="lg" onClick={() => navigate(feedPage)}>
               Get Started
             </Button>
             <Button variant="bordered" size="lg">
@@ -67,9 +54,7 @@ const KeyFeatures = () => {
                 className="flex flex-col items-center text-center p-6 bg-background/80 rounded-xl shadow-lg transition-all hover:shadow-xl"
               >
                 {feature.icon}
-                <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
-                  {feature.name}
-                </h3>
+                <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">{feature.name}</h3>
                 <p className="text-gray-400">{feature.description}</p>
               </div>
             );
@@ -95,12 +80,8 @@ const ReadingStatus = () => {
                 className="flex flex-col items-center p-6 bg-background/80 rounded-xl shadow-lg transition-all hover:shadow-xl"
               >
                 {status.icon}
-                <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
-                  {status.name}
-                </h3>
-                <p className="text-center text-gray-400">
-                  {status.description}
-                </p>
+                <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">{status.name}</h3>
+                <p className="text-center text-gray-400">{status.description}</p>
               </div>
             );
           })}
@@ -110,64 +91,56 @@ const ReadingStatus = () => {
   );
 };
 
-const RecommendedBooks = () => {
-  const { data: recommendedBooksData } = useQuery<TGetRecommendedBooks>({
-    queryKey: ['getRecommendedBooks'],
-    queryFn: getRecommendedBooks,
-  });
-  const recommendedBooks = recommendedBooksData?.body.data;
+// const RecommendedBooks = () => {
+//   const { data: recommendedBooksData } = useQuery<TGetRecommendedBooks>({
+//     queryKey: ['getRecommendedBooks'],
+//     queryFn: getRecommendedBooks,
+//   });
+//   const recommendedBooks = recommendedBooksData?.body.data;
 
-  const navigate = useNavigate();
+//   const navigate = useNavigate();
 
-  return (
-    <section className="w-full py-12 md:py-24 lg:py-32 bg-background/50 flex items-center justify-center">
-      <div className="container px-4 md:px-6">
-        <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
-          Recommended Books
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {recommendedBooks?.map((book) => {
-            return (
-              <Card
-                key={book.id}
-                isPressable
-                onPress={() => navigate(`/book/${book.id}`)}
-                className="bg-background/80 border border-background/80 hover:border-primary hover:shadow-md hover:shadow-primary cursor-pointer group"
-              >
-                <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-                  <Image
-                    alt="Book cover"
-                    className="object-cover rounded-xl"
-                    src=""
-                    width={100}
-                    height={100}
-                  />
-                  <h4 className="font-bold text-large mt-4">{book.name}</h4>
-                  <p className="text-tiny uppercase font-bold">
-                    {book.author.name}
-                  </p>
-                </CardHeader>
-                <CardBody className="overflow-visible py-2">
-                  <p className="text-default-500">{book.description}</p>
-                </CardBody>
-                <CardFooter className="flex justify-between">
-                  <div className="flex items-center">
-                    <Star className="w-4 h-4 fill-warning text-warning mr-1" />
-                    <span className="text-sm font-bold">4.8</span>
-                  </div>
-                  <div className="flex items-center text-default-500 group-hover:text-white">
-                    <BookOpen className="w-4 h-4 mr-1" />
-                    <span className="text-sm">{book.category.name}</span>
-                  </div>
-                </CardFooter>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-};
+//   return (
+//     <section className="w-full py-12 md:py-24 lg:py-32 bg-background/50 flex items-center justify-center">
+//       <div className="container px-4 md:px-6">
+//         <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+//           Recommended Books
+//         </h2>
+//         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+//           {recommendedBooks?.map((book) => {
+//             return (
+//               <Card
+//                 key={book.id}
+//                 isPressable
+//                 onPress={() => navigate(`/book/${book.id}`)}
+//                 className="bg-background/80 border border-background/80 hover:border-primary hover:shadow-md hover:shadow-primary cursor-pointer group"
+//               >
+//                 <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+//                   <Image alt="Book cover" className="object-cover rounded-xl" src="" width={100} height={100} />
+//                   <h4 className="font-bold text-large mt-4">{book.name}</h4>
+//                   <p className="text-tiny uppercase font-bold">{book.author.name}</p>
+//                 </CardHeader>
+//                 <CardBody className="overflow-visible py-2">
+//                   <p className="text-default-500">{book.description}</p>
+//                 </CardBody>
+//                 <CardFooter className="flex justify-between">
+//                   <div className="flex items-center">
+//                     <Star className="w-4 h-4 fill-warning text-warning mr-1" />
+//                     <span className="text-sm font-bold">4.8</span>
+//                   </div>
+//                   <div className="flex items-center text-default-500 group-hover:text-white">
+//                     <BookOpen className="w-4 h-4 mr-1" />
+//                     <span className="text-sm">{book.category.name}</span>
+//                   </div>
+//                 </CardFooter>
+//               </Card>
+//             );
+//           })}
+//         </div>
+//       </div>
+//     </section>
+//   );
+// };
 
 const StartToday = () => {
   const [email, setEmail] = useState('');
@@ -190,8 +163,7 @@ const StartToday = () => {
               Start Your Reading Journey Today
             </h2>
             <p className="mx-auto max-w-[700px] text-gray-400 md:text-xl">
-              Join Book-Toshokan and transform how you manage your reading
-              experience.
+              Join Book-Toshokan and transform how you manage your reading experience.
             </p>
           </div>
           <div className="w-full max-w-sm space-y-2">
@@ -229,7 +201,7 @@ export const HomePage = () => {
         <Welcome />
         <KeyFeatures />
         <ReadingStatus />
-        <RecommendedBooks />
+        {/* <RecommendedBooks /> */}
         <StartToday />
       </div>
     </div>

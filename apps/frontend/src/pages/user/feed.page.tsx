@@ -1,14 +1,8 @@
 import { useState } from 'react';
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  Image,
-  Pagination,
-} from '@nextui-org/react';
+import { Card, CardBody, CardFooter, Image, Pagination } from '@nextui-org/react';
 import { Star, BookOpen } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { getAllBooks } from '../../api/data/book';
+import { getAllBooks } from '../../data/book';
 
 type BookResponse = {
   status: number;
@@ -59,11 +53,7 @@ const BookCard = ({ book }: { book: Book }) => {
       className="bg-background/60 border border-gray-100 hover:border-primary hover:shadow-md hover:shadow-primary cursor-pointer"
     >
       <CardBody className="p-0">
-        <Image
-          src={book.image}
-          alt={`${book.name} cover`}
-          className="w-full object-cover h-[300px]"
-        />
+        <Image src={book.image} alt={`${book.name} cover`} className="w-full object-cover h-[300px]" />
       </CardBody>
       <CardFooter className="flex-col items-start">
         <h4 className="font-bold text-large">{book.name}</h4>
@@ -75,9 +65,7 @@ const BookCard = ({ book }: { book: Book }) => {
           </div>
           <div className="flex items-center">
             <BookOpen className="w-4 h-4 mr-1 text-default-500" />
-            <span className="text-sm text-default-500">
-              {book.category.name}
-            </span>
+            <span className="text-sm text-default-500">{book.category.name}</span>
           </div>
         </div>
       </CardFooter>
@@ -109,11 +97,7 @@ export const BookFeedPage = () => {
           ))}
         </div>
         <div className="flex justify-center">
-          <Pagination
-            total={data?.body.pageInfo.totalPage || 10}
-            initialPage={1}
-            onChange={(page) => setPage(page)}
-          />
+          <Pagination total={data?.body.pageInfo.totalPage || 10} initialPage={1} onChange={(page) => setPage(page)} />
         </div>
       </div>
     </div>

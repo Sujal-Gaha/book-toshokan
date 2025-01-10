@@ -1,16 +1,26 @@
-import { ReadStatusEnum } from '@prisma/client';
+import { z } from 'zod';
 
-export class Book {
-  constructor(
-    public id: string,
-    public authorId: string,
-    public categoryId: string,
-    public name: string,
-    public description: string,
-    public image: string,
-    public subImages: string[] = [],
-    public pages: number,
-    public publishedOn: Date,
-    public readStatus?: ReadStatusEnum
-  ) {}
+export enum ReadStatus {
+  NOT_STARTED = 'NOT_STARTED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
 }
+
+export const ReadStatusEnumSchema = z.nativeEnum(ReadStatus);
+
+export type TReadStatusEnum = z.infer<typeof ReadStatusEnumSchema>;
+
+export const BookSchema = z.object({
+  id: z.string().cuid(),
+  authorId: z.string(),
+  categoryId: z.string(),
+  name: z.string(),
+  description: z.string(),
+  image: z.string(),
+  subImages: z.array(z.string()).optional(),
+  pages: z.number(),
+  publishedOn: z.date(),
+  readStatus: ReadStatusEnumSchema.optional().nullable(),
+});
+
+export type Book = z.infer<typeof BookSchema>;

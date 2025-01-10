@@ -1,10 +1,16 @@
-import { TFindAllCategoryOutput } from '@book-toshokan/libs/domain';
+import { TFindAllCategoryInput, TFindAllCategoryOutput } from '@book-toshokan/libs/domain';
 import { AbstractCategoryRepository } from '../../repository/category.repository';
 
 export class FindAllCategoryUseCase {
   constructor(private categoryRepository: AbstractCategoryRepository) {}
 
-  async execute(): Promise<TFindAllCategoryOutput> {
-    return this.categoryRepository.findAllCategory();
+  async execute(input: TFindAllCategoryInput): Promise<TFindAllCategoryOutput> {
+    return this.categoryRepository.findAllCategory({
+      name: input.name,
+      pageInfo: {
+        page: input.pageInfo.page,
+        perPage: input.pageInfo.perPage,
+      },
+    });
   }
 }

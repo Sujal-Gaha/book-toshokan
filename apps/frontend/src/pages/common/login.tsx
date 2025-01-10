@@ -9,15 +9,16 @@ import { Divider } from '../../components/divider';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
 import { getAppsPath } from '../../utils/getAppsPath';
 import { useMutation } from '@tanstack/react-query';
-import { loginUser } from '../../api/data/user';
+import { loginUser } from '../../data/user';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   LoginUserSchema,
-  TError,
+  TApiResponse,
+  TApiError,
   TLoginUserInput,
   TLoginUserOutput,
-} from '../../api/contracts/user/schema';
+} from '@book-toshokan/libs/domain';
 import { toastError, toastSuccess } from '../../components/toast';
 
 export const LoginPage = () => {
@@ -33,27 +34,31 @@ export const LoginPage = () => {
     resolver: zodResolver(LoginUserSchema),
   });
 
-  const loginMtn = useMutation<TLoginUserOutput, TError, TLoginUserInput>({
-    mutationFn: loginUser,
-    onSuccess: (data) => {
-      toastSuccess(data.body.message);
-      navigate('/');
-    },
-    onError: (error) => {
-      toastError(error.body.message);
-    },
-  });
+  const loginMtn = useMutation<TApiResponse<TLoginUserOutput>, TApiError, TLoginUserInput>({ mutationFn: loginUser });
 
   const loginForm: SubmitHandler<TLoginUserInput> = async (data) => {
     try {
-      await loginMtn.mutateAsync(data);
+      await loginMtn.mutateAsync(
+        {
+          email: data.email,
+          password: data.password,
+        },
+        {
+          onSuccess: (data) => {
+            toastSuccess(data.body.message);
+            navigate('/');
+          },
+          onError: (error) => {
+            toastError(error.body.message);
+          },
+        }
+      );
     } catch (error) {
       console.error('error ', error);
     }
   };
 
-  const toggleIsPasswordVisible = () =>
-    setIsPasswordVisible(!isPasswordVisible);
+  const toggleIsPasswordVisible = () => setIsPasswordVisible(!isPasswordVisible);
 
   const { forgotPasswordPage, registerPage } = getAppsPath();
   return (
@@ -63,9 +68,7 @@ export const LoginPage = () => {
           <div className="w-[450px] p-6 flex flex-col gap-6 rounded-md">
             <div className="flex flex-col items-start">
               <h1 className="text-xl font-medium text-white">Welcome Back</h1>
-              <p className="text-gray-400 text-sm">
-                Log in to your account to continue
-              </p>
+              <p className="text-gray-400 text-sm">Log in to your account to continue</p>
             </div>
             <div className="flex flex-col gap-4 w-full">
               <Input
@@ -105,19 +108,11 @@ export const LoginPage = () => {
             </div>
             <div className="flex items-center justify-between">
               <Checkbox>Remember me</Checkbox>
-              <Link
-                to={forgotPasswordPage}
-                className="text-gray-400 hover:underline"
-              >
+              <Link to={forgotPasswordPage} className="text-gray-400 hover:underline">
                 Forgot password?
               </Link>
             </div>
-            <Button
-              type="submit"
-              color="primary"
-              size="lg"
-              disabled={loginMtn.isPending}
-            >
+            <Button type="submit" color="primary" size="lg" disabled={loginMtn.isPending}>
               {loginMtn.isPending ? 'Logging In...' : 'Log In'}
             </Button>
             <p className="text-white text-center">

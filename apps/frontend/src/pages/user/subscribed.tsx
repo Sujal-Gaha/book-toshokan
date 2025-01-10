@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   Table,
   TableHeader,
@@ -15,23 +15,23 @@ import {
   DropdownMenu,
   DropdownItem,
   Button,
-} from "@nextui-org/react";
-import { Book, ChevronDown } from "lucide-react";
+} from '@nextui-org/react';
+import { Book, ChevronDown } from 'lucide-react';
 
 type Book = {
   id: string;
   title: string;
   author: string;
   coverImage: string;
-  status: "to-read" | "reading" | "read";
+  status: 'to-read' | 'reading' | 'read';
   progress: number;
   rating: number | null;
 };
 
-const statusColorMap: Record<string, ChipProps["color"]> = {
-  "to-read": "warning",
-  reading: "primary",
-  read: "success",
+const statusColorMap: Record<string, ChipProps['color']> = {
+  'to-read': 'warning',
+  reading: 'primary',
+  read: 'success',
 };
 
 const dummyBooks: Book[] = Array.from({ length: 50 }, (_, i) => ({
@@ -39,29 +39,27 @@ const dummyBooks: Book[] = Array.from({ length: 50 }, (_, i) => ({
   title: `Book Title ${i + 1}`,
   author: `Author ${i + 1}`,
   coverImage: `/placeholder.svg?height=40&width=40&text=${i + 1}`,
-  status: ["to-read", "reading", "read"][
-    Math.floor(Math.random() * 3)
-  ] as Book["status"],
+  status: ['to-read', 'reading', 'read'][Math.floor(Math.random() * 3)] as Book['status'],
   progress: Math.floor(Math.random() * 101),
   rating: Math.random() > 0.3 ? Math.floor(Math.random() * 5) + 1 : null,
 }));
 
 const columns = [
-  { name: "TITLE", uid: "title" },
-  { name: "AUTHOR", uid: "author" },
-  { name: "STATUS", uid: "status" },
-  { name: "PROGRESS", uid: "progress" },
-  { name: "RATING", uid: "rating" },
+  { name: 'TITLE', uid: 'title' },
+  { name: 'AUTHOR', uid: 'author' },
+  { name: 'STATUS', uid: 'status' },
+  { name: 'PROGRESS', uid: 'progress' },
+  { name: 'RATING', uid: 'rating' },
 ];
 
 export const SubscribedBooksTable = () => {
-  const [filterValue, setFilterValue] = useState<string>("all");
+  const [filterValue, setFilterValue] = useState<string>('all');
   const [page, setPage] = useState(1);
   const rowsPerPage = 10;
 
   const filteredBooks = useMemo(() => {
     let filteredData = [...dummyBooks];
-    if (filterValue !== "all") {
+    if (filterValue !== 'all') {
       filteredData = filteredData.filter((book) => book.status === filterValue);
     }
     return filteredData;
@@ -80,45 +78,34 @@ export const SubscribedBooksTable = () => {
     const cellValue = book[columnKey as keyof Book];
 
     switch (columnKey) {
-      case "title":
+      case 'title':
         return (
-          <User
-            avatarProps={{ radius: "lg", src: book.coverImage }}
-            description={book.author}
-            name={book.title}
-          >
+          <User avatarProps={{ radius: 'lg', src: book.coverImage }} description={book.author} name={book.title}>
             {book.title}
           </User>
         );
-      case "author":
+      case 'author':
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small capitalize">{book.author}</p>
           </div>
         );
-      case "status":
+      case 'status':
         return (
-          <Chip
-            className="capitalize"
-            color={statusColorMap[book.status]}
-            size="sm"
-            variant="flat"
-          >
+          <Chip className="capitalize" color={statusColorMap[book.status]} size="sm" variant="flat">
             {book.status}
           </Chip>
         );
-      case "progress":
+      case 'progress':
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small">{`${book.progress}%`}</p>
           </div>
         );
-      case "rating":
+      case 'rating':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">
-              {book.rating ? `${book.rating}/5` : "Not rated"}
-            </p>
+            <p className="text-bold text-small">{book.rating ? `${book.rating}/5` : 'Not rated'}</p>
           </div>
         );
       default:
@@ -132,11 +119,8 @@ export const SubscribedBooksTable = () => {
         <h1 className="text-2xl font-bold">My Subscribed Books</h1>
         <Dropdown>
           <DropdownTrigger>
-            <Button
-              variant="flat"
-              endContent={<ChevronDown className="text-small" />}
-            >
-              Status: {filterValue === "all" ? "All" : filterValue}
+            <Button variant="flat" endContent={<ChevronDown className="text-small" />}>
+              Status: {filterValue === 'all' ? 'All' : filterValue}
             </Button>
           </DropdownTrigger>
           <DropdownMenu
@@ -144,9 +128,7 @@ export const SubscribedBooksTable = () => {
             aria-label="Filter by status"
             selectedKeys={filterValue}
             selectionMode="single"
-            onSelectionChange={(keys) =>
-              setFilterValue(Array.from(keys)[0] as string)
-            }
+            onSelectionChange={(keys) => setFilterValue(Array.from(keys)[0] as string)}
           >
             <DropdownItem key="all">All</DropdownItem>
             <DropdownItem key="to-read">To Read</DropdownItem>
@@ -171,26 +153,19 @@ export const SubscribedBooksTable = () => {
           </div>
         }
         classNames={{
-          wrapper: "min-h-[222px]",
+          wrapper: 'min-h-[222px]',
         }}
       >
         <TableHeader columns={columns}>
           {(column) => (
-            <TableColumn
-              key={column.uid}
-              align={column.uid === "actions" ? "center" : "start"}
-            >
+            <TableColumn key={column.uid} align={column.uid === 'actions' ? 'center' : 'start'}>
               {column.name}
             </TableColumn>
           )}
         </TableHeader>
         <TableBody items={items}>
           {(item) => (
-            <TableRow key={item.id}>
-              {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
-              )}
-            </TableRow>
+            <TableRow key={item.id}>{(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}</TableRow>
           )}
         </TableBody>
       </Table>
