@@ -5,11 +5,10 @@ import {
   TCreateAuthorOutput,
   TDeleteAuthorInput,
   TDeleteAuthorOutput,
-  TFindAllAuthorsOutput,
+  TFindAllAuthorInput,
+  TFindAllAuthorOutput,
   TFindAuthorByIdInput,
   TFindAuthorByIdOutput,
-  TFindAuthorByNameInput,
-  TFindAuthorByNameOutput,
   TUpdateAuthorInput,
   TUpdateAuthorOutput,
 } from '@book-toshokan/libs/domain';
@@ -19,14 +18,14 @@ export class AuthorRepository implements AbstractAuthorRepository {
     const author = await db.author.create({
       data: {
         name: input.name,
-        about: input.about,
+        description: input.description,
       },
     });
 
     return {
       id: author.id,
       name: author.name,
-      about: author.about,
+      description: author.description,
     };
   }
 
@@ -40,29 +39,50 @@ export class AuthorRepository implements AbstractAuthorRepository {
     return {
       id: authorById.id,
       name: authorById.name,
-      about: authorById.about,
+      description: authorById.description,
     };
   }
 
-  async findAllAuthors(): Promise<TFindAllAuthorsOutput> {
-    const allAuthors = await db.author.findMany({});
-    return allAuthors.map((author) => ({
-      id: author.id,
-      name: author.name,
-      about: author.about,
-    }));
-  }
+  async findAllAuthor(input: TFindAllAuthorInput): Promise<TFindAllAuthorOutput> {
+    const take = input.pageInfo?.perPage || 10;
+    const skip = input.pageInfo?.page ? (input.pageInfo.page - 1) * take : 0;
 
-  async findAuthorByName(input: TFindAuthorByNameInput): Promise<TFindAuthorByNameOutput> {
-    const authorByName = await db.author.findFirst({
-      where: {
-        name: input.name,
-      },
+    const authors = await db.author.findMany({
+      ...(input.name
+        ? {
+            where: {
+              name: {
+                contains: input.name,
+                mode: 'insensitive',
+              },
+            },
+          }
+        : null),
+      skip: skip,
+      take: take,
     });
+
+    const totalCount = await db.author.count({
+      ...(input.name && {
+        where: {
+          name: {
+            contains: input.name,
+            mode: 'insensitive',
+          },
+        },
+      }),
+    });
+
+    const totalPages = Math.ceil(totalCount / take);
+
     return {
-      id: authorByName.id,
-      name: authorByName.name,
-      about: authorByName.about,
+      authors: authors,
+      pageInfo: {
+        currentPage: input.pageInfo?.page || 1,
+        perPage: take,
+        totalCount: totalCount,
+        totalPages: totalPages,
+      },
     };
   }
 
@@ -74,14 +94,14 @@ export class AuthorRepository implements AbstractAuthorRepository {
       data: {
         id: input.id,
         name: input.name,
-        about: input.about,
+        description: input.description,
       },
     });
 
     return {
       id: updatedAuthor.id,
       name: updatedAuthor.name,
-      about: updatedAuthor.about,
+      description: updatedAuthor.description,
     };
   }
 
@@ -95,7 +115,7 @@ export class AuthorRepository implements AbstractAuthorRepository {
     return {
       id: deletedAuthor.id,
       name: deletedAuthor.name,
-      about: deletedAuthor.about,
+      description: deletedAuthor.description,
     };
   }
 }

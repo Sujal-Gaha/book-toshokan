@@ -3,9 +3,10 @@ import { AuthorController } from '../controllers/author.controller';
 
 const router = Router();
 
-router.post('/create', AuthorController.createAuthor);
-router.post('/findAllAuthors', AuthorController.findAllAuthors);
-router.post('/findAuthorById/:authorId', AuthorController.findAuthorById);
-router.post('/findAuthorByName/:authorName', AuthorController.findAuthorByName);
+router.post('/createAuthor', AuthorController.createAuthor);
+router.get('/findAllAuthor', AuthorController.findAllAuthor);
+router.get('/findAuthorById/:authorId', AuthorController.findAuthorById);
+router.put('/updateAuthor/:authorId', AuthorController.updateAuthor);
+router.delete('/deleteAuthor/:authorId', AuthorController.deleteAuthor);
 
 export default router;

@@ -5,14 +5,9 @@ export class CreateAuthorUseCase {
   constructor(private authorRepository: AbstractAuthorRepository) {}
 
   async execute(input: TCreateAuthorInput): Promise<TCreateAuthorOutput> {
-    const authorExist = await this.authorRepository.findAuthorByName({
+    return this.authorRepository.createAuthor({
       name: input.name,
+      description: input.description,
     });
-
-    if (authorExist) {
-      throw new Error('Author already exists');
-    }
-
-    return this.authorRepository.createAuthor(input);
   }
 }
