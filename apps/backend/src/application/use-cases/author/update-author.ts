@@ -16,7 +16,7 @@ export class UpdateAuthorUseCase {
     return this.authorRepository.updateAuthor({
       id: input.id,
       name: input.name,
-      about: input.about,
+      description: input.description,
     });
   }
 }

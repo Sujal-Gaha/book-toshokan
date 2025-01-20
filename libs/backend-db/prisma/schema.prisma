@@ -49,10 +49,10 @@ model User {
 }
 
 model Author {
-  id    String @id @default(cuid())
-  name  String
-  about String
-  books Book[]
+  id          String @id @default(cuid())
+  name        String
+  description String
+  books       Book[]
 }
 
 model Category {

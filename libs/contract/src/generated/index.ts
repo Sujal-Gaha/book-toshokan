@@ -14,7 +14,7 @@ export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCo
 
 export const UserScalarFieldEnumSchema = z.enum(['id','username','email','password','image','role']);
 
-export const AuthorScalarFieldEnumSchema = z.enum(['id','name','about']);
+export const AuthorScalarFieldEnumSchema = z.enum(['id','name','description']);
 
 export const CategoryScalarFieldEnumSchema = z.enum(['id','name','description']);
 
@@ -66,7 +66,7 @@ export type User = z.infer<typeof UserSchema>
 export const AuthorSchema = z.object({
   id: z.string(),
   name: z.string(),
-  about: z.string(),
+  description: z.string(),
 })
 
 export type Author = z.infer<typeof AuthorSchema>

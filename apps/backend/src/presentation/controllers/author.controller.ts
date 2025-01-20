@@ -3,16 +3,14 @@ import { CreateAuthorUseCase } from '../../application/use-cases/author/create-a
 import { AuthorRepository } from '../../infrastructure/database/author.repository.impl';
 import { FindAllAuthorsUseCase } from '../../application/use-cases/author/find-all-authors';
 import { FindAuthorByIdUseCase } from '../../application/use-cases/author/find-author-by-id';
-import { FindAuthorByNameUseCase } from '../../application/use-cases/author/find-author-by-name';
 import { UpdateAuthorUseCase } from '../../application/use-cases/author/update-author';
 import { DeleteAuthorUseCase } from '../../application/use-cases/author/delete-author';
 import {
   TApiResponse,
   TCreateAuthorOutput,
   TDeleteAuthorOutput,
-  TFindAllAuthorsOutput,
+  TFindAllAuthorOutput,
   TFindAuthorByIdOutput,
-  TFindAuthorByNameOutput,
   TUpdateAuthorOutput,
 } from '@book-toshokan/libs/domain';
 import { StatusCodes } from 'http-status-codes';
@@ -22,20 +20,19 @@ const authorRepository = new AuthorRepository();
 const createAuthorUseCase = new CreateAuthorUseCase(authorRepository);
 const findAllAuthorsUseCase = new FindAllAuthorsUseCase(authorRepository);
 const findAuthorByIdUseCase = new FindAuthorByIdUseCase(authorRepository);
-const findAuthorByNameUseCase = new FindAuthorByNameUseCase(authorRepository);
 const updateAuthorUseCase = new UpdateAuthorUseCase(authorRepository);
 const deleteAuthorUseCase = new DeleteAuthorUseCase(authorRepository);
 
 export class AuthorController {
   static async createAuthor(req: Request, res: Response) {
-    const { name, about } = req.body;
+    const { name, description } = req.body;
 
-    if (!name || !about) {
+    if (!name || !description) {
       return res.status(StatusCodes.BAD_REQUEST).json({ error: 'Please provide all the necessary fields' });
     }
 
     try {
-      const author = await createAuthorUseCase.execute({ name, about });
+      const author = await createAuthorUseCase.execute({ name: name, description: description });
 
       const response: TApiResponse<TCreateAuthorOutput> = {
         status: StatusCodes.CREATED,
@@ -51,11 +48,19 @@ export class AuthorController {
     }
   }
 
-  static async findAllAuthors(req: Request, res: Response) {
-    try {
-      const authors = await findAllAuthorsUseCase.execute();
+  static async findAllAuthor(req: Request, res: Response) {
+    const { name, page, perPage } = req.query;
 
-      const response: TApiResponse<TFindAllAuthorsOutput> = {
+    try {
+      const authors = await findAllAuthorsUseCase.execute({
+        name: name as string,
+        pageInfo: {
+          page: +page,
+          perPage: +perPage,
+        },
+      });
+
+      const response: TApiResponse<TFindAllAuthorOutput> = {
         status: StatusCodes.OK,
         body: {
           data: authors,
@@ -97,48 +102,20 @@ export class AuthorController {
     }
   }
 
-  static async findAuthorByName(req: Request, res: Response) {
-    const { name } = req.body;
-
-    if (!name) {
-      return res.status(StatusCodes.BAD_REQUEST).json({ error: "Please provide the author's name" });
-    }
-
-    try {
-      const authorByName = await findAuthorByNameUseCase.execute({ name });
-
-      if (!authorByName) {
-        return res.status(StatusCodes.NOT_FOUND).json({ error: 'Author not found' });
-      }
-
-      const response: TApiResponse<TFindAuthorByNameOutput> = {
-        status: StatusCodes.OK,
-        body: {
-          data: authorByName,
-          message: 'Fetched the author successfully',
-        },
-      };
-
-      res.status(StatusCodes.OK).json(response);
-    } catch (error) {
-      res.status(StatusCodes.BAD_REQUEST).json({ error: error.messages });
-    }
-  }
-
   static async updateAuthor(req: Request, res: Response) {
     const { authorId } = req.params;
-    const { name, about } = req.body;
+    const { name, description } = req.body;
 
     if (!authorId) {
       return res.status(StatusCodes.BAD_REQUEST).json({ error: "Please provide the author's id" });
     }
 
-    if (!name || !about) {
+    if (!name || !description) {
       return res.status(StatusCodes.BAD_REQUEST).json({ error: 'Please provide all the necessary fields' });
     }
 
     try {
-      const updatedAuthor = await updateAuthorUseCase.execute({ id: authorId, name: name, about: about });
+      const updatedAuthor = await updateAuthorUseCase.execute({ id: authorId, name: name, description: description });
 
       const response: TApiResponse<TUpdateAuthorOutput> = {
         status: StatusCodes.OK,

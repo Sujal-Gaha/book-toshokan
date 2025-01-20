@@ -3,20 +3,18 @@ import {
   TCreateAuthorOutput,
   TDeleteAuthorInput,
   TDeleteAuthorOutput,
-  TFindAllAuthorsOutput,
+  TFindAllAuthorInput,
+  TFindAllAuthorOutput,
   TFindAuthorByIdInput,
   TFindAuthorByIdOutput,
-  TFindAuthorByNameInput,
-  TFindAuthorByNameOutput,
   TUpdateAuthorInput,
   TUpdateAuthorOutput,
 } from '@book-toshokan/libs/domain';
 
 export abstract class AbstractAuthorRepository {
   abstract createAuthor(input: TCreateAuthorInput): Promise<TCreateAuthorOutput>;
-  abstract findAllAuthors(): Promise<TFindAllAuthorsOutput>;
+  abstract findAllAuthor(input: TFindAllAuthorInput): Promise<TFindAllAuthorOutput>;
   abstract findAuthorById(input: TFindAuthorByIdInput): Promise<TFindAuthorByIdOutput>;
-  abstract findAuthorByName(input: TFindAuthorByNameInput): Promise<TFindAuthorByNameOutput>;
   abstract updateAuthor(input: TUpdateAuthorInput): Promise<TUpdateAuthorOutput>;
   abstract deleteAuthor(input: TDeleteAuthorInput): Promise<TDeleteAuthorOutput>;
 }

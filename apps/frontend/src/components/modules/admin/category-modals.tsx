@@ -191,7 +191,7 @@ export const useDeleteCategoryModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [categoryIdForDeletion, setCategoryIdForDeletion] = useState('');
 
-  const { register, handleSubmit, watch } = useForm<TDeleteCategorySchema>();
+  const { register, handleSubmit, watch, setValue } = useForm<TDeleteCategorySchema>();
 
   const { data: findCategoryByIdData, isLoading } = useQuery<TApiResponse<TFindCategoryByIdOutput>>({
     queryKey: ['findCategoryById', categoryIdForDeletion],
@@ -225,6 +225,7 @@ export const useDeleteCategoryModal = () => {
           qc.invalidateQueries({ queryKey: ['findAllCategory'] });
           onClose();
           setCategoryIdForDeletion('');
+          setValue('delete_command', '');
         },
         onError: (error) => {
           toastError(error.body.message);
