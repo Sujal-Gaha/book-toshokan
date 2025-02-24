@@ -1,6 +1,6 @@
-import { Input } from '../../ui/input';
-import { Button } from '../../ui/button';
-import { ModalComponent } from '../../ui/modal';
+import { Input } from '../../components/ui/input';
+import { Button } from '../../components/ui/button';
+import { ModalComponent } from '../../components/ui/modal';
 import {
   FieldErrors,
   SubmitHandler,
@@ -22,13 +22,13 @@ import {
   TUpdateCategoryOutput,
   UpdateCategorySchema,
 } from '@book-toshokan/libs/domain';
-import { createCategory, updateCategory } from '../../../data/category.data';
-import { toastError, toastSuccess } from '../../toast';
+import { createCategory, updateCategory } from '../../data/category.data';
+import { toastError, toastSuccess } from '../../components/toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { deleteCategory, findCategoryById } from '../../../data/category.data';
-import { Loading } from '../../loading';
+import { deleteCategory, findCategoryById } from '../../data/category.data';
+import { Loading } from '../../components/loading';
 import { z } from 'zod';
 import { useDisclosure } from '@nextui-org/react';
 

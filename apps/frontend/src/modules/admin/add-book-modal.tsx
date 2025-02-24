@@ -1,7 +1,7 @@
 import { useDisclosure } from '@nextui-org/react';
-import { ModalComponent } from '../../ui/modal';
-import { Input } from '../../ui/input';
-import { Button } from '../../ui/button';
+import { ModalComponent } from '../../components/ui/modal';
+import { Input } from '../../components/ui/input';
+import { Button } from '../../components/ui/button';
 
 interface IAddBookModal {
   onClose: () => void;
@@ -34,12 +34,7 @@ export const useAddBookModal = () => {
   return {
     openAddBookModal: onOpen,
     AddBookModalNode: (
-      <ModalComponent
-        title="Add New Book"
-        isOpen={isOpen}
-        onOpen={onOpen}
-        onClose={onClose}
-      >
+      <ModalComponent title="Add New Book" isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
         <AddBookModal onClose={onClose} />
       </ModalComponent>
     ),

@@ -1,5 +1,3 @@
-'use client';
-
 import {
   Modal as NextUIModal,
   ModalContent as NextUIModalContent,
@@ -7,7 +5,7 @@ import {
   ModalBody as NextUIModalBody,
   ModalProps as NextUIModalProps,
 } from '@nextui-org/react';
-import { Dispatch, ReactNode, SetStateAction } from 'react';
+import { ReactNode } from 'react';
 
 interface ModalComponentProps extends Omit<NextUIModalProps, 'backdrop'> {
   isOpen: boolean;
@@ -17,19 +15,13 @@ interface ModalComponentProps extends Omit<NextUIModalProps, 'backdrop'> {
   children: ReactNode;
 }
 
-export const ModalComponent = ({
-  children,
-  title,
-  ...props
-}: ModalComponentProps) => {
+export const ModalComponent = ({ children, title, ...props }: ModalComponentProps) => {
   return (
     <NextUIModal backdrop="transparent" {...props}>
       <NextUIModalContent>
         {() => (
           <>
-            <NextUIModalHeader className="flex flex-col gap-1">
-              {title}
-            </NextUIModalHeader>
+            <NextUIModalHeader className="flex flex-col gap-1">{title}</NextUIModalHeader>
             <NextUIModalBody>{children}</NextUIModalBody>
           </>
         )}

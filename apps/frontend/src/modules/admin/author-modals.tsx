@@ -1,7 +1,7 @@
 import { useDisclosure } from '@nextui-org/react';
-import { ModalComponent } from '../../ui/modal';
-import { Input } from '../../ui/input';
-import { Button } from '../../ui/button';
+import { ModalComponent } from '../../components/ui/modal';
+import { Input } from '../../components/ui/input';
+import { Button } from '../../components/ui/button';
 import {
   FieldErrors,
   SubmitHandler,
@@ -22,10 +22,10 @@ import {
   TUpdateAuthorOutput,
 } from '@book-toshokan/libs/domain';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createAuthor, deleteAuthor, findAuthorById, updateAuthor } from '../../../data/author.data';
-import { toastError, toastSuccess } from '../../toast';
+import { createAuthor, deleteAuthor, findAuthorById, updateAuthor } from '../../data/author.data';
+import { toastError, toastSuccess } from '../../components/toast';
 import { useEffect, useState } from 'react';
-import { Loading } from '../../loading';
+import { Loading } from '../../components/loading';
 import { z } from 'zod';
 
 interface IAddAuthorModal {
