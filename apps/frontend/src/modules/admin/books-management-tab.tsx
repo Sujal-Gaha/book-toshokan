@@ -6,7 +6,7 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Toolti
 import { DeleteIcon, EyeIcon, EditIcon } from '../../icons';
 import { useQuery } from '@tanstack/react-query';
 import { getAllBooks } from '../../data/book';
-import { Loading } from '../../components/loading';
+import { Loading } from '@book-toshokan/libs/shared-ui';
 
 type TColumn = {
   name: string;

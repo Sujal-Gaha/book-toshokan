@@ -1,13 +1,12 @@
 import { Card, CardBody, CardHeader, Input } from '@nextui-org/react';
 import { Edit, PlusCircle, Search, Trash } from 'lucide-react';
-import { Button } from '../../components/ui/button';
 import { useAddAuthorModal, useDeleteAuthorModal, useUpdateAuthorModal } from './author-modals';
-import { TableComponent } from '../../components/ui/table';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Author, TApiResponse, TFindAllAuthorOutput } from '@book-toshokan/libs/domain';
 import { useQuery } from '@tanstack/react-query';
 import { findAllAuthor } from '../../data/author.data';
 import { Dispatch, SetStateAction, useState } from 'react';
+import { Button, TableComponent } from '@book-toshokan/libs/shared-ui';
 
 const columnHelperForCategory = createColumnHelper<Author>();
 

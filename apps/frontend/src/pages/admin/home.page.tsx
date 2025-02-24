@@ -1,6 +1,6 @@
 import { BookOpen, Users, Album } from 'lucide-react';
-import { ITabItem, TabsComponent } from '../../components/ui/tabs';
 import { BooksManagementTab, AuthorManagementTab, CategoriesManagementTab } from '../../modules/admin';
+import { ITabItem, TabsComponent } from '@book-toshokan/libs/shared-ui';
 
 const tabItems: ITabItem[] = [
   // {

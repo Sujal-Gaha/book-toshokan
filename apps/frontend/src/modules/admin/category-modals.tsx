@@ -1,6 +1,3 @@
-import { Input } from '../../components/ui/input';
-import { Button } from '../../components/ui/button';
-import { ModalComponent } from '../../components/ui/modal';
 import {
   FieldErrors,
   SubmitHandler,
@@ -28,9 +25,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { deleteCategory, findCategoryById } from '../../data/category.data';
-import { Loading } from '../../components/loading';
 import { z } from 'zod';
 import { useDisclosure } from '@nextui-org/react';
+import { Button, Input, Loading, ModalComponent } from '@book-toshokan/libs/shared-ui';
 
 interface IAddCategoryModal {
   register: UseFormRegister<TCreateCategoryInput>;

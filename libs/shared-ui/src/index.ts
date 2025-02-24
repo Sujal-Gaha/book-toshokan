@@ -1,5 +1,3 @@
-export * from './lib/shared-ui';
-
 export * from './ui/button';
 export * from './ui/checkbox';
 export * from './ui/input';

@@ -1,7 +1,4 @@
 import { useDisclosure } from '@nextui-org/react';
-import { ModalComponent } from '../../components/ui/modal';
-import { Input } from '../../components/ui/input';
-import { Button } from '../../components/ui/button';
 import {
   FieldErrors,
   SubmitHandler,
@@ -25,8 +22,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createAuthor, deleteAuthor, findAuthorById, updateAuthor } from '../../data/author.data';
 import { toastError, toastSuccess } from '../../components/toast';
 import { useEffect, useState } from 'react';
-import { Loading } from '../../components/loading';
 import { z } from 'zod';
+import { Button, Input, Loading, ModalComponent } from '@book-toshokan/libs/shared-ui';
 
 interface IAddAuthorModal {
   register: UseFormRegister<TCreateAuthorInput>;

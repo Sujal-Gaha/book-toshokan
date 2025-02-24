@@ -1,7 +1,5 @@
+import { Button, Input, ModalComponent } from '@book-toshokan/libs/shared-ui';
 import { useDisclosure } from '@nextui-org/react';
-import { ModalComponent } from '../../components/ui/modal';
-import { Input } from '../../components/ui/input';
-import { Button } from '../../components/ui/button';
 
 interface IAddBookModal {
   onClose: () => void;
