@@ -15,7 +15,7 @@ import {
   DropdownMenu,
   DropdownItem,
   Button,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { Book, ChevronDown } from 'lucide-react';
 
 type Book = {

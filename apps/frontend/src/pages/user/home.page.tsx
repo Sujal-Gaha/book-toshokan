@@ -1,4 +1,4 @@
-import { Link, Button, Card, CardHeader, CardBody, CardFooter, Image } from '@nextui-org/react';
+import { Link, Button, Card, CardHeader, CardBody, CardFooter, Image } from "@heroui/react";
 import { BookOpen, Star } from 'lucide-react';
 import { keyFeatures } from '../../constants/key-features';
 import { readingStatuses } from '../../constants/reading-status';

@@ -1,4 +1,4 @@
-import { Pagination as NextUIPagination, PaginationProps } from '@nextui-org/react';
+import { Pagination as NextUIPagination, PaginationProps } from "@heroui/react";
 
 export interface IPaginationProps extends Omit<PaginationProps, 'isCompact' | 'showControls' | 'showShadow'> {
   color: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';

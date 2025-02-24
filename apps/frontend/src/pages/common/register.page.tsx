@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
-import { Image } from '@nextui-org/react';
+import { Image } from "@heroui/react";
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Divider } from '../../components/divider';
 import { FaGithub, FaGoogle } from 'react-icons/fa';

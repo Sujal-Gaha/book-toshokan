@@ -4,7 +4,7 @@ import {
   ModalHeader as NextUIModalHeader,
   ModalBody as NextUIModalBody,
   ModalProps as NextUIModalProps,
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { ReactNode } from 'react';
 
 interface ModalComponentProps extends Omit<NextUIModalProps, 'backdrop'> {

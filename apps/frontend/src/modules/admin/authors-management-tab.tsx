@@ -1,4 +1,4 @@
-import { Card, CardBody, CardHeader, Input } from '@nextui-org/react';
+import { Card, CardBody, CardHeader, Input } from "@heroui/react";
 import { Edit, PlusCircle, Search, Trash } from 'lucide-react';
 import { useAddAuthorModal, useDeleteAuthorModal, useUpdateAuthorModal } from './author-modals';
 import { createColumnHelper } from '@tanstack/react-table';

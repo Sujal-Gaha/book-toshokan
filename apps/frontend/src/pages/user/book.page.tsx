@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardBody, CardHeader, Button, Progress, Textarea, Avatar, Divider } from '@nextui-org/react';
+import { Card, CardBody, CardHeader, Button, Progress, Textarea, Avatar, Divider } from "@heroui/react";
 import { BookOpen, BookMarked, Star, Heart, Share2, MessageCircle } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';

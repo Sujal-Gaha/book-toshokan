@@ -1,4 +1,4 @@
-import { Card, CardBody, CardHeader } from '@nextui-org/react';
+import { Card, CardBody, CardHeader } from "@heroui/react";
 import { PlusCircle, Search, Edit, Trash } from 'lucide-react';
 import { useAddCategoryModal, useDeleteCategoryModal, useUpdateCategoryModal } from './category-modals';
 import { createColumnHelper } from '@tanstack/react-table';

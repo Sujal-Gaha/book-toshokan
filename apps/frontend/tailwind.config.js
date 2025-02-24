@@ -1,6 +1,6 @@
 import { createGlobPatternsForDependencies } from '@nx/react/tailwind';
 import { join } from 'path';
-import { nextui } from '@nextui-org/react';
+import { heroui } from "@heroui/react";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -10,14 +10,14 @@ module.exports = {
       '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}'
     ),
     ...createGlobPatternsForDependencies(__dirname),
-    '../../node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
+    "../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {},
   },
   darkMode: 'class',
   plugins: [
-    nextui({
+    heroui({
       prefix: 'nextui', // prefix for themes variables
       addCommonColors: false, // override common colors (e.g. "blue", "green", "pink").
       defaultTheme: 'dark', // default theme from the themes object

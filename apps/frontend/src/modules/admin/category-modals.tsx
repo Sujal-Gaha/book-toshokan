@@ -26,7 +26,7 @@ import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { deleteCategory, findCategoryById } from '../../data/category.data';
 import { z } from 'zod';
-import { useDisclosure } from '@nextui-org/react';
+import { useDisclosure } from "@heroui/react";
 import { Button, Input, Loading, ModalComponent } from '@book-toshokan/libs/shared-ui';
 
 interface IAddCategoryModal {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, CardBody, CardFooter, Image, Pagination } from '@nextui-org/react';
+import { Card, CardBody, CardFooter, Image, Pagination } from "@heroui/react";
 import { Star, BookOpen } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { getAllBooks } from '../../data/book';

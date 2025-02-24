@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Tabs, Tab, TabsProps } from '@nextui-org/react';
+import { Tabs, Tab, TabsProps } from "@heroui/react";
 import { type LucideIcon } from 'lucide-react';
 
 export interface ITabItem {
