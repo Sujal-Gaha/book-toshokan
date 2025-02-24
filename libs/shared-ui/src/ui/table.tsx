@@ -9,7 +9,7 @@ import {
   IdIdentifier,
 } from '@tanstack/react-table';
 import { IPaginationProps, Pagination } from './pagination';
-import { Loading } from '../loading';
+import { Loading } from './loading';
 import React from 'react';
 
 interface TableComponentProps<T extends object> {
