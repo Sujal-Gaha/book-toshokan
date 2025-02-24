@@ -18,6 +18,7 @@ import {
 import { StatusCodes } from 'http-status-codes';
 import { LoginUserUseCase } from '../../application/use-cases/user/login-user';
 import { DeleteUserUseCase } from '../../application/use-cases/user/delete-user';
+import { utils } from '../../utils';
 
 const userRepository = new UserRepository();
 
