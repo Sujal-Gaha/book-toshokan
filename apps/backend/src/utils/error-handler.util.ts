@@ -1,5 +1,5 @@
-import { Response } from "express";
-import { TErrorResponse } from "../types/";
+import { Response } from 'express';
+import { TErrorResponse } from '../types';
 
 interface IHandleErrorFn {
   res: Response;
@@ -8,7 +8,7 @@ interface IHandleErrorFn {
 }
 
 export const handleError = ({ res, error, customMessage }: IHandleErrorFn) => {
-  console.error("Error: ", error);
+  console.error('Error: ', error);
 
   const errorResponse: TErrorResponse = {
     status: 500,
@@ -16,7 +16,7 @@ export const handleError = ({ res, error, customMessage }: IHandleErrorFn) => {
       data: null,
     },
     success: false,
-    message: customMessage || error.message || "Internal Server Error",
+    message: customMessage || error.message || 'Internal Server Error',
   };
 
   res.status(500).json(errorResponse);
