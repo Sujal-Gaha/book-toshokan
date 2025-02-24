@@ -19,8 +19,8 @@ import { getAppsPath } from '../utils/getAppsPath';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useTheme } from 'next-themes';
-import { SunIcon } from './icons';
-import { MoonIcon } from './icons';
+import { SunIcon } from '../icons';
+import { MoonIcon } from '../icons';
 
 export const AdminNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

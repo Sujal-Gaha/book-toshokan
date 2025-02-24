@@ -3,7 +3,7 @@ import { PlusCircle, Search } from 'lucide-react';
 import { useAddBookModal } from './add-book-modal';
 import { Dispatch, Key, SetStateAction, useCallback, useState } from 'react';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Tooltip } from '@nextui-org/react';
-import { DeleteIcon, EyeIcon, EditIcon } from '../../components/icons';
+import { DeleteIcon, EyeIcon, EditIcon } from '../../icons';
 import { useQuery } from '@tanstack/react-query';
 import { getAllBooks } from '../../data/book';
 import { Loading } from '../../components/loading';
