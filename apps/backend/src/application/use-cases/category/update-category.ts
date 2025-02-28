@@ -1,10 +1,10 @@
-import { TUpdateCategoryInput, TUpdateCategoryOutput } from '@book-toshokan/libs/domain';
+import { UpdateCategoryInput, UpdateCategoryOutput } from '@book-toshokan/libs/domain';
 import { AbstractCategoryRepository } from '../../repository/category.repository';
 
 export class UpdateCategoryUseCase {
   constructor(private categoryRepository: AbstractCategoryRepository) {}
 
-  async execute(input: TUpdateCategoryInput): Promise<TUpdateCategoryOutput> {
+  async execute(input: UpdateCategoryInput): Promise<UpdateCategoryOutput> {
     const categoryExists = await this.categoryRepository.findCategoryById({
       id: input.id,
     });

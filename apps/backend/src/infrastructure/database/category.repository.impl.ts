@@ -1,20 +1,20 @@
 import {
-  TCreateCategoryInput,
-  TCreateCategoryOutput,
-  TDeleteCategoryInput,
-  TDeleteCategoryOutput,
-  TFindAllCategoryInput,
-  TFindAllCategoryOutput,
-  TFindCategoryByIdInput,
-  TFindCategoryByIdOutput,
-  TUpdateCategoryInput,
-  TUpdateCategoryOutput,
+  CreateCategoryInput,
+  CreateCategoryOutput,
+  DeleteCategoryInput,
+  DeleteCategoryOutput,
+  FindAllCategoryInput,
+  FindAllCategoryOutput,
+  FindCategoryByIdInput,
+  FindCategoryByIdOutput,
+  UpdateCategoryInput,
+  UpdateCategoryOutput,
 } from '@book-toshokan/libs/domain';
 import { AbstractCategoryRepository } from '../../application/repository/category.repository';
 import { db } from '@book-toshokan/libs/backend-db';
 
 export class CategoryRepository implements AbstractCategoryRepository {
-  async createCategory(input: TCreateCategoryInput): Promise<TCreateCategoryOutput> {
+  async createCategory(input: CreateCategoryInput): Promise<CreateCategoryOutput> {
     const category = await db.category.create({
       data: {
         name: input.name,
@@ -29,7 +29,7 @@ export class CategoryRepository implements AbstractCategoryRepository {
     };
   }
 
-  async findAllCategory(input: TFindAllCategoryInput): Promise<TFindAllCategoryOutput> {
+  async findAllCategory(input: FindAllCategoryInput): Promise<FindAllCategoryOutput> {
     const take = input.pageInfo?.perPage || 10;
     const skip = input.pageInfo?.page ? (input.pageInfo.page - 1) * take : 0;
 
@@ -74,7 +74,7 @@ export class CategoryRepository implements AbstractCategoryRepository {
     };
   }
 
-  async findCategoryById(input: TFindCategoryByIdInput): Promise<TFindCategoryByIdOutput> {
+  async findCategoryById(input: FindCategoryByIdInput): Promise<FindCategoryByIdOutput> {
     const categoryById = await db.category.findFirst({
       where: {
         id: input.id,
@@ -88,7 +88,7 @@ export class CategoryRepository implements AbstractCategoryRepository {
     };
   }
 
-  async updateCategory(input: TUpdateCategoryInput): Promise<TUpdateCategoryOutput> {
+  async updateCategory(input: UpdateCategoryInput): Promise<UpdateCategoryOutput> {
     const updatedCategory = await db.category.update({
       where: {
         id: input.id,
@@ -106,7 +106,7 @@ export class CategoryRepository implements AbstractCategoryRepository {
     };
   }
 
-  async deleteCategory(input: TDeleteCategoryInput): Promise<TDeleteCategoryOutput> {
+  async deleteCategory(input: DeleteCategoryInput): Promise<DeleteCategoryOutput> {
     const deletedCategory = await db.category.delete({
       where: {
         id: input.id,

@@ -9,11 +9,11 @@ import { StatusCodes } from 'http-status-codes';
 import {
   TApiError,
   TApiResponse,
-  TCreateCategoryOutput,
-  TDeleteCategoryOutput,
-  TFindAllCategoryOutput,
-  TFindCategoryByIdOutput,
-  TUpdateCategoryOutput,
+  CreateCategoryOutput,
+  DeleteCategoryOutput,
+  FindAllCategoryOutput,
+  FindCategoryByIdOutput,
+  UpdateCategoryOutput,
 } from '@book-toshokan/libs/domain';
 
 const categoryRepository = new CategoryRepository();
@@ -45,7 +45,7 @@ export class CategoryController {
         description: description,
       });
 
-      const response: TApiResponse<TCreateCategoryOutput> = {
+      const response: TApiResponse<CreateCategoryOutput> = {
         status: StatusCodes.CREATED,
         body: {
           data: {
@@ -85,7 +85,7 @@ export class CategoryController {
         },
       });
 
-      const response: TApiResponse<TFindAllCategoryOutput> = {
+      const response: TApiResponse<FindAllCategoryOutput> = {
         status: StatusCodes.OK,
         body: {
           data: categories,
@@ -141,7 +141,7 @@ export class CategoryController {
         return res.status(StatusCodes.NOT_FOUND).json(response);
       }
 
-      const response: TApiResponse<TFindCategoryByIdOutput> = {
+      const response: TApiResponse<FindCategoryByIdOutput> = {
         status: StatusCodes.OK,
         body: {
           data: {
@@ -203,7 +203,7 @@ export class CategoryController {
         description: description,
       });
 
-      const response: TApiResponse<TUpdateCategoryOutput> = {
+      const response: TApiResponse<UpdateCategoryOutput> = {
         status: StatusCodes.OK,
         body: {
           data: {
@@ -250,7 +250,7 @@ export class CategoryController {
         id: categoryId,
       });
 
-      const response: TApiResponse<TDeleteCategoryOutput> = {
+      const response: TApiResponse<DeleteCategoryOutput> = {
         status: StatusCodes.OK,
         body: {
           data: {
