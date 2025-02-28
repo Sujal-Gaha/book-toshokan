@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { CategorySchema } from '../entities';
 
-export const CreateCategoryInputSchema = CategorySchema.pick({ id: true, name: true, description: true });
+export const CreateCategoryInputSchema = CategorySchema.pick({ name: true, description: true });
 export type CreateCategoryInput = z.infer<typeof CreateCategoryInputSchema>;
 
 export const CreateCategoryOutputSchema = CategorySchema.pick({ id: true, name: true, description: true });

@@ -7,17 +7,17 @@ import {
   UseFormWatch,
 } from 'react-hook-form';
 import {
-  CreateCategorySchema,
+  CreateCategoryInputSchema,
   TApiError,
   TApiResponse,
-  TCreateCategoryInput,
-  TCreateCategoryOutput,
-  TDeleteCategoryInput,
-  TDeleteCategoryOutput,
-  TFindCategoryByIdOutput,
-  TUpdateCategoryInput,
-  TUpdateCategoryOutput,
-  UpdateCategorySchema,
+  CreateCategoryInput,
+  CreateCategoryOutput,
+  DeleteCategoryInput,
+  DeleteCategoryOutput,
+  FindCategoryByIdOutput,
+  UpdateCategoryInput,
+  UpdateCategoryOutput,
+  UpdateCategoryInputSchema,
 } from '@book-toshokan/libs/domain';
 import { createCategory, updateCategory } from '../../data/category.data';
 import { toastError, toastSuccess } from '../../components/toast';
@@ -26,14 +26,14 @@ import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { deleteCategory, findCategoryById } from '../../data/category.data';
 import { z } from 'zod';
-import { useDisclosure } from "@heroui/react";
+import { useDisclosure } from '@heroui/react';
 import { Button, Input, Loading, ModalComponent } from '@book-toshokan/libs/shared-ui';
 
 interface IAddCategoryModal {
-  register: UseFormRegister<TCreateCategoryInput>;
-  addCategory: SubmitHandler<TCreateCategoryInput>;
-  errors: FieldErrors<TCreateCategoryInput>;
-  handleSubmit: UseFormHandleSubmit<TCreateCategoryInput>;
+  register: UseFormRegister<CreateCategoryInput>;
+  addCategory: SubmitHandler<CreateCategoryInput>;
+  errors: FieldErrors<CreateCategoryInput>;
+  handleSubmit: UseFormHandleSubmit<CreateCategoryInput>;
   isAddingCategory: boolean;
   onClose: () => void;
 }
@@ -83,7 +83,7 @@ const AddCategoryModal = ({
 export const useAddCategoryModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const createCategoryMtn = useMutation<TApiResponse<TCreateCategoryOutput>, TApiError, TCreateCategoryInput>({
+  const createCategoryMtn = useMutation<TApiResponse<CreateCategoryOutput>, TApiError, CreateCategoryInput>({
     mutationFn: createCategory,
   });
   const qc = useQueryClient();
@@ -93,8 +93,8 @@ export const useAddCategoryModal = () => {
     setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm<TCreateCategoryInput>({
-    resolver: zodResolver(CreateCategorySchema),
+  } = useForm<CreateCategoryInput>({
+    resolver: zodResolver(CreateCategoryInputSchema),
   });
 
   const closeAddCategoryModal = () => {
@@ -103,7 +103,7 @@ export const useAddCategoryModal = () => {
     onClose();
   };
 
-  const addCategory: SubmitHandler<TCreateCategoryInput> = async (input) => {
+  const addCategory: SubmitHandler<CreateCategoryInput> = async (input) => {
     await createCategoryMtn.mutateAsync(
       {
         name: input.name,
@@ -190,13 +190,13 @@ export const useDeleteCategoryModal = () => {
 
   const { register, handleSubmit, watch, setValue } = useForm<TDeleteCategorySchema>();
 
-  const { data: findCategoryByIdData, isLoading } = useQuery<TApiResponse<TFindCategoryByIdOutput>>({
+  const { data: findCategoryByIdData, isLoading } = useQuery<TApiResponse<FindCategoryByIdOutput>>({
     queryKey: ['findCategoryById', categoryIdForDeletion],
     queryFn: () => findCategoryById({ id: categoryIdForDeletion }),
     enabled: !!categoryIdForDeletion,
   });
 
-  const deleteCategoryMtn = useMutation<TApiResponse<TDeleteCategoryOutput>, TApiError, TDeleteCategoryInput>({
+  const deleteCategoryMtn = useMutation<TApiResponse<DeleteCategoryOutput>, TApiError, DeleteCategoryInput>({
     mutationFn: () => deleteCategory({ id: categoryIdForDeletion }),
   });
 
@@ -261,11 +261,11 @@ export const useDeleteCategoryModal = () => {
 interface IUpdateCategoryModal {
   onClose: () => void;
   isUpdatingCatgory: boolean;
-  errors: FieldErrors<TUpdateCategoryInput>;
-  watch: UseFormWatch<TUpdateCategoryInput>;
-  register: UseFormRegister<TUpdateCategoryInput>;
-  handleSubmit: UseFormHandleSubmit<TUpdateCategoryInput>;
-  submitUpdateCategoryForm: SubmitHandler<TUpdateCategoryInput>;
+  errors: FieldErrors<UpdateCategoryInput>;
+  watch: UseFormWatch<UpdateCategoryInput>;
+  register: UseFormRegister<UpdateCategoryInput>;
+  handleSubmit: UseFormHandleSubmit<UpdateCategoryInput>;
+  submitUpdateCategoryForm: SubmitHandler<UpdateCategoryInput>;
 }
 
 const UpdateCategoryModal = ({
@@ -317,7 +317,7 @@ export const useUpdateCategoryModal = () => {
 
   const qc = useQueryClient();
 
-  const { data: findCategoryByIdData, isLoading } = useQuery<TApiResponse<TFindCategoryByIdOutput>>({
+  const { data: findCategoryByIdData, isLoading } = useQuery<TApiResponse<FindCategoryByIdOutput>>({
     queryKey: ['findCategoryById', categoryIdForModification],
     queryFn: () => findCategoryById({ id: categoryIdForModification }),
     enabled: !!categoryIdForModification,
@@ -329,8 +329,8 @@ export const useUpdateCategoryModal = () => {
     setValue,
     watch,
     formState: { errors },
-  } = useForm<TUpdateCategoryInput>({
-    resolver: zodResolver(UpdateCategorySchema),
+  } = useForm<UpdateCategoryInput>({
+    resolver: zodResolver(UpdateCategoryInputSchema),
   });
 
   useEffect(() => {
@@ -340,11 +340,11 @@ export const useUpdateCategoryModal = () => {
     }
   }, [setValue, findCategoryByIdData?.body?.data]);
 
-  const updateCategoryMtn = useMutation<TApiResponse<TUpdateCategoryOutput>, TApiError, TUpdateCategoryInput>({
+  const updateCategoryMtn = useMutation<TApiResponse<UpdateCategoryOutput>, TApiError, UpdateCategoryInput>({
     mutationFn: updateCategory,
   });
 
-  const submitUpdateCategoryForm: SubmitHandler<TUpdateCategoryInput> = async (input) => {
+  const submitUpdateCategoryForm: SubmitHandler<UpdateCategoryInput> = async (input) => {
     await updateCategoryMtn.mutateAsync(
       {
         id: categoryIdForModification,

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { AuthorSchema } from '../entities';
 
-export const CreateAuthorInputSchema = AuthorSchema.pick({ id: true, name: true, description: true });
+export const CreateAuthorInputSchema = AuthorSchema.pick({ name: true, description: true });
 export type CreateAuthorInput = z.infer<typeof CreateAuthorInputSchema>;
 
 export const CreateAuthorOutputSchema = AuthorSchema.pick({

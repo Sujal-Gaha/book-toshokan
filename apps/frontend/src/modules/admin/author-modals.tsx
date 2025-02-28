@@ -1,4 +1,4 @@
-import { useDisclosure } from "@heroui/react";
+import { useDisclosure } from '@heroui/react';
 import {
   FieldErrors,
   SubmitHandler,
@@ -10,13 +10,13 @@ import {
 import {
   TApiError,
   TApiResponse,
-  TCreateAuthorInput,
-  TCreateAuthorOutput,
-  TDeleteAuthorInput,
-  TDeleteAuthorOutput,
-  TFindAuthorByIdOutput,
-  TUpdateAuthorInput,
-  TUpdateAuthorOutput,
+  CreateAuthorInput,
+  CreateAuthorOutput,
+  DeleteAuthorInput,
+  DeleteAuthorOutput,
+  FindAuthorByIdOutput,
+  UpdateAuthorInput,
+  UpdateAuthorOutput,
 } from '@book-toshokan/libs/domain';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createAuthor, deleteAuthor, findAuthorById, updateAuthor } from '../../data/author.data';
@@ -26,12 +26,12 @@ import { z } from 'zod';
 import { Button, Input, Loading, ModalComponent } from '@book-toshokan/libs/shared-ui';
 
 interface IAddAuthorModal {
-  register: UseFormRegister<TCreateAuthorInput>;
-  errors: FieldErrors<TCreateAuthorInput>;
+  register: UseFormRegister<CreateAuthorInput>;
+  errors: FieldErrors<CreateAuthorInput>;
   isAddingAuthor: boolean;
   onClose: () => void;
-  handleSubmit: UseFormHandleSubmit<TCreateAuthorInput>;
-  submitAddAuthorForm: SubmitHandler<TCreateAuthorInput>;
+  handleSubmit: UseFormHandleSubmit<CreateAuthorInput>;
+  submitAddAuthorForm: SubmitHandler<CreateAuthorInput>;
 }
 
 const AddAuthorModal = ({
@@ -86,9 +86,9 @@ export const useAddAuthorModal = () => {
     setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm<TCreateAuthorInput>();
+  } = useForm<CreateAuthorInput>();
 
-  const createAuthorMtn = useMutation<TApiResponse<TCreateAuthorOutput>, TApiError, TCreateAuthorInput>({
+  const createAuthorMtn = useMutation<TApiResponse<CreateAuthorOutput>, TApiError, CreateAuthorInput>({
     mutationFn: createAuthor,
   });
 
@@ -98,7 +98,7 @@ export const useAddAuthorModal = () => {
     onClose();
   };
 
-  const submitAddAuthorForm: SubmitHandler<TCreateAuthorInput> = async (data) => {
+  const submitAddAuthorForm: SubmitHandler<CreateAuthorInput> = async (data) => {
     await createAuthorMtn.mutateAsync(
       {
         name: data.name,
@@ -186,13 +186,13 @@ export const useDeleteAuthorModal = () => {
 
   const { register, handleSubmit, watch, setValue } = useForm<TDeleteAuthorSchema>();
 
-  const { data: findAuthorByIdData, isLoading } = useQuery<TApiResponse<TFindAuthorByIdOutput>>({
+  const { data: findAuthorByIdData, isLoading } = useQuery<TApiResponse<FindAuthorByIdOutput>>({
     queryKey: ['findAuthorById', authorIdForDeletion],
     queryFn: () => findAuthorById({ id: authorIdForDeletion }),
     enabled: !!authorIdForDeletion,
   });
 
-  const deleteAuthorMtn = useMutation<TApiResponse<TDeleteAuthorOutput>, TApiError, TDeleteAuthorInput>({
+  const deleteAuthorMtn = useMutation<TApiResponse<DeleteAuthorOutput>, TApiError, DeleteAuthorInput>({
     mutationFn: () => deleteAuthor({ id: authorIdForDeletion }),
   });
 
@@ -255,11 +255,11 @@ export const useDeleteAuthorModal = () => {
 };
 
 interface IUpdateAuthorModal {
-  handleSubmit: UseFormHandleSubmit<TUpdateAuthorInput>;
-  submitUpdateAuthorForm: SubmitHandler<TUpdateAuthorInput>;
-  register: UseFormRegister<TUpdateAuthorInput>;
-  errors: FieldErrors<TUpdateAuthorInput>;
-  watch: UseFormWatch<TUpdateAuthorInput>;
+  handleSubmit: UseFormHandleSubmit<UpdateAuthorInput>;
+  submitUpdateAuthorForm: SubmitHandler<UpdateAuthorInput>;
+  register: UseFormRegister<UpdateAuthorInput>;
+  errors: FieldErrors<UpdateAuthorInput>;
+  watch: UseFormWatch<UpdateAuthorInput>;
   isUpdatingAuthor: boolean;
   onClose: () => void;
 }
@@ -315,13 +315,13 @@ export const useUpdateAuthorModal = () => {
 
   const qc = useQueryClient();
 
-  const { data: findAuthorByIdData, isLoading } = useQuery<TApiResponse<TFindAuthorByIdOutput>>({
+  const { data: findAuthorByIdData, isLoading } = useQuery<TApiResponse<FindAuthorByIdOutput>>({
     queryKey: ['findAuthorById', authorIdForModification],
     queryFn: () => findAuthorById({ id: authorIdForModification }),
     enabled: !!authorIdForModification,
   });
 
-  const updateAuthorMtn = useMutation<TApiResponse<TUpdateAuthorOutput>, TApiError, TUpdateAuthorInput>({
+  const updateAuthorMtn = useMutation<TApiResponse<UpdateAuthorOutput>, TApiError, UpdateAuthorInput>({
     mutationFn: updateAuthor,
   });
 
@@ -331,7 +331,7 @@ export const useUpdateAuthorModal = () => {
     setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm<TUpdateAuthorInput>();
+  } = useForm<UpdateAuthorInput>();
 
   useEffect(() => {
     if (findAuthorByIdData?.body.data) {
@@ -340,7 +340,7 @@ export const useUpdateAuthorModal = () => {
     }
   }, [findAuthorByIdData?.body.data, setValue]);
 
-  const submitUpdateAuthorForm: SubmitHandler<TUpdateAuthorInput> = async (data) => {
+  const submitUpdateAuthorForm: SubmitHandler<UpdateAuthorInput> = async (data) => {
     await updateAuthorMtn.mutateAsync(
       {
         id: authorIdForModification,
