@@ -7,11 +7,11 @@ import { UpdateAuthorUseCase } from '../../application/use-cases/author/update-a
 import { DeleteAuthorUseCase } from '../../application/use-cases/author/delete-author';
 import {
   TApiResponse,
-  TCreateAuthorOutput,
-  TDeleteAuthorOutput,
-  TFindAllAuthorOutput,
-  TFindAuthorByIdOutput,
-  TUpdateAuthorOutput,
+  CreateAuthorOutput,
+  DeleteAuthorOutput,
+  FindAllAuthorOutput,
+  FindAuthorByIdOutput,
+  UpdateAuthorOutput,
 } from '@book-toshokan/libs/domain';
 import { StatusCodes } from 'http-status-codes';
 
@@ -34,7 +34,7 @@ export class AuthorController {
     try {
       const author = await createAuthorUseCase.execute({ name: name, description: description });
 
-      const response: TApiResponse<TCreateAuthorOutput> = {
+      const response: TApiResponse<CreateAuthorOutput> = {
         status: StatusCodes.CREATED,
         body: {
           data: author,
@@ -60,7 +60,7 @@ export class AuthorController {
         },
       });
 
-      const response: TApiResponse<TFindAllAuthorOutput> = {
+      const response: TApiResponse<FindAllAuthorOutput> = {
         status: StatusCodes.OK,
         body: {
           data: authors,
@@ -88,7 +88,7 @@ export class AuthorController {
         return res.status(StatusCodes.NOT_FOUND).json({ error: 'Author not found' });
       }
 
-      const response: TApiResponse<TFindAuthorByIdOutput> = {
+      const response: TApiResponse<FindAuthorByIdOutput> = {
         status: StatusCodes.OK,
         body: {
           data: authorById,
@@ -117,7 +117,7 @@ export class AuthorController {
     try {
       const updatedAuthor = await updateAuthorUseCase.execute({ id: authorId, name: name, description: description });
 
-      const response: TApiResponse<TUpdateAuthorOutput> = {
+      const response: TApiResponse<UpdateAuthorOutput> = {
         status: StatusCodes.OK,
         body: {
           data: updatedAuthor,
@@ -141,7 +141,7 @@ export class AuthorController {
     try {
       const deletedAuthor = await deleteAuthorUseCase.execute({ id: authorId });
 
-      const response: TApiResponse<TDeleteAuthorOutput> = {
+      const response: TApiResponse<DeleteAuthorOutput> = {
         status: StatusCodes.OK,
         body: {
           data: deletedAuthor,

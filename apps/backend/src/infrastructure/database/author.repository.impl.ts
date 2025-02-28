@@ -1,20 +1,20 @@
 import { db } from '@book-toshokan/libs/backend-db';
 import { AbstractAuthorRepository } from '../../application/repository/author.repository';
 import {
-  TCreateAuthorInput,
-  TCreateAuthorOutput,
-  TDeleteAuthorInput,
-  TDeleteAuthorOutput,
-  TFindAllAuthorInput,
-  TFindAllAuthorOutput,
-  TFindAuthorByIdInput,
-  TFindAuthorByIdOutput,
-  TUpdateAuthorInput,
-  TUpdateAuthorOutput,
+  CreateAuthorInput,
+  CreateAuthorOutput,
+  DeleteAuthorInput,
+  DeleteAuthorOutput,
+  FindAllAuthorInput,
+  FindAllAuthorOutput,
+  FindAuthorByIdInput,
+  FindAuthorByIdOutput,
+  UpdateAuthorInput,
+  UpdateAuthorOutput,
 } from '@book-toshokan/libs/domain';
 
 export class AuthorRepository implements AbstractAuthorRepository {
-  async createAuthor(input: TCreateAuthorInput): Promise<TCreateAuthorOutput> {
+  async createAuthor(input: CreateAuthorInput): Promise<CreateAuthorOutput> {
     const author = await db.author.create({
       data: {
         name: input.name,
@@ -29,7 +29,7 @@ export class AuthorRepository implements AbstractAuthorRepository {
     };
   }
 
-  async findAuthorById(input: TFindAuthorByIdInput): Promise<TFindAuthorByIdOutput> {
+  async findAuthorById(input: FindAuthorByIdInput): Promise<FindAuthorByIdOutput> {
     const authorById = await db.author.findFirst({
       where: {
         id: input.id,
@@ -43,7 +43,7 @@ export class AuthorRepository implements AbstractAuthorRepository {
     };
   }
 
-  async findAllAuthor(input: TFindAllAuthorInput): Promise<TFindAllAuthorOutput> {
+  async findAllAuthor(input: FindAllAuthorInput): Promise<FindAllAuthorOutput> {
     const take = input.pageInfo?.perPage || 10;
     const skip = input.pageInfo?.page ? (input.pageInfo.page - 1) * take : 0;
 
@@ -86,7 +86,7 @@ export class AuthorRepository implements AbstractAuthorRepository {
     };
   }
 
-  async updateAuthor(input: TUpdateAuthorInput): Promise<TUpdateAuthorOutput> {
+  async updateAuthor(input: UpdateAuthorInput): Promise<UpdateAuthorOutput> {
     const updatedAuthor = await db.author.update({
       where: {
         id: input.id,
@@ -105,7 +105,7 @@ export class AuthorRepository implements AbstractAuthorRepository {
     };
   }
 
-  async deleteAuthor(input: TDeleteAuthorInput): Promise<TDeleteAuthorOutput> {
+  async deleteAuthor(input: DeleteAuthorInput): Promise<DeleteAuthorOutput> {
     const deletedAuthor = await db.author.delete({
       where: {
         id: input.id,

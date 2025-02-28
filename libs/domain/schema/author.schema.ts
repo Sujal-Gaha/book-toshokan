@@ -1,29 +1,70 @@
 import { z } from 'zod';
-import { AuthorSchema, Author } from '../entities';
+import { AuthorSchema } from '../entities';
 
-export const CreateAuthorSchema = AuthorSchema.omit({ id: true });
-export type TCreateAuthorInput = z.infer<typeof CreateAuthorSchema>;
-export type TCreateAuthorOutput = Author;
+export const CreateAuthorInputSchema = AuthorSchema.pick({ id: true, name: true, description: true });
+export type CreateAuthorInput = z.infer<typeof CreateAuthorInputSchema>;
 
-export type TFindAllAuthorInput = { name?: string; pageInfo?: { page: number; perPage: number } };
-export type TFindAllAuthorOutput = {
-  authors: Author[];
-  pageInfo: {
-    currentPage: number;
-    perPage: number;
-    totalCount: number;
-    totalPages: number;
-  };
-};
+export const CreateAuthorOutputSchema = AuthorSchema.pick({
+  id: true,
+  name: true,
+  description: true,
+});
+export type CreateAuthorOutput = z.infer<typeof CreateAuthorOutputSchema>;
 
-export const FindAuthorByIdSchema = AuthorSchema.pick({ id: true });
-export type TFindAuthorByIdInput = z.infer<typeof FindAuthorByIdSchema>;
-export type TFindAuthorByIdOutput = Author | null;
+export const FindAllAuthorInputSchema = z.object({
+  name: z.string().optional(),
+  pageInfo: z.object({ page: z.number(), perPage: z.number() }).optional(),
+});
 
-export const UpdateAuthorSchema = AuthorSchema;
-export type TUpdateAuthorInput = z.infer<typeof UpdateAuthorSchema>;
-export type TUpdateAuthorOutput = Author;
+export type FindAllAuthorInput = z.infer<typeof FindAllAuthorInputSchema>;
 
-export const DeleteAuthorSchema = AuthorSchema.pick({ id: true });
-export type TDeleteAuthorInput = z.infer<typeof DeleteAuthorSchema>;
-export type TDeleteAuthorOutput = Author;
+export const FindAllAuthorOutputSchema = z.object({
+  authors: z.array(
+    AuthorSchema.pick({
+      id: true,
+      name: true,
+      description: true,
+    })
+  ),
+  pageInfo: z.object({
+    currentPage: z.number(),
+    perPage: z.number(),
+    totalCount: z.number(),
+    totalPages: z.number(),
+  }),
+});
+export type FindAllAuthorOutput = z.infer<typeof FindAllAuthorOutputSchema>;
+
+export const FindAuthorByIdInputSchema = AuthorSchema.pick({ id: true });
+export type FindAuthorByIdInput = z.infer<typeof FindAuthorByIdInputSchema>;
+
+export const FindAuthorByIdOutputSchema = AuthorSchema.pick({
+  id: true,
+  name: true,
+  description: true,
+});
+export type FindAuthorByIdOutput = z.infer<typeof FindAuthorByIdOutputSchema>;
+
+export const UpdateAuthorInputSchema = AuthorSchema.pick({
+  id: true,
+  name: true,
+  description: true,
+});
+export type UpdateAuthorInput = z.infer<typeof UpdateAuthorInputSchema>;
+
+export const UpdateAuthorOutputSchema = AuthorSchema.pick({
+  id: true,
+  name: true,
+  description: true,
+});
+export type UpdateAuthorOutput = z.infer<typeof UpdateAuthorOutputSchema>;
+
+export const DeleteAuthorInputSchema = AuthorSchema.pick({ id: true });
+export type DeleteAuthorInput = z.infer<typeof DeleteAuthorInputSchema>;
+
+export const DeleteAuthorOutputSchema = AuthorSchema.pick({
+  id: true,
+  name: true,
+  description: true,
+});
+export type DeleteAuthorOutput = z.infer<typeof DeleteAuthorOutputSchema>;

@@ -1,10 +1,10 @@
-import { TDeleteAuthorInput, TDeleteAuthorOutput } from '@book-toshokan/libs/domain';
+import { DeleteAuthorInput, DeleteAuthorOutput } from '@book-toshokan/libs/domain';
 import { AbstractAuthorRepository } from '../../repository/author.repository';
 
 export class DeleteAuthorUseCase {
   constructor(public authorRepository: AbstractAuthorRepository) {}
 
-  async execute(input: TDeleteAuthorInput): Promise<TDeleteAuthorOutput> {
+  async execute(input: DeleteAuthorInput): Promise<DeleteAuthorOutput> {
     const authorExist = await this.authorRepository.findAuthorById({
       id: input.id,
     });

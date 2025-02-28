@@ -1,10 +1,10 @@
-import { TFindAuthorByIdInput, TFindAuthorByIdOutput } from '@book-toshokan/libs/domain';
+import { FindAuthorByIdInput, FindAuthorByIdOutput } from '@book-toshokan/libs/domain';
 import { AbstractAuthorRepository } from '../../repository/author.repository';
 
 export class FindAuthorByIdUseCase {
   constructor(public authorRepository: AbstractAuthorRepository) {}
 
-  async execute(input: TFindAuthorByIdInput): Promise<TFindAuthorByIdOutput> {
+  async execute(input: FindAuthorByIdInput): Promise<FindAuthorByIdOutput> {
     return this.authorRepository.findAuthorById({ id: input.id });
   }
 }

@@ -1,20 +1,20 @@
 import {
-  TCreateAuthorInput,
-  TCreateAuthorOutput,
-  TDeleteAuthorInput,
-  TDeleteAuthorOutput,
-  TFindAllAuthorInput,
-  TFindAllAuthorOutput,
-  TFindAuthorByIdInput,
-  TFindAuthorByIdOutput,
-  TUpdateAuthorInput,
-  TUpdateAuthorOutput,
+  CreateAuthorInput,
+  CreateAuthorOutput,
+  DeleteAuthorInput,
+  DeleteAuthorOutput,
+  FindAllAuthorInput,
+  FindAllAuthorOutput,
+  FindAuthorByIdInput,
+  FindAuthorByIdOutput,
+  UpdateAuthorInput,
+  UpdateAuthorOutput,
 } from '@book-toshokan/libs/domain';
 
 export abstract class AbstractAuthorRepository {
-  abstract createAuthor(input: TCreateAuthorInput): Promise<TCreateAuthorOutput>;
-  abstract findAllAuthor(input: TFindAllAuthorInput): Promise<TFindAllAuthorOutput>;
-  abstract findAuthorById(input: TFindAuthorByIdInput): Promise<TFindAuthorByIdOutput>;
-  abstract updateAuthor(input: TUpdateAuthorInput): Promise<TUpdateAuthorOutput>;
-  abstract deleteAuthor(input: TDeleteAuthorInput): Promise<TDeleteAuthorOutput>;
+  abstract createAuthor(input: CreateAuthorInput): Promise<CreateAuthorOutput>;
+  abstract findAllAuthor(input: FindAllAuthorInput): Promise<FindAllAuthorOutput>;
+  abstract findAuthorById(input: FindAuthorByIdInput): Promise<FindAuthorByIdOutput>;
+  abstract updateAuthor(input: UpdateAuthorInput): Promise<UpdateAuthorOutput>;
+  abstract deleteAuthor(input: DeleteAuthorInput): Promise<DeleteAuthorOutput>;
 }
