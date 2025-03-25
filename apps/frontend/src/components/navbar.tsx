@@ -13,7 +13,7 @@ import {
   NavbarMenu,
   NavbarMenuItem,
   Switch,
-} from "@heroui/react";
+} from '@heroui/react';
 import { BookOpen, UserIcon } from 'lucide-react';
 import { getAppsPath } from '../utils/getAppsPath';
 import { useNavigate } from 'react-router-dom';

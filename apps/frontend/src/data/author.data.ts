@@ -1,14 +1,14 @@
 import {
-  TCreateAuthorInput,
-  TDeleteAuthorInput,
-  TFindAllAuthorInput,
-  TFindAuthorByIdInput,
-  TUpdateAuthorInput,
+  CreateAuthorInput,
+  DeleteAuthorInput,
+  FindAllAuthorInput,
+  FindAuthorByIdInput,
+  UpdateAuthorInput,
 } from '@book-toshokan/libs/domain';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
 
-export const createAuthor = async (input: TCreateAuthorInput) => {
+export const createAuthor = async (input: CreateAuthorInput) => {
   const response = await fetch(`${BACKEND_URL}/api/v1/authors/createAuthor`, {
     method: 'POST',
     headers: {
@@ -29,7 +29,7 @@ export const createAuthor = async (input: TCreateAuthorInput) => {
   return data;
 };
 
-export const findAllAuthor = async (input: TFindAllAuthorInput) => {
+export const findAllAuthor = async (input: FindAllAuthorInput) => {
   const response = await fetch(
     `${BACKEND_URL}/api/v1/authors/findAllAuthor?name=${input.name}&page=${input.pageInfo?.page}&perPage=${input.pageInfo?.perPage}`,
     {
@@ -49,7 +49,7 @@ export const findAllAuthor = async (input: TFindAllAuthorInput) => {
   return data;
 };
 
-export const findAuthorById = async (input: TFindAuthorByIdInput) => {
+export const findAuthorById = async (input: FindAuthorByIdInput) => {
   const response = await fetch(`${BACKEND_URL}/api/v1/authors/findAuthorById/${input.id}`, {
     method: 'GET',
     headers: {
@@ -66,7 +66,7 @@ export const findAuthorById = async (input: TFindAuthorByIdInput) => {
   return data;
 };
 
-export const updateAuthor = async (input: TUpdateAuthorInput) => {
+export const updateAuthor = async (input: UpdateAuthorInput) => {
   const response = await fetch(`${BACKEND_URL}/api/v1/authors/updateAuthor/${input.id}`, {
     method: 'PUT',
     headers: {
@@ -87,7 +87,7 @@ export const updateAuthor = async (input: TUpdateAuthorInput) => {
   return data;
 };
 
-export const deleteAuthor = async (input: TDeleteAuthorInput) => {
+export const deleteAuthor = async (input: DeleteAuthorInput) => {
   const response = await fetch(`${BACKEND_URL}/api/v1/authors/deleteAuthor/${input.id}`, {
     method: 'DELETE',
     headers: {

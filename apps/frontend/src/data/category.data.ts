@@ -1,14 +1,14 @@
 import {
-  TCreateCategoryInput,
-  TDeleteCategoryInput,
-  TFindAllCategoryInput,
-  TFindCategoryByIdInput,
-  TUpdateCategoryInput,
+  CreateCategoryInput,
+  DeleteCategoryInput,
+  FindAllCategoryInput,
+  FindCategoryByIdInput,
+  UpdateCategoryInput,
 } from '@book-toshokan/libs/domain';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
 
-export const createCategory = async (input: TCreateCategoryInput) => {
+export const createCategory = async (input: CreateCategoryInput) => {
   const response = await fetch(`${BACKEND_URL}/api/v1/categories/createCategory`, {
     method: 'POST',
     headers: {
@@ -29,7 +29,7 @@ export const createCategory = async (input: TCreateCategoryInput) => {
   return data;
 };
 
-export const findAllCategory = async (input: TFindAllCategoryInput) => {
+export const findAllCategory = async (input: FindAllCategoryInput) => {
   const response = await fetch(
     `${BACKEND_URL}/api/v1/categories/findAllCategory?name=${input.name}&page=${input.pageInfo?.page}&perPage=${input.pageInfo?.perPage}`,
     {
@@ -49,7 +49,7 @@ export const findAllCategory = async (input: TFindAllCategoryInput) => {
   return data;
 };
 
-export const findCategoryById = async (input: TFindCategoryByIdInput) => {
+export const findCategoryById = async (input: FindCategoryByIdInput) => {
   const response = await fetch(`${BACKEND_URL}/api/v1/categories/findCategoryById/${input.id}`, {
     method: 'GET',
     headers: {
@@ -66,7 +66,7 @@ export const findCategoryById = async (input: TFindCategoryByIdInput) => {
   return data;
 };
 
-export const updateCategory = async (input: TUpdateCategoryInput) => {
+export const updateCategory = async (input: UpdateCategoryInput) => {
   const response = await fetch(`${BACKEND_URL}/api/v1/categories/updateCategory/${input.id}`, {
     method: 'PUT',
     headers: {
@@ -87,7 +87,7 @@ export const updateCategory = async (input: TUpdateCategoryInput) => {
   return data;
 };
 
-export const deleteCategory = async (input: TDeleteCategoryInput) => {
+export const deleteCategory = async (input: DeleteCategoryInput) => {
   const response = await fetch(`${BACKEND_URL}/api/v1/categories/deleteCategory/${input.id}`, {
     method: 'DELETE',
     headers: {
