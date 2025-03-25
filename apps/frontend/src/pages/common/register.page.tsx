@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
-import { Image } from "@heroui/react";
+import { Image } from '@heroui/react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Divider } from '../../components/divider';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
@@ -18,6 +18,7 @@ import {
   TCreateUserOutput,
 } from '@book-toshokan/libs/domain';
 import { Button, Checkbox, Input } from '@book-toshokan/libs/shared-ui';
+import { authClient } from '../../utils/auth';
 
 export const RegisterPage = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -30,7 +31,7 @@ export const RegisterPage = () => {
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const email = queryParams.get('email');
+  const email = queryParams.get('email') || '';
 
   const { loginPage } = getAppsPath();
 
@@ -54,30 +55,29 @@ export const RegisterPage = () => {
   const password = watch('password');
   const passwordMatches = confirmPassword === password;
 
-  const registerForm: SubmitHandler<TCreateUserInput> = async (data) => {
-    try {
-      if (passwordMatches && hasTermsBeenAccepted) {
-        await registerUserMtn.mutateAsync(
-          {
-            email: data.email,
-            password: data.password,
-            username: data.username,
-          },
-          {
-            onSuccess: (data) => {
-              toastSuccess(data.body.message);
-              navigate(loginPage);
-            },
-            onError: (error) => {
-              toastError(error.body.message);
-              console.log('error ', error);
-            },
-          }
-        );
+  const registerForm: SubmitHandler<TCreateUserInput> = async (input) => {
+    const { data, error } = await authClient.signUp.email(
+      {
+        name: input.username,
+        email: input.email,
+        password: input.password,
+      },
+      {
+        onRequest: (ctx) => {
+          console.log('on Request ', ctx);
+        },
+        onSuccess: (ctx) => {
+          toastSuccess('Created user successfully!');
+          navigate('/admin');
+        },
+        onError: (ctx) => {
+          console.log(ctx);
+          toastError(ctx.error.message);
+        },
       }
-    } catch (error) {
-      console.error('error ', error);
-    }
+    );
+
+    console.log({ data, error });
   };
 
   const toggleIsPasswordVisible = () => setIsPasswordVisible(!isPasswordVisible);

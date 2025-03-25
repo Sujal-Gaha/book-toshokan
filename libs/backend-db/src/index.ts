@@ -1,4 +1,3 @@
-import { PrismaClient } from '@prisma/client';
-
 export * from './lib/backend-db';
-export const db = new PrismaClient();
+export * from './prisma/prisma-db';
+export * from './auth';

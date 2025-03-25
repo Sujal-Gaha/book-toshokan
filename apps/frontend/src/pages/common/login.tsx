@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
-import { Image } from "@heroui/react";
+import { Image } from '@heroui/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Divider } from '../../components/divider';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
@@ -18,6 +18,7 @@ import {
 } from '@book-toshokan/libs/domain';
 import { toastError, toastSuccess } from '../../components/toast';
 import { Button, Checkbox, Input } from '@book-toshokan/libs/shared-ui';
+import { authClient } from '../../utils/auth';
 
 export const LoginPage = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
