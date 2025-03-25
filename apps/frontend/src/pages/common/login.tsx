@@ -5,23 +5,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Divider } from '../../components/divider';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
 import { getAppsPath } from '../../utils/getAppsPath';
-import { useMutation } from '@tanstack/react-query';
-import { loginUser } from '../../data/user';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  LoginUserSchema,
-  TApiResponse,
-  TApiError,
-  TLoginUserInput,
-  TLoginUserOutput,
-} from '@book-toshokan/libs/domain';
+import { LoginUserSchema, TLoginUserInput } from '@book-toshokan/libs/domain';
 import { toastError, toastSuccess } from '../../components/toast';
 import { Button, Checkbox, Input } from '@book-toshokan/libs/shared-ui';
 import { authClient } from '../../utils/auth';
 
 export const LoginPage = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isLoggingInUser, setIsLoggingInUser] = useState(false);
 
   const navigate = useNavigate();
 
@@ -33,28 +26,27 @@ export const LoginPage = () => {
     resolver: zodResolver(LoginUserSchema),
   });
 
-  const loginMtn = useMutation<TApiResponse<TLoginUserOutput>, TApiError, TLoginUserInput>({ mutationFn: loginUser });
-
-  const loginForm: SubmitHandler<TLoginUserInput> = async (data) => {
-    try {
-      await loginMtn.mutateAsync(
-        {
-          email: data.email,
-          password: data.password,
+  const loginForm: SubmitHandler<TLoginUserInput> = async (input) => {
+    await authClient.signIn.email(
+      {
+        email: input.email,
+        password: input.password,
+      },
+      {
+        onRequest: (ctx) => {
+          setIsLoggingInUser(true);
         },
-        {
-          onSuccess: (data) => {
-            toastSuccess(data.body.message);
-            navigate('/');
-          },
-          onError: (error) => {
-            toastError(error.body.message);
-          },
-        }
-      );
-    } catch (error) {
-      console.error('error ', error);
-    }
+        onSuccess: (ctx) => {
+          toastSuccess('Logged in Successfully!');
+          setIsLoggingInUser(false);
+          navigate('/');
+        },
+        onError: (ctx) => {
+          setIsLoggingInUser(false);
+          toastError(ctx.error.message);
+        },
+      }
+    );
   };
 
   const toggleIsPasswordVisible = () => setIsPasswordVisible(!isPasswordVisible);
@@ -111,8 +103,8 @@ export const LoginPage = () => {
                 Forgot password?
               </Link>
             </div>
-            <Button type="submit" color="primary" size="lg" disabled={loginMtn.isPending}>
-              {loginMtn.isPending ? 'Logging In...' : 'Log In'}
+            <Button type="submit" color="primary" size="lg" disabled={isLoggingInUser}>
+              {isLoggingInUser ? 'Logging In...' : 'Log In'}
             </Button>
             <p className="text-white text-center">
               Need to create an account?{' '}

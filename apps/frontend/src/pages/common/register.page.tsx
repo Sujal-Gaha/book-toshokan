@@ -5,18 +5,10 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Divider } from '../../components/divider';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
 import { getAppsPath } from '../../utils/getAppsPath';
-import { useMutation } from '@tanstack/react-query';
-import { registerUser } from '../../data/user';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toastError, toastSuccess } from '../../components/toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  CreateUserSchema,
-  TApiError,
-  TApiResponse,
-  TCreateUserInput,
-  TCreateUserOutput,
-} from '@book-toshokan/libs/domain';
+import { CreateUserSchema, TCreateUserInput } from '@book-toshokan/libs/domain';
 import { Button, Checkbox, Input } from '@book-toshokan/libs/shared-ui';
 import { authClient } from '../../utils/auth';
 
@@ -27,6 +19,8 @@ export const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [hasTermsBeenAccepted, setHasTermsBeenAccepted] = useState(false);
 
+  const [isRegisteringUser, setIsRegisteringUser] = useState(false);
+
   const navigate = useNavigate();
 
   const location = useLocation();
@@ -34,10 +28,6 @@ export const RegisterPage = () => {
   const email = queryParams.get('email') || '';
 
   const { loginPage } = getAppsPath();
-
-  const registerUserMtn = useMutation<TApiResponse<TCreateUserOutput>, TApiError, TCreateUserInput>({
-    mutationFn: registerUser,
-  });
 
   const {
     watch,
@@ -56,7 +46,7 @@ export const RegisterPage = () => {
   const passwordMatches = confirmPassword === password;
 
   const registerForm: SubmitHandler<TCreateUserInput> = async (input) => {
-    const { data, error } = await authClient.signUp.email(
+    await authClient.signUp.email(
       {
         name: input.username,
         email: input.email,
@@ -64,20 +54,20 @@ export const RegisterPage = () => {
       },
       {
         onRequest: (ctx) => {
-          console.log('on Request ', ctx);
+          setIsRegisteringUser(true);
         },
         onSuccess: (ctx) => {
+          setIsRegisteringUser(false);
           toastSuccess('Created user successfully!');
-          navigate('/admin');
+          navigate('/auth/login');
         },
         onError: (ctx) => {
-          console.log(ctx);
+          console.error(ctx);
+          setIsRegisteringUser(false);
           toastError(ctx.error.message);
         },
       }
     );
-
-    console.log({ data, error });
   };
 
   const toggleIsPasswordVisible = () => setIsPasswordVisible(!isPasswordVisible);
@@ -171,14 +161,14 @@ export const RegisterPage = () => {
                 errorMessage={'Password doesnot match'}
               />
             </div>
-            <Checkbox isRequired onClick={(e) => setHasTermsBeenAccepted(!e.currentTarget.value)}>
+            <Checkbox isRequired onChange={(e) => setHasTermsBeenAccepted(e.currentTarget.checked)}>
               I agree with the{' '}
               <span className="text-blue-500 hover:underline" onClick={(e) => e.stopPropagation()}>
                 Terms & Privacy Policy
               </span>
             </Checkbox>
-            <Button type="submit" color="primary" size="lg" disabled={registerUserMtn.isPending}>
-              {registerUserMtn.isPending ? 'Signing Up...' : 'Sign Up'}
+            <Button type="submit" color="primary" size="lg" disabled={isRegisteringUser || !hasTermsBeenAccepted}>
+              {isRegisteringUser ? 'Signing Up...' : 'Sign Up'}
             </Button>
             <p className="text-white text-center">
               Already have an account?{' '}
