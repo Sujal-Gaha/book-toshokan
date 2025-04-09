@@ -1,8 +1,8 @@
-import { Card, CardBody, CardHeader } from "@heroui/react";
+import { Card, CardBody, CardHeader } from '@heroui/react';
 import { PlusCircle, Search, Edit, Trash } from 'lucide-react';
 import { useAddCategoryModal, useDeleteCategoryModal, useUpdateCategoryModal } from './category-modals';
 import { createColumnHelper } from '@tanstack/react-table';
-import { Category, TApiResponse, TFindAllCategoryOutput } from '@book-toshokan/libs/domain';
+import { Category, TApiResponse, FindAllCategoryOutput } from '@book-toshokan/libs/domain';
 import { useQuery } from '@tanstack/react-query';
 import { findAllCategory } from '../../data/category.data';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -71,7 +71,7 @@ export const CategoriesManagementTab = () => {
     perPage: 10,
   });
 
-  const { data: findAllCategoryData, isLoading } = useQuery<TApiResponse<TFindAllCategoryOutput>>({
+  const { data: findAllCategoryData, isLoading } = useQuery<TApiResponse<FindAllCategoryOutput>>({
     queryKey: ['findAllCategory', nameFilter, pageInfo.page, pageInfo.perPage],
     queryFn: () => findAllCategory({ name: nameFilter, pageInfo: pageInfo }),
   });

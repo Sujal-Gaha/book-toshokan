@@ -1,8 +1,8 @@
-import { Card, CardBody, CardHeader, Input } from "@heroui/react";
+import { Card, CardBody, CardHeader, Input } from '@heroui/react';
 import { Edit, PlusCircle, Search, Trash } from 'lucide-react';
 import { useAddAuthorModal, useDeleteAuthorModal, useUpdateAuthorModal } from './author-modals';
 import { createColumnHelper } from '@tanstack/react-table';
-import { Author, TApiResponse, TFindAllAuthorOutput } from '@book-toshokan/libs/domain';
+import { Author, TApiResponse, FindAllAuthorOutput } from '@book-toshokan/libs/domain';
 import { useQuery } from '@tanstack/react-query';
 import { findAllAuthor } from '../../data/author.data';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -81,7 +81,7 @@ export const AuthorManagementTab = () => {
     setAuthorIdForModification: setAuthorIdForModification,
   });
 
-  const { data: findAllAuthorData, isLoading } = useQuery<TApiResponse<TFindAllAuthorOutput>>({
+  const { data: findAllAuthorData, isLoading } = useQuery<TApiResponse<FindAllAuthorOutput>>({
     queryKey: ['findAllAuthor', nameFilter, pageInfo.page, pageInfo.perPage],
     queryFn: () => findAllAuthor({ name: nameFilter, pageInfo: pageInfo }),
   });
