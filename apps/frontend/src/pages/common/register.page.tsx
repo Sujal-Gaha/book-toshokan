@@ -10,7 +10,7 @@ import { toastError, toastSuccess } from '../../components/toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CreateUserSchema, TCreateUserInput } from '@book-toshokan/libs/domain';
 import { Button, Checkbox, Input } from '@book-toshokan/libs/shared-ui';
-import { authClient } from '../../utils/auth';
+import { authClient } from '../../auth/authClient';
 
 export const RegisterPage = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);

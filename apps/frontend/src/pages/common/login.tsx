@@ -10,7 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginUserSchema, TLoginUserInput } from '@book-toshokan/libs/domain';
 import { toastError, toastSuccess } from '../../components/toast';
 import { Button, Checkbox, Input } from '@book-toshokan/libs/shared-ui';
-import { authClient } from '../../utils/auth';
+import { authClient } from '../../auth/authClient';
 
 export const LoginPage = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
